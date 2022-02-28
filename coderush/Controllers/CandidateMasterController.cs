@@ -54,7 +54,7 @@ namespace coderush.Controllers
         //post submitted candidate data. if todo.CandidateId is null then create new, otherwise edit
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult SubmitForm([Bind("Id", "Name", "Email", "Phone", "Technologies", "FileUpload", "IsActive")] CandidateMastersViewModel candidateMasters)
+        public IActionResult SubmitForm([Bind("Id", "Name", "Email", "Phone", "Technologies", "FileUpload", "InterviewDate", "PlaceOfInterview", "InterviewTime", "InterviewDescription", "IsActive", "IsReject")] CandidateMastersViewModel candidateMasters)
         {
             try
             {
@@ -113,8 +113,13 @@ namespace coderush.Controllers
                     newcandidateMaster.Email = candidateMasters.Email;
                     newcandidateMaster.Phone = candidateMasters.Phone;
                     newcandidateMaster.Technologies = candidateMasters.Technologies;
+                    newcandidateMaster.InterviewDate = candidateMasters.InterviewDate;
+                    newcandidateMaster.PlaceOfInterview = candidateMasters.PlaceOfInterview;
+                    newcandidateMaster.InterviewTime = candidateMasters.InterviewTime ;
+                    newcandidateMaster.InterviewDescription = candidateMasters.InterviewDescription ;
                     newcandidateMaster.FileUpload = candidateMasters.FileUpload.FileName.ToString();
                     newcandidateMaster.IsActive = candidateMasters.IsActive;
+                    newcandidateMaster.IsReject = candidateMasters.IsReject;
                     newcandidateMaster.CreatedBy = user.Id;
                     _context.CandidateMaster.Add(newcandidateMaster);
                     _context.SaveChanges();
@@ -134,6 +139,7 @@ namespace coderush.Controllers
                 editCandidatemaster.UpdatedBy = user.Id;
                 editCandidatemaster.UpdatedDate = DateTime.Now;
                 editCandidatemaster.IsActive = candidateMasters.IsActive;
+                editCandidatemaster.IsReject = candidateMasters.IsReject;
                 _context.CandidateMaster.Update(editCandidatemaster);
                 _context.SaveChanges();
 

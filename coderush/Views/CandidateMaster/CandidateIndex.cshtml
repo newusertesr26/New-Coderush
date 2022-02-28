@@ -34,42 +34,62 @@
                                 <th width="20%">Name</th>
                                 <th width="10%">Email</th>
                                 <th width="10%">Phone</th>
+                                <th width="10%">Interview Date</th>
+                                <th width="10%">Place Of Interview</th>
+                                <th width="10%">Interview Time</th>
+                                <th width="10%">Interview Description</th>
                                 <th width="10%">Technologies</th>
                                 <th width="10%">FileUpload</th>
                                 <th width="10%">Is Active</th>
+                                <th width="10%">Is Reject</th>
                             </tr>
                         </thead>
                         <tbody>
                             @foreach (var item in Model)
                             {
-                <tr>
-                    <td>
-                        <a href="/CandidateMaster/Form/@item.Id"><i class="fa fa-edit"></i></a>
-                    </td>
-                    <td>
-                        <a href="/CandidateMaster/Delete/@item.Id"><i class="fa fa-trash"></i></a>
-                    </td>
-                    <td>
-                        @item.Name
-                    </td>
-                    <td>
-                        @item.Email
-                    </td>
-                    <td>
-                        @item.Phone
-                    </td>
-                    <td>
-                        @item.Technologies
-                    </td>
-                    <td>
-                        @item.FileUpload
-                    </td>
-                    @*<td><span style="text-decoration-line:@(item.Isactive ? "line-through" : "none")">@item.Isactive</span></td>*@
-                    <td>
-                        <input type="checkbox" class="flat-red" @(item.IsActive ? "checked" : "") onclick="return false;">
-                    </td>
+                            <tr>
+                                <td>
+                                    <a href="/CandidateMaster/Form/@item.Id"><i class="fa fa-edit"></i></a>
+                                </td>
+                                <td>
+                                    <a href="/CandidateMaster/Delete/@item.Id"><i class="fa fa-trash"></i></a>
+                                </td>
+                                <td>
+                                    @item.Name
+                                </td>
+                                <td>
+                                    @item.Email
+                                </td>
+                                <td>
+                                    @item.Phone
+                                </td>
+                                <td>
+                                    @item.Technologies
+                                </td>
+                                <td>
+                                    @item.FileUpload
+                                </td>
+                                <td>
+                                    @item.InterviewDate
+                                </td>
+                                <td>
+                                    @item.PlaceOfInterview
+                                </td>
+                                <td>
+                                    @item.InterviewTime
+                                </td>
+                                <td>
+                                    @item.InterviewDescription
+                                </td>
+                                @*<td><span style="text-decoration-line:@(item.Isactive ? "line-through" : "none")">@item.Isactive</span></td>*@
+                                <td>
+                                    <input type="checkbox" class="flat-red" @(item.IsActive ? "checked" : "") onclick="return false;">
+                                </td>
+                                <td>
+                                    <input type="checkbox" class="flat-red" @(item.IsReject ? "checked" : "") onclick="return false;">
+                                </td>
 
-                </tr>
+                            </tr>
 }
                         </tbody>
                     </table>

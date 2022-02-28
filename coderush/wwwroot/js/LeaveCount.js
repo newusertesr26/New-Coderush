@@ -62,7 +62,7 @@
             success: function (result) {
                 //$("#AddLeave").modal('hide');
                 alert(result.message);
-                Bindtablegrid(userid);
+                Bindtablegrid(userid,"");
             },
             error: function (err) {
                 alert("Fail!");
@@ -91,9 +91,9 @@
         //$("#levuserid").val(BinddrpdwnData);
     });
 
-    var Bindtablegrid = function (id) {
+    var Bindtablegrid = function (id,username) {
         $.ajax({
-            url: "/Leavecount/BindGridData?id=" + id,
+            url: "/Leavecount/BindGridData?id=" + id + "&UserName=" + username,
             method: 'Get',
             data: {},
             success: function (data) {
@@ -170,8 +170,10 @@
     };
 
     $("#leavedrpdwn").on('change', function () {
+        debugger
         var id = $(this).val();
-        Bindtablegrid(id);
+        var username = $("#leavedrpdwn option:selected").text();
+        Bindtablegrid(id, username);
         $("#grid").show();
     })
 

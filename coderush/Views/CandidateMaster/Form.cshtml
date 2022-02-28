@@ -60,6 +60,26 @@
                         <span asp-validation-for="Technologies" class="text-danger"></span>
                         @*<span class="text-danger hidespan spanSelection">Please select Type</span>*@
                     </div>
+                    <div class="form-group ">
+                        <div class="form-group col-md-6">
+                            <label asp-for="InterviewDate"></label>
+                            <input type="date" asp-for="InterviewDate" class="form-control" />
+                            <span asp-validation-for="InterviewDate" class="text-danger"></span>
+                            @*<span class="text-danger hidespan spantext">Please enter Text</span>*@
+                        </div>
+                        <div class="form-group col-md-6">
+                            <label asp-for="InterviewTime"></label>
+                            <input type="time" asp-for="InterviewTime" class="form-control" />
+                            <span asp-validation-for="InterviewTime" class="text-danger"></span>
+                            @*<span class="text-danger hidespan spantext">Please enter Text</span>*@
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="PlaceOfInterview"></label>
+                        <input asp-for="PlaceOfInterview" class="form-control" />
+                        <span asp-validation-for="PlaceOfInterview" class="text-danger"></span>
+                        @*<span class="text-danger hidespan spantext">Please enter Text</span>*@
+                    </div>
                     <div class="form-group">
                         <label asp-for="FileUpload"></label>
                         <input type="file" asp-for="FileUpload" id="FileUpload" class="form-control" />
@@ -73,7 +93,12 @@
                         <input asp-for="IsActive" type="checkbox" id="ckisactive" class="flat-red" />
                     </div>
                     <div class="form-group">
-                        <textarea TextMode="MultiLine" rows="4" cols="50" type="text" value="" class="form-control"></textarea>
+                        <label asp-for="IsReject"></label>
+                        <input asp-for="IsReject" type="checkbox" id="ckisactive" class="flat-red" />
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="InterviewDescription"></label>
+                        <textarea asp-for="InterviewDescription" TextMode="MultiLine" rows="4" cols="50" type="text" value="" class="form-control"></textarea>
                     </div>
 
                 </div>

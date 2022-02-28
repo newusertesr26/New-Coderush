@@ -10,8 +10,8 @@ namespace coderush.Models
     {
         [Key]
         public int Id { get; set; }
-        [Display(Name = "Userid:")]
 
+        [Display(Name = "UserName:")]
         [Required]
         public string Userid { get; set; }
         [Display(Name = "Fromdate:")]

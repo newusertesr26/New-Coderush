@@ -33,6 +33,19 @@ namespace coderush.Models
         public string FileUpload { get; set; }
         [Display(Name = "IsActive:")]
         public bool IsActive { get; set; }
+        [Display(Name = "Interview Date:")]
+        [Required]
+        public DateTime? InterviewDate { get; set; }
+        [Display(Name = "Place Of Interview:")]
+        [Required]
+        public string PlaceOfInterview { get; set; }
+        [Display(Name = "Interview Time:")]
+        [Required]
+        public DateTime? InterviewTime { get; set; }
+        [Display(Name = "Interview Description:")]
+        [Required]
+        public string InterviewDescription { get; set; }
+        public bool IsReject { get; set; }
         public bool IsDelete { get; set; }
         public string CreatedBy { get; set; }
         public DateTime? CreatedDate { get; set; }
