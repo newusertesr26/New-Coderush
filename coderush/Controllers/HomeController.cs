@@ -1,5 +1,6 @@
 ﻿using coderush.Data;
 using coderush.Models;
+using coderush.Models.ViewModels;
 using coderush.Services.Security;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
@@ -15,14 +16,14 @@ using System.Threading.Tasks;
 
 namespace coderush.Controllers
 {
-    [Authorize(Roles = Services.App.Pages.Membership.RoleName)]
+    //[Authorize(Roles = Services.App.Pages.Home.RoleName)]
     public class HomeController : Controller
     {
         private readonly Services.Security.ICommon _security;
         private readonly IdentityDefaultOptions _identityDefaultOptions;
         private readonly SuperAdminDefaultOptions _superAdminDefaultOptions;
         private readonly ApplicationDbContext _context;
-        private readonly UserManager<IdentityUser> _userManager;
+        private readonly UserManager<ApplicationUser> _userManager;
 
         //dependency injection through constructor, to directly access services
         public HomeController(
@@ -30,7 +31,7 @@ namespace coderush.Controllers
             IOptions<IdentityDefaultOptions> identityDefaultOptions,
             IOptions<SuperAdminDefaultOptions> superAdminDefaultOptions,
             ApplicationDbContext context,
-            UserManager<IdentityUser> userManager
+            UserManager<ApplicationUser> userManager
             )
         {
             _security = security;
@@ -43,7 +44,7 @@ namespace coderush.Controllers
         public IActionResult Index()
         {
             //return View();
-            return RedirectToPage("/Account/Login", new { area = "Identity" });
+            return LocalRedirect("/Identity/Account/Login");
         }
 
         //public async Task<IActionResult> NewLogin()

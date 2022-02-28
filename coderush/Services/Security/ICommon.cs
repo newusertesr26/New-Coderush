@@ -1,9 +1,11 @@
 ﻿using coderush.Models;
+using coderush.Models.ViewModels;
 using Microsoft.AspNetCore.Identity;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
+using System.Threading.Tasks; 
+
 
 namespace coderush.Services.Security
 {
@@ -17,7 +19,7 @@ namespace coderush.Services.Security
 
         ApplicationUser GetMemberByApplicationId(string applicationId);
 
-        Task<ApplicationUser> CreateApplicationUser(ApplicationUser applicationUser, string password);
+        Task<ApplicationUser> CreateApplicationUser(ApplicationViewModel applicationUser, string password);
         
     }
 }

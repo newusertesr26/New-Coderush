@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Identity;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,7 +10,9 @@ namespace coderush.Models
     public partial class ApplicationUser : IdentityUser
     {
         //override identity user, add new column
+        public DateTime JoiningDate { get; set; }
+        public string ProfilePicture { get; set; }
         public bool isSuperAdmin { get; set; } = false;
-        
+            
     }
 }

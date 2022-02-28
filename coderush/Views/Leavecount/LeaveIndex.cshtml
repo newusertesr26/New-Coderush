@@ -1,0 +1,163 @@
+﻿@model List<LeaveCountViewModel>
+@{ ViewData["Title"] = "LeaveCount"; }
+
+
+<!-- Content Wrapper. Contains page content -->
+<div class="content-wrapper">
+    <!-- Content Header (Page header) -->
+    <section class="content-header">
+        <h1>
+            @ViewData["Title"]
+        </h1>
+        <p>
+            @await Html.PartialAsync(PartialView.StatusMessage, TempData[StaticString.StatusMessage])
+        </p>
+
+    </section>
+    <!-- Main content -->
+    <section class="content">
+        @Html.AntiForgeryToken()
+        <!-- Default box -->
+        <div class="box">
+            <div class="box-header with-border">
+                <h3 class="box-title">List of LeaveCount item</h3>
+                <div class="box-tools pull-right">
+                    <a href="/LeaveCount/Form" id="btninsert" class="btn btn-primary"><i class="fa fa-plus"></i></a>
+                </div>
+            </div>
+            <div class="box-body">
+                <div class="form-group">
+                    <select name="Userid" id="leavedrpdwn" class="form-control" asp-items="@ViewBag.UserList"></select>
+                    @*<select class="dropdown-mega-menu-xl" id="leavedrpdwn"></select>*@
+                </div>
+
+                <div class="table-responsive">
+                    <table id="grid" class="table table-striped" cellspacing="0" width="100%">
+                        <thead>
+                            <tr>
+                                <th width="5%">Edit</th>
+                                <th width="5%">Delete</th>
+                                <th width="20%">Userid</th>
+                                <th width="10%">Fromdate</th>
+                                <th width="10%">Todate</th>
+                                <th width="10%">Count</th>
+                                <th width="10%">Description</th>
+                                <th width="10%">Is approve</th>
+                                <th width="10%">Approve Date</th>
+                            </tr>
+                        </thead>
+                       
+                        <tbody id="levtblbdy">
+                        </tbody>
+                    </table>
+                </div>
+
+            </div>
+            <!-- /.box-body -->
+        </div>
+
+        <!-- /.box -->
+    </section>
+    <!-- /.content -->
+</div>
+<!-- /.content-wrapper -->
+
+
+
+@section Styles{
+    <!-- DataTables -->
+    <link rel="stylesheet" href="~/adminlte/components/datatables.net-bs/css/dataTables.bootstrap.min.css">
+}
+
+
+@section Scripts{
+
+
+    <!-- DataTables -->
+    <script src="~/adminlte/components/datatables.net/js/jquery.dataTables.min.js"></script>
+    <script src="~/adminlte/components/datatables.net-bs/js/dataTables.bootstrap.min.js"></script>
+    @*<script src="~/js/jquery.min.js"></script>
+        <script src="~/js/jquery-ui.js"></script>*@
+
+    <script src="~/js/LeaveCount.js"></script>
+
+    <!-- page script -->
+    <script type="text/javascript">
+                    $(document).ready(function () {
+
+                            $('#grid').DataTable({
+                                lengthChange: false,
+                                info: false,
+                                searching: true,
+                                dom: 'lrtip',
+                                scrollX: false,
+                                pageLength: 5,
+                            });
+
+                        });
+
+                        //$("#leavedrpdwn").on('change', function () {
+                        //    var id = $(this).val();
+                        //    Bindtablegrid(id);
+                        //    $("#leavetbl").show();
+                        //})
+
+                        //$("#leavedrpdwn option:selected").text();
+                        //$("#levuserid").val(BinddrpdwnData);
+
+                        //var Bindtablegrid = function (id) {
+                        //    $.ajax({
+                        //        url: "/Leavecount/BindGridData?id=" + id,
+                        //        method: 'Get',
+                        //        data: {},
+                        //        success: function (data) {
+                        //            /*console.log(data);*/
+                        //            $("#levtblbdy").empty();
+                        //            if (data.list != null && data.list.length > 0) {
+
+                        //                var innerHtml = '';
+                        //                $.each(data.list, function (i, v) {
+                        //                    var rowdata = data.list[i]
+                        //                    innerHtml += "<tr>";
+                        //                    innerHtml += "<td scope='col' id='User ID'>" + rowdata.userid + "</td>";
+                        //                    innerHtml += "<td scope='col' id='From Date'>" + rowdata.fromdate + "</td>";
+                        //                    innerHtml += "<td scope='col' id='To Date'>" + rowdata.todate + "</td>";
+                        //                    innerHtml += "<td scope='col' id='Count'>" + rowdata.count + "</td>";
+                        //                    innerHtml += "<td scope='col' id='Description'>" + rowdata.description + "</td>";
+                        //                    innerHtml += "<td scope='col' id='IsApprove'>" + rowdata.isapprove + "</td>";
+                        //                    innerHtml += "<td scope='col' id='Approve Date'>" + rowdata.approveDate + "</td>";
+                        //                    innerHtml += "<td><i class='fa fa-edit' style='font-size:20px' id='btnedit' data-id = " + rowdata.id + "></i></td>";
+                        //                    innerHtml += "<td><i class='fa fa-trash' style='font-size:20px'></i></td>";
+                        //                    innerHtml += "</tr>";
+                        //                });
+                        //                $("#levtblbdy").html(innerHtml);
+                        //            }
+                        //            else {
+                        //                var innerhtml = '<tr><td colspan="9" class="text-center">No record found.</td></tr>';
+                        //                $("#levtblbdy").html(innerhtml);
+                        //            }
+                        //        }
+
+                        //    });
+                        //}
+
+        //function sendData() {
+        //    var selectedFilter = $("#leavedrpdwn option:selected").val();
+        //    $.ajax({
+        //        //type: "POST",
+        //        url: "/Leavecount/LeaveIndex",
+        //        data: { selectedFilter: selectedFilter },
+        //        //headers: {
+        //        //    RequestVerificationToken: $('input:hidden[name="__RequestVerificationToken"]').val()
+        //        //},
+        //        success: function (result) {
+        //            //alert("success");
+        //        },
+        //        error: function () {
+        //            alert("there was an error");
+        //        }
+        //    });
+        //}
+        </script>
+
+}

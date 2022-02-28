@@ -1,0 +1,164 @@
+﻿@model ProjectMaster
+@{ ViewData["Title"] = "ProjectMaster Form"; }
+
+<!-- Content Wrapper. Contains page content -->
+<div class="content-wrapper">
+    <!-- Content Header (Page header) -->
+    <section class="content-header">
+        <h1>
+            @ViewData["Title"]
+        </h1>
+        <p>
+            @await Html.PartialAsync(PartialView.StatusMessage, TempData[StaticString.StatusMessage])
+        </p>
+
+    </section>
+    <!-- Main content -->
+    <section class="content">
+        <!-- Default box -->
+        <form asp-controller="ProjectMaster" asp-action="SubmitForm" method="post">
+            <div class="box">
+                <div class="box-header with-border">
+                    <h3 class="box-title">Create or edit existing ProjectMaster item</h3>
+                    <div class="box-tools pull-right">
+                        <button type="button" class="btn btn-box-tool" data-widget="collapse" data-toggle="tooltip"
+                                title="Collapse">
+                            <i class="fa fa-minus"></i>
+                        </button>
+                        <button type="button" class="btn btn-box-tool" data-widget="remove" data-toggle="tooltip" title="Remove">
+                            <i class="fa fa-times"></i>
+                        </button>
+                    </div>
+                </div>
+                <div class="box-body">
+                    <input type="hidden" asp-for="Id" />
+                    <div class="form-group">
+                        <label asp-for="ProjectName"></label>
+                        <input asp-for="ProjectName" class="form-control" />
+                        <span asp-validation-for="ProjectName" class="text-danger"></span>
+                        @*<span class="text-danger hidespan spantext">Please enter Text</span>*@
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="Technologies"></label>
+                        @*@Html.DropDownList("Selection", new SelectList(ViewBag.SelectionList, "Value", "Text"), new { @class = "form-control", @id = "ddlSelectionList" })*@
+                        <select name="Technologies" class="form-control" asp-items="@ViewBag.projectTechnologiesList" asp-for="Technologies"></select>
+                        <span asp-validation-for="Technologies" class="text-danger"></span>
+                        @*<span class="text-danger hidespan spanSelection">Please select Type</span>*@
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="Description"></label>
+                        <textarea asp-for="Description" rows="4" cols="50" type="text" value="" class="form-control"></textarea>
+                        <span asp-validation-for="Description" class="text-danger"></span>
+                        @*<span class="text-danger hidespan spandescription">Please enter description</span>*@
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="ManagerName"></label>
+                        <input asp-for="ManagerName" class="form-control" />
+                        <span asp-validation-for="ManagerName" class="text-danger"></span>
+                        @*<span class="text-danger hidespan spantext">Please enter Text</span>*@
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="DeveloperName"></label>
+                        <input asp-for="DeveloperName" class="form-control" />
+                        <span asp-validation-for="DeveloperName" class="text-danger"></span>
+                        @*<span class="text-danger hidespan spantext">Please enter Text</span>*@
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="paymenttype"></label>
+                        <input asp-for="paymenttype" class="form-control" />
+                        <span asp-validation-for="paymenttype" class="text-danger"></span>
+                        @*<span class="text-danger hidespan spantext">Please enter Text</span>*@
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="projectamount"></label>
+                        <input asp-for="projectamount" id="prjctamount" class="form-control" />
+                        <span asp-validation-for="projectamount" class="text-danger"></span>
+                        @*<span class="text-danger hidespan spantext">Please enter Text</span>*@
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="currency"></label>
+                        <input asp-for="currency" id="prjcurrency" class="form-control" />
+                        <span asp-validation-for="currency" class="text-danger"></span>
+                        @*<span class="text-danger hidespan spantext">Please enter Text</span>*@
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="isactive"></label>
+                        <input asp-for="isactive" type="checkbox" class="flat-red" />
+                    </div>
+
+                </div>
+                <!-- /.box-body -->
+                <div class="box-footer">
+                    <a href="/ProjectMaster/ProjectIndex" class="btn btn-default">Back</a>
+                    <button type="submit" class="btn btn-primary">Save</button>
+                </div>
+                <!-- /.box-footer-->
+            </div>
+        </form>
+
+        <!-- /.box -->
+    </section>
+    <!-- /.content -->
+</div>
+<!-- /.content-wrapper -->
+
+
+@section Styles{
+    <!-- DataTables -->
+    <link rel="stylesheet" href="~/adminlte/components/datatables.net-bs/css/dataTables.bootstrap.min.css">
+
+}
+
+
+@section Scripts{
+
+    <partial name="_ValidationScriptsPartial" />
+    <script src="~/js/jquery.min.js"></script>
+    <script src="~/js/jquery-ui.js"></script>
+    <script type="text/javascript">
+        $(document).ready(function () {
+            debugger
+            $("#prjcurrency").on("blur", function () {
+                var amunt = $(this).val();
+                var filter = /^\d*(?:\.\d{1,2})?$/;
+
+                if (filter.test(amunt)) {
+                    if (amunt == null || amunt == undefined || amunt == "") {
+                        $(".spanprjcurncy").show();
+                        $(".prjcurncyvalid").hide();
+
+                        return false;
+                    }
+                }
+                else {
+                    $(".prjcurncyvalid").show();
+                    $(".spanprjcurncy").hide();
+                    return false;
+                }
+                $(".prjcurncyvalid").hide();
+            });
+
+            $("#prjctamount").on("blur", function () {
+                var amunt = $(this).val();
+                var filter = /^\d*(?:\.\d{1,2})?$/;
+
+                if (filter.test(amunt)) {
+                    if (amunt == null || amunt == undefined || amunt == "") {
+                        $(".prjamountvalid").hide();
+                        $(".spanprjamount").show();
+
+                        return false;
+                    }
+                }
+                else {
+                    $(".spanprjamount").hide();
+                    $(".prjamountvalid").show();
+                    return false;
+                }
+                $(".prjamountvalid").hide();
+            });
+        });
+
+    </script>
+
+}

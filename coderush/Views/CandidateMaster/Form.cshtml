@@ -1,0 +1,103 @@
+﻿@model coderush.Models.ViewModels.CandidateMastersViewModel
+@{ ViewData["Title"] = "CandidateMaster Form"; }
+
+<!-- Content Wrapper. Contains page content -->
+<div class="content-wrapper">
+    <!-- Content Header (Page header) -->
+    <section class="content-header">
+        <h1>
+            @ViewData["Title"]
+        </h1>
+        <p>
+            @await Html.PartialAsync(PartialView.StatusMessage, TempData[StaticString.StatusMessage])
+        </p>
+
+    </section>
+    <!-- Main content -->
+    <section class="content">
+        <!-- Default box -->
+        <form asp-controller="CandidateMaster" enctype="multipart/form-data" asp-action="SubmitForm" method="post">
+            <div class="box">
+                <div class="box-header with-border">
+                    <h3 class="box-title">Create or edit existing CandidateMaster item</h3>
+                    <div class="box-tools pull-right">
+                        <button type="button" class="btn btn-box-tool" data-widget="collapse" data-toggle="tooltip"
+                                title="Collapse">
+                            <i class="fa fa-minus"></i>
+                        </button>
+                        <button type="button" class="btn btn-box-tool" data-widget="remove" data-toggle="tooltip" title="Remove">
+                            <i class="fa fa-times"></i>
+                        </button>
+                    </div>
+                </div>
+                <div class="box-body">
+                    <input type="hidden" asp-for="Id" />
+                    <div class="form-group">
+                        <label asp-for="Name"></label>
+                        <input id="candidatename" asp-for="Name" class="form-control" />
+                        <span asp-validation-for="Name" class="text-danger"></span>
+                        @*<span class="text-danger hidespan spantext">Please enter Text</span>*@
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="Email"></label>
+                        <input id="candidateemail" asp-for="Email" class="form-control" />
+                        <span asp-validation-for="Email" class="text-danger"></span>
+                        @*<span class="text-danger hidespan spantext">Please enter Text</span>*@
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="Phone"></label>
+                        <input id="candidatephone" asp-for="Phone" class="form-control" />
+                        <span asp-validation-for="Phone" class="text-danger"></span>
+                        @*<span class="text-danger hidespan spantext">Please enter Text</span>*@
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="Technologies"></label>
+                        @*@Html.DropDownList("Selection", new SelectList(ViewBag.SelectionList, "Value", "Text"), new { @class = "form-control", @id = "ddlSelectionList" })*@
+                        <select name="technologies" class="form-control" asp-items="@ViewBag.CandidatetechnologiesList" asp-for="Technologies"></select>
+                        <span asp-validation-for="Technologies" class="text-danger"></span>
+                        @*<span class="text-danger hidespan spanSelection">Please select Type</span>*@
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="FileUpload"></label>
+                        <input type="file" asp-for="FileUpload" id="FileUpload" class="form-control" />
+                        <span id="file_error"></span>
+                        @*<span asp-validation-for="FileUpload" class="text-danger"></span>*@
+                        @*<span class="text-danger hidespan spantext">Please enter Text</span>*@
+                    </div>
+
+                    <div class="form-group">
+                        <label asp-for="IsActive"></label>
+                        <input asp-for="IsActive" type="checkbox" id="ckisactive" class="flat-red" />
+                    </div>
+
+                </div>
+                <!-- /.box-body -->
+                <div class="box-footer">
+                    <a href="/CandidateMaster/CandidateIndex" class="btn btn-default">Back</a>
+                    <button type="submit" class="btn btn-primary" id="btnsave">Save</button>
+                </div>
+                <!-- /.box-footer-->
+            </div>
+        </form>
+
+        <!-- /.box -->
+    </section>
+    <!-- /.content -->
+</div>
+<!-- /.content-wrapper -->
+
+
+@section Styles{
+    <!-- DataTables -->
+    <link rel="stylesheet" href="~/adminlte/components/datatables.net-bs/css/dataTables.bootstrap.min.css">
+
+}
+
+
+@section Scripts{
+
+    <partial name="_ValidationScriptsPartial" />
+    <script src="~/js/Candidate.js"></script>
+
+
+}

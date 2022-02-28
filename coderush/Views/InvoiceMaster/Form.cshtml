@@ -1,0 +1,225 @@
+﻿@model InvoiceMaster
+@{ ViewData["Title"] = "InvoiceMaster Form"; }
+
+<!-- Content Wrapper. Contains page content -->
+<div class="content-wrapper">
+    <!-- Content Header (Page header) -->
+    <section class="content-header">
+        <h1>
+            @ViewData["Title"]
+        </h1>
+        <p>
+            @await Html.PartialAsync(PartialView.StatusMessage, TempData[StaticString.StatusMessage])
+        </p>
+
+    </section>
+    <!-- Main content -->
+    <section class="content">
+        <!-- Default box -->
+        <form asp-controller="InvoiceMaster" asp-action="SubmitForm" method="post">
+            <div class="box">
+                <div class="box-header with-border">
+                    <h3 class="box-title">Create or edit existing InvoiceMaster item</h3>
+                    <div class="box-tools pull-right">
+                        <button type="button" class="btn btn-box-tool" data-widget="collapse" data-toggle="tooltip"
+                                title="Collapse">
+                            <i class="fa fa-minus"></i>
+                        </button>
+                        <button type="button" class="btn btn-box-tool" data-widget="remove" data-toggle="tooltip" title="Remove">
+                            <i class="fa fa-times"></i>
+                        </button>
+                    </div>
+                </div>
+             
+                <div class="box-body">
+                    <input type="hidden" asp-for="Id" />
+                    <div class="form-group">
+                        <label asp-for="ProjectId"></label>
+                        <select name="ProjectId" class="form-control" id="invprojid" asp-items="@ViewBag.ProjectMasterSelectionList" asp-for="ProjectId"></select>
+                        @*<input asp-for="ProjectId" id="invprojid" class="form-control" />*@
+                        <span asp-validation-for="ProjectId" class="text-danger"></span>
+                        @*<span class="text-danger hidespan spantext">Please enter Text</span>*@
+                    </div>
+                    <input type="hidden" id="invamountold" value="" />
+                    <input type="hidden" id="invallamount" value="" />
+                    <input type="hidden" id="projectid" value="" />
+                    <div class="form-group">
+                        <label asp-for="Amount"></label>
+                        <input asp-for="Amount" id="invamount" class="form-control" />
+                        <span asp-validation-for="Amount" class="text-danger"></span>
+                        @*<span class="text-danger hidespan spantext">Please enter Text</span>*@
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="Duedate"></label>
+                        <input type="date" asp-for="Duedate" class="form-control" />
+                        <span asp-validation-for="Duedate" class="text-danger"></span>
+                        @*<span class="text-danger hidespan spantext">Please enter Text</span>*@
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="InvoiceNumber"></label>
+                        <input asp-for="InvoiceNumber" class="form-control" />
+                        <span asp-validation-for="InvoiceNumber" class="text-danger"></span>
+                        @*<span class="text-danger hidespan spantext">Please enter Text</span>*@
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="PendingAmount"></label>
+                        <input asp-for="PendingAmount" id="invpendingamount" class="form-control" />
+                        <span asp-validation-for="PendingAmount" class="text-danger"></span>
+                        @*<span class="text-danger hidespan spantext">Please enter Text</span>*@
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="Isverify"></label>
+                        <input asp-for="Isverify" type="checkbox" id="ckisactive" class="flat-red" />
+                    </div>
+
+                </div>
+                <!-- /.box-body -->
+                <div class="box-footer">
+                    <a href="/InvoiceMaster/InvoiceIndex" class="btn btn-default">Back</a>
+                    <button type="submit" class="btn btn-primary">Save</button>
+                </div>
+                <!-- /.box-footer-->
+            </div>
+        </form>
+
+        <!-- /.box -->
+    </section>
+    <!-- /.content -->
+</div>
+<!-- /.content-wrapper -->
+
+
+@section Styles{
+    <!-- DataTables -->
+    <link rel="stylesheet" href="~/adminlte/components/datatables.net-bs/css/dataTables.bootstrap.min.css">
+
+}
+
+
+@section Scripts{
+
+    <partial name="_ValidationScriptsPartial" />
+
+<script type="text/javascript">
+
+ 
+
+    $("#invprojid").on('change', function () {
+        debugger
+        var id = $(this).val();
+        Bindamount(id);
+    })
+
+    var Bindamount = function (Id) {
+        debugger
+        $.ajax({
+            type: "GET",
+            url: "/InvoiceMaster/Bindamount?ProjectId=" + Id,
+            dataType: "json",
+            data: {},
+            contentType: "application/json",
+            success: function (res) {
+                //$("#txtdeviceworkphone").empty();
+                $("#invamount").empty();
+                $("#invamount").val(res);
+                $("#invamountold").val(res);
+            },
+            error: function (res, err) {
+
+            }
+        });
+
+    };
+
+    $("#invamount").on('change', function () {
+
+        debugger
+        var amt = $("#invamount").val();
+        var amtold = $("#invamountold").val();
+        if (amt < amtold) {
+            var different = amtold - amt
+            $("#invpendingamount").val(different);
+        }
+        if (amtold < amt) {
+            $("#invpendingamount").val("");
+        }
+    })
+
+    $("#invpendingamount").on("blur", function () {
+        debugger
+
+        var amunt = $(this).val();
+        var filter = /^\d*(?:\.\d{1,2})?$/;
+        if (filter.test(amunt)) {
+            $(".prjcurncyvalid").show();
+            return false;
+        }
+        else {
+            $(".prjcurncyvalid").hide();
+            return false;
+        }
+    });
+</script>
+
+    @*<script type="text/javascript">
+
+            $('#btnsave').click(function () {
+                debugger
+                var id = $("#hideid").val();
+                var type = $("#ddlSelectionList option:selected").val();
+                var text = $("#datatext").val();
+                var description = $("#datadescription").val();
+                var isactive = $("#ckisactive").is(":checked");
+
+                var Isvalid = true;
+                if (text == null || text == undefined || text == "") {
+                    $("#datatext").attr('maxlength', '50');
+                    $(".spantext").show();
+                    Isvalid = false;
+                }
+
+                if (description == null || description == undefined || description == "") {
+                    $(".spandescription").show();
+                    Isvalid = false;
+                }
+
+                if (type == null || type == undefined || type == "") {
+                    $(".spanSelection").show();
+                    Isvalid = false;
+
+                }
+                if (!Isvalid) {
+                    return false;
+                }
+                $(".text-danger").hide();
+
+
+                var fileData = new FormData();
+                fileData.append('Id', id);
+                fileData.append('Type', type);
+                fileData.append('Text', text);
+                fileData.append('Description', description);
+                fileData.append('isactive', isactive);
+
+
+                $.ajax({
+                    url: '/DataMaster/SubmitForm',
+                    type: "POST",
+                    contentType: false,
+                    processData: false,
+                    data: fileData,
+                    success: function (result) {
+                        $("#AddData").modal('hide');
+                        alert(result.message);
+                        window.location.reload();
+                    },
+                    error: function (err) {
+                        alert("Fail!");
+                    }
+                });
+            });
+
+
+        </script>*@
+
+}

@@ -1,12 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using coderush.Data;
 using coderush.Models;
+using coderush.Models.ViewModels;
 using coderush.Services.Security;
 using coderush.ViewModels;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -21,7 +24,8 @@ namespace coderush.Controllers
         private readonly IdentityDefaultOptions _identityDefaultOptions;
         private readonly SuperAdminDefaultOptions _superAdminDefaultOptions;
         private readonly ApplicationDbContext _context;
-        private readonly UserManager<IdentityUser> _userManager;
+        private readonly UserManager<ApplicationUser> _userManager;
+        private readonly IWebHostEnvironment _webHostEnvironment;
 
         //dependency injection through constructor, to directly access services
         public MembershipController(
@@ -29,7 +33,8 @@ namespace coderush.Controllers
             IOptions<IdentityDefaultOptions> identityDefaultOptions,
             IOptions<SuperAdminDefaultOptions> superAdminDefaultOptions,
             ApplicationDbContext context,
-            UserManager<IdentityUser> userManager
+             IWebHostEnvironment webHostEnvironment,
+            UserManager<ApplicationUser> userManager
             )
         {
             _security = security;
@@ -37,6 +42,7 @@ namespace coderush.Controllers
             _superAdminDefaultOptions = superAdminDefaultOptions.Value;
             _context = context;
             _userManager = userManager;
+            _webHostEnvironment = webHostEnvironment; ;
         }
 
         public IActionResult Index()
@@ -50,13 +56,14 @@ namespace coderush.Controllers
         [HttpGet]
         public IActionResult ChangeProfile(string id)
         {
+          
+
             if (id == null)
             {
                 return NotFound();
             }
 
-            IdentityUser appUser = new IdentityUser();
-            appUser = _security.GetMemberByApplicationId(id);
+           var appUser = _security.GetMemberByApplicationId(id);
 
             if (appUser == null)
             {
@@ -69,18 +76,37 @@ namespace coderush.Controllers
         //post submited change profile request
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> SubmitChangeProfile([Bind("Id,EmailConfirmed,Email,PhoneNumber")] ApplicationUser applicationUser)
+        public async Task<IActionResult> SubmitChangeProfile([Bind("Id,EmailConfirmed,Email,PhoneNumber,JoiningDate,ProfilePicture")] ApplicationViewModel applicationUser)
         {
             try
             {
+
                 if (!ModelState.IsValid)
                 {
                     TempData[StaticString.StatusMessage] = "Error: Model state not valid.";
                     return RedirectToAction(nameof(ChangeProfile), new { id = applicationUser.Id });
                 }
 
-                ApplicationUser updatedUser = new ApplicationUser();
-                updatedUser = _security.GetMemberByApplicationId(applicationUser.Id);
+                string wwwPath = this._webHostEnvironment.WebRootPath;
+                string contentPath = this._webHostEnvironment.ContentRootPath;
+                var filename = applicationUser.ProfilePicture.FileName.ToString();
+                string path = Path.Combine(this._webHostEnvironment.WebRootPath, "document/Userimage");
+                //if (!Directory.Exists(path))
+                //{
+                //    Directory.CreateDirectory(path);
+                //}
+
+                List<string> uploadedFiles = new List<string>();
+
+                string fileName = Path.GetFileName(applicationUser.ProfilePicture.FileName);
+                string fileext = Path.GetExtension(fileName);
+                using (FileStream stream = new FileStream(Path.Combine(path, applicationUser.Id + fileext), FileMode.Create))
+                {
+                    applicationUser.ProfilePicture.CopyTo(stream);
+                    uploadedFiles.Add(fileName);
+                }
+
+                var updatedUser = _security.GetMemberByApplicationId(applicationUser.Id);
                 if (updatedUser == null)
                 {
                     TempData[StaticString.StatusMessage] = "Error: Can not found the member.";
@@ -96,6 +122,9 @@ namespace coderush.Controllers
                 updatedUser.Email = applicationUser.Email;
                 updatedUser.PhoneNumber = applicationUser.PhoneNumber;
                 updatedUser.EmailConfirmed = applicationUser.EmailConfirmed;
+                updatedUser.JoiningDate = applicationUser.JoiningDate;
+                updatedUser.ProfilePicture = applicationUser.Id + fileext;
+                
 
                 _context.Update(updatedUser);
                 await _context.SaveChangesAsync();

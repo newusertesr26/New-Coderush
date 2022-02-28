@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace DemoCreate.DataEnum
+namespace coderush.DataEnum
 {
         public enum DataSelection
         {

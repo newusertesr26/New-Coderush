@@ -1,4 +1,4 @@
-﻿using DemoCreate.DataEnum;
+﻿using coderush.DataEnum;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -11,8 +11,12 @@ namespace coderush.Models
     public class DataMaster
     {
         public int Id { get; set; }
+        [Required]
         public string Type { get; set; }
+        [Required]
         public string Text { get; set; }
+        [Required]
+        [StringLength(60, MinimumLength = 3)]
         public string Description { get; set; }
         public bool Isactive { get; set; }
         public bool Isdeleted { get; set; }

@@ -11,18 +11,19 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.Extensions.Logging;
 using coderush.Services.Security;
 using Microsoft.Extensions.Options;
+using coderush.Models;
 
 namespace coderush.Areas.Identity.Pages.Account
 {
     [AllowAnonymous]
     public class LoginModel : PageModel
     {
-        private readonly SignInManager<IdentityUser> _signInManager;
+        private readonly SignInManager<ApplicationUser> _signInManager;
         private readonly ILogger<LoginModel> _logger;
         private readonly IdentityDefaultOptions _identityDefaultOptions;
 
         public LoginModel(
-            SignInManager<IdentityUser> signInManager, 
+            SignInManager<ApplicationUser> signInManager, 
             ILogger<LoginModel> logger,
             IOptions<IdentityDefaultOptions> identityDefaultOptions
             )

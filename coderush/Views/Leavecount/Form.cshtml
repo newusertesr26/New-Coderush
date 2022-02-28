@@ -1,0 +1,177 @@
+﻿@model LeaveCount
+@{ ViewData["Title"] = "LeaveCount Form"; }
+
+<!-- Content Wrapper. Contains page content -->
+<div class="content-wrapper">
+    <!-- Content Header (Page header) -->
+    <section class="content-header">
+        <h1>
+            @ViewData["Title"]
+        </h1>
+        <p>
+            @await Html.PartialAsync(PartialView.StatusMessage, TempData[StaticString.StatusMessage])
+        </p>
+
+    </section>
+    <!-- Main content -->
+    <section class="content">
+        <!-- Default box -->
+        <form asp-controller="LeaveCount" asp-action="SubmitForm" method="post">
+            <div class="box">
+                <div class="box-header with-border">
+                    <h3 class="box-title">Create or edit existing LeaveCount item</h3>
+                    <div class="box-tools pull-right">
+                        <button type="button" class="btn btn-box-tool" data-widget="collapse" data-toggle="tooltip"
+                                title="Collapse">
+                            <i class="fa fa-minus"></i>
+                        </button>
+                        <button type="button" class="btn btn-box-tool" data-widget="remove" data-toggle="tooltip" title="Remove">
+                            <i class="fa fa-times"></i>
+                        </button>
+                    </div>
+                </div>
+                <div class="box-body">
+                    <input type="hidden" asp-for="Id" />
+                    <div class="form-group">
+                        <label asp-for="Userid"></label>
+                        <input id="levuserid" asp-for="Userid" class="form-control" readonly />
+                        <span asp-validation-for="Userid" class="text-danger"></span>
+                        @*<span class="text-danger hidespan spantext">Please enter Text</span>*@
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="Fromdate"></label>
+                        <input type="date" asp-for="Fromdate" id="levfrmdate" class="form-control" />
+                        <span asp-validation-for="Fromdate" class="text-danger"></span>
+                        @*<span class="text-danger hidespan spantext">Please enter Text</span>*@
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="Todate"></label>
+                        <input id="levtodate" type="date" asp-for="Todate" class="form-control" />
+                        <span asp-validation-for="Todate" class="text-danger"></span>
+                        @*<span class="text-danger hidespan spantext">Please enter Text</span>*@
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="Count"></label>
+                        <input id="levcount" asp-for="Count" class="form-control" />
+                        <span asp-validation-for="Count" class="text-danger"></span>
+                        @*<span class="text-danger hidespan spantext">Please enter Text</span>*@
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="Description"></label>
+                        <textarea asp-for="Description" rows="4" cols="50" type="text" id="levdescription" value="" class="form-control"></textarea>
+                        <span asp-validation-for="Description" class="text-danger"></span>
+                        @*<span class="text-danger hidespan spantext">Please enter Text</span>*@
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="Isapprove"></label>
+                        <input asp-for="Isapprove" type="checkbox" id="isaprv" class="flat-red" />
+                    </div>
+
+                </div>
+                <!-- /.box-body -->
+                <div class="box-footer">
+                    <a href="/LeaveCount/LeaveIndex" class="btn btn-default">Back</a>
+                    <button type="submit" @*id="btninsert"*@ class="btn btn-primary">Save</button>
+                </div>
+                <!-- /.box-footer-->
+            </div>
+        </form>
+
+
+        <!-- /.box -->
+    </section>
+    <!-- /.content -->
+</div>
+<!-- /.content-wrapper -->
+
+
+@section Styles{
+    <!-- DataTables -->
+    <link rel="stylesheet" href="~/adminlte/components/datatables.net-bs/css/dataTables.bootstrap.min.css">
+
+}
+
+
+@section Scripts{
+
+    <partial name="_ValidationScriptsPartial" />
+    <script src="~/js/LeaveCount.js"></script>
+    <script type="text/javascript">
+
+        $('#levtodate').on('change', function () {
+            var fromdate = $('#levfrmdate').val();
+            var todate = $('#levtodate').val();
+            if (todate < fromdate) {
+                alert('To date should be greater than From date.');
+                $('#levtodate').val('');
+            }
+        });
+
+        //$(document).ready(function () {
+        //    debugger
+        //    var BinddrpdwnData = $("#leavedrpdwn option:selected").val();
+        //    $("#levuserid").val(BinddrpdwnData);
+        //});
+    </script>
+    @*<script type="text/javascript">
+
+            $('#btnsave').click(function () {
+                debugger
+                var id = $("#hideid").val();
+                var type = $("#ddlSelectionList option:selected").val();
+                var text = $("#datatext").val();
+                var description = $("#datadescription").val();
+                var isactive = $("#ckisactive").is(":checked");
+
+                var Isvalid = true;
+                if (text == null || text == undefined || text == "") {
+                    $("#datatext").attr('maxlength', '50');
+                    $(".spantext").show();
+                    Isvalid = false;
+                }
+
+                if (description == null || description == undefined || description == "") {
+                    $(".spandescription").show();
+                    Isvalid = false;
+                }
+
+                if (type == null || type == undefined || type == "") {
+                    $(".spanSelection").show();
+                    Isvalid = false;
+
+                }
+                if (!Isvalid) {
+                    return false;
+                }
+                $(".text-danger").hide();
+
+
+                var fileData = new FormData();
+                fileData.append('Id', id);
+                fileData.append('Type', type);
+                fileData.append('Text', text);
+                fileData.append('Description', description);
+                fileData.append('isactive', isactive);
+
+
+                $.ajax({
+                    url: '/DataMaster/SubmitForm',
+                    type: "POST",
+                    contentType: false,
+                    processData: false,
+                    data: fileData,
+                    success: function (result) {
+                        $("#AddData").modal('hide');
+                        alert(result.message);
+                        window.location.reload();
+                    },
+                    error: function (err) {
+                        alert("Fail!");
+                    }
+                });
+            });
+
+
+        </script>*@
+
+}

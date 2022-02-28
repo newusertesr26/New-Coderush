@@ -1,5 +1,6 @@
 ﻿using coderush.Data;
 using coderush.Models;
+using coderush.Models.ViewModels;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Options;
 using System;
@@ -12,13 +13,13 @@ namespace coderush.Services.Security
     //custom service provided for common user and membership activities such as get user , create user etc..
     public class Common : ICommon
     {
-        private readonly UserManager<IdentityUser> _userManager;
+        private readonly UserManager<ApplicationUser> _userManager;
         private readonly RoleManager<IdentityRole> _roleManager;
         private readonly SuperAdminDefaultOptions _superAdminDefaultOptions;
         private readonly ApplicationDbContext _context;
 
         public Common(
-            UserManager<IdentityUser> userManager,
+            UserManager<ApplicationUser> userManager,
             RoleManager<IdentityRole> roleManager,
             IOptions<SuperAdminDefaultOptions> superAdminDefaultOptions,
             ApplicationDbContext context
@@ -34,22 +35,22 @@ namespace coderush.Services.Security
         {
             try
             {
-                ApplicationUser superAdmin = new ApplicationUser();
 
-                superAdmin = await CreateApplicationUser(
-                    new ApplicationUser
-                    {
-                        Email = _superAdminDefaultOptions.Email,
-                        UserName = _superAdminDefaultOptions.Email,
-                        EmailConfirmed = true,
-                        isSuperAdmin = true
-                    }
-                    , _superAdminDefaultOptions.Password);
+                var superAdmin = await CreateApplicationUser(
+                     new ApplicationViewModel
+                     {
+                         Email = _superAdminDefaultOptions.Email,
+                         UserName = _superAdminDefaultOptions.Email,
+                         EmailConfirmed = true,
+                         isSuperAdmin = true
+                     }
+                     , _superAdminDefaultOptions.Password);
 
                 //loop all the roles and then fill to SuperAdmin so he become powerfull
-                IdentityUser selectedUser = await _userManager.FindByEmailAsync(superAdmin.Email);
+                var user = await _userManager.FindByEmailAsync(superAdmin.Email);
+
                 List<string> roles = new List<string>();
-                if (selectedUser != null)
+                if (user != null)
                 {
                     foreach (var item in typeof(App.Pages).GetNestedTypes())
                     {
@@ -59,14 +60,14 @@ namespace coderush.Services.Security
                             await _roleManager.CreateAsync(new IdentityRole(roleName));
                             roles.Add(roleName);
                         }
-                        
+
                     }
-                    
-                    await _userManager.AddToRolesAsync(selectedUser, roles);
+
+                    await _userManager.AddToRolesAsync(user, roles);
                 }
-                
+
             }
-            catch (Exception) 
+            catch (Exception)
             {
 
                 throw;
@@ -99,8 +100,8 @@ namespace coderush.Services.Security
             try
             {
                 List<ApplicationUser> users = new List<ApplicationUser>();
-                users = _context.ApplicationUser.ToList();
-                return users;
+                var user = _context.ApplicationUser.ToList();
+                return user;
             }
             catch (Exception)
             {
@@ -113,9 +114,9 @@ namespace coderush.Services.Security
         {
             try
             {
-                ApplicationUser appUser = new ApplicationUser();
-                appUser = _context.ApplicationUser.Where(x => x.Id.Equals(applicationId)).FirstOrDefault();
-                return appUser;
+                var userdata = _context.ApplicationUser.Where(x => x.Id.Equals(applicationId)).FirstOrDefault();
+
+                return userdata;
             }
             catch (Exception)
             {
@@ -124,7 +125,7 @@ namespace coderush.Services.Security
             }
         }
 
-        public async Task<ApplicationUser> CreateApplicationUser(ApplicationUser applicationUser, string password)
+        public async Task<ApplicationUser> CreateApplicationUser(ApplicationViewModel applicationUser, string password)
         {
             try
             {
@@ -133,7 +134,7 @@ namespace coderush.Services.Security
                 appUser.Email = applicationUser.Email;
                 appUser.UserName = applicationUser.Email;
                 appUser.EmailConfirmed = applicationUser.EmailConfirmed;
-                appUser.isSuperAdmin = applicationUser.isSuperAdmin;                
+                appUser.isSuperAdmin = applicationUser.isSuperAdmin;
 
                 await _userManager.CreateAsync(appUser, password);
 
@@ -146,6 +147,6 @@ namespace coderush.Services.Security
             }
         }
 
-        
+
     }
 }

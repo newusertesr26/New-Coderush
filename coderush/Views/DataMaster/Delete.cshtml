@@ -1,5 +1,7 @@
 ﻿@model DataMaster
-@{ ViewData["Title"] = "Delete Todo"; }
+@{
+    ViewData["Title"] = "Delete DataMaster";
+}
 
 <!-- Content Wrapper. Contains page content -->
 <div class="content-wrapper">
@@ -16,10 +18,10 @@
     <!-- Main content -->
     <section class="content">
         <!-- Default box -->
-        <form asp-controller="DataMaster" asp-action="Delete" method="post">
+        <form asp-controller="DataMaster" asp-action="SubmitDelete" method="post">
             <div class="box">
                 <div class="box-header with-border">
-                    <h3 class="box-title">Delete todo item? this process is irreversible</h3>
+                    <h3 class="box-title">Delete datamaster item? this process is irreversible</h3>
                     <div class="box-tools pull-right">
                         <button type="button" class="btn btn-box-tool" data-widget="collapse" data-toggle="tooltip"
                                 title="Collapse">
@@ -33,26 +35,18 @@
                 <div class="box-body">
                     <input type="hidden" asp-for="Id" />
                     <div class="form-group">
-                        <label asp-for="Text"></label>
-                        <input asp-for="Text" class="form-control" disabled />
+                        <label asp-for="Id"></label>
+                        <input asp-for="Id" class="form-control" disabled />
                     </div>
                     <div class="form-group">
-                        <label asp-for="Type"></label>
-                        <input asp-for="Type" class="form-control" disabled />
-                    </div>
-                    <div class="form-group">
-                        <label asp-for="Description"></label>
-                        <input asp-for="Description" class="form-control" disabled />
-                    </div>
-                    <div class="form-group">
-                        <label>Is active</label>
-                        <input asp-for="Isactive" type="checkbox" class="flat-red" disabled />
+                        <label>Is Active</label>
+                        <input asp-for="Isactive" type="checkbox" class="flat-red" disabled/>
                     </div>
 
                 </div>
                 <!-- /.box-body -->
                 <div class="box-footer">
-                    <a href="//DataMaster/DataMasters" class="btn btn-default">Back</a>
+                    <a href="/DataMaster/Index" class="btn btn-default">Back</a>
                     <button type="submit" class="btn btn-danger">Delete</button>
                 </div>
                 <!-- /.box-footer-->

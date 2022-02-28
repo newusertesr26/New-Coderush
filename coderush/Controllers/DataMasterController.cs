@@ -1,193 +1,242 @@
 ﻿using coderush.Data;
+using coderush.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.Extensions.Logging;
 using System;
-using Microsoft.Extensions.Hosting;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
-using DemoCreate.DataEnum;
-using Microsoft.AspNetCore.Mvc.Rendering;
-using coderush.Models;
+using coderush.DataEnum;
 using Microsoft.AspNetCore.Authorization;
-using coderush.Services.Security;
-using Microsoft.Extensions.Options;
+using coderush.Models.ViewModels;
 
 namespace coderush.Controllers
 {
-    [Authorize(Roles = Services.App.Pages.Membership.RoleName)]
+    //[Authorize(Roles = Services.App.Pages.DataMaster.RoleName)]
     public class DataMasterController : Controller
     {
-        private readonly Services.Security.ICommon _security;
-        private readonly IdentityDefaultOptions _identityDefaultOptions;
-        private readonly SuperAdminDefaultOptions _superAdminDefaultOptions;
+        private readonly ILogger<HomeController> _logger;
+        private readonly UserManager<ApplicationUser> _userManager;
+        private readonly RoleManager<IdentityRole> _roleManager;
         private readonly ApplicationDbContext _context;
-        private readonly UserManager<IdentityUser> _userManager;
-
-        //dependency injection through constructor, to directly access services
-        public DataMasterController(
-            Services.Security.ICommon security,
-            IOptions<IdentityDefaultOptions> identityDefaultOptions,
-            IOptions<SuperAdminDefaultOptions> superAdminDefaultOptions,
-            ApplicationDbContext context,
-            UserManager<IdentityUser> userManager
-            )
+        //private readonly IHostEnvironment _hostingEnvironment;
+        public DataMasterController(ILogger<HomeController> logger, UserManager<ApplicationUser> userManager,
+           RoleManager<IdentityRole> roleManager,
+           ApplicationDbContext context)
+           //IHostEnvironment hostingEnvironment)
         {
-            _security = security;
-            _identityDefaultOptions = identityDefaultOptions.Value;
-            _superAdminDefaultOptions = superAdminDefaultOptions.Value;
-            _context = context;
+            _logger = logger;
+            _roleManager = roleManager;
             _userManager = userManager;
+            _context = context;
+            //_hostingEnvironment = hostingEnvironment;
         }
-
-        public IActionResult DataMasters()
-
+        public IActionResult Index()
         {
             ViewBag.SelectionList = Enum.GetValues(typeof(DataSelection)).Cast<DataSelection>().Select(v => new SelectListItem
             {
                 Text = v.ToString(),
                 Value = ((int)v).ToString(),
             }).ToList();
-            //ViewBag.Role = HttpContext.Session.GetString("Role");
-            return View(_context.Datamaster.Where(x => !x.Isdeleted).ToList());
+
+            var datamaster = _context.Datamaster.Where(x => !x.Isdeleted).ToList();
+            return View(datamaster);
         }
 
-        [HttpGet]
-        public IActionResult Data(string id)
-        {
-            //create new
-            if (id == null)
-            {
-                DataMaster newdata = new DataMaster();
-                return View(newdata);
-            }
-
-            //edit todo
-            DataMaster data = new DataMaster();
-            data = _context.Datamaster.Where(x => x.Id.Equals(id)).FirstOrDefault();
-
-            if (data == null)
-            {
-                return NotFound();
-            }
-
-            return View(data);
-
-        }
-
+        //post submitted todo data. if todo.TodoId is null then create new, otherwise edit
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> SubmitDataForm([Bind("Id", "Type", "Isactive")] DataMaster dataMaster)
+        public IActionResult SubmitForm([Bind("Id", "Type", "Text", "Description", "Isactive")] DataMaster dataMasters)
         {
-            bool IsDataExist = false;
-
-            DataMaster data = await _context.Datamaster.FindAsync(dataMaster.Id);
-
-            if (data != null)
-            {
-                IsDataExist = true;
-            }
-            else
-            {
-                data = new DataMaster();
-            }
-            var user = _userManager.GetUserAsync(User).Result;
             try
             {
-                //if (!ModelState.IsValid)
-                //{
-                //    TempData[StaticString.StatusMessage] = "Error: Model state not valid.";
-                //    return RedirectToAction(nameof(Form), new { id = DataMaster.Id ?? "" });
-                //}
+                if (!ModelState.IsValid)
+                {
+                    TempData[StaticString.StatusMessage] = "Error: Model state not valid.";
+                    return RedirectToAction(nameof(Form), new { id = dataMasters.Id > 0 ? dataMasters.Id : 0 });
+                }
+
+                var user = _userManager.GetUserAsync(User).Result;
 
                 //create new
-                if (dataMaster.Type == null)
+                if (dataMasters.Id == 0)
                 {
-                    DataMaster newdata = new DataMaster();
-                    newdata.Type = dataMaster.Type;
-                    newdata.Text = dataMaster.Text;
-                    newdata.Description = dataMaster.Description;
-                    newdata.Isactive = dataMaster.Isactive;
-
-
-                    if (IsDataExist)
-                    {
-                        data.UpdatedBy = user.Id;
-                        data.UpdatedDate = DateTime.Now;
-                        _context.Update(data);
-                    }
-                    else
-                    {
-                        data.CreatedBy = user.Id;
-                        data.CreatedDate = DateTime.Now;
-                        _context.Add(data);
-                    }
-                    _context.Datamaster.Add(dataMaster);
+                    DataMaster newdataMaster = new DataMaster();
+                    newdataMaster.Description = dataMasters.Description;
+                    newdataMaster.CreatedDate = DateTime.Now;
+                    newdataMaster.Text = dataMasters.Text;
+                    newdataMaster.Type = dataMasters.Type;
+                    newdataMaster.Isactive = dataMasters.Isactive;
+                    newdataMaster.CreatedBy = user.Id;
+                    _context.Datamaster.Add(newdataMaster);
                     _context.SaveChanges();
 
-                    TempData[StaticString.StatusMessage] = "Create new data item success.";
-                    return RedirectToAction(nameof(Data), new { id = dataMaster.Id });
+                    TempData[StaticString.StatusMessage] = "Create new data master item success.";
+                    return RedirectToAction(nameof(Form), new { id = dataMasters.Id > 0 ? dataMasters.Id : 0 });
                 }
 
                 //edit existing
-                DataMaster editdata = new DataMaster();
-                editdata = _context.Datamaster.Where(x => x.Id.Equals(dataMaster.Id)).FirstOrDefault();
-                editdata.Type = dataMaster.Type;
-                editdata.Text = dataMaster.Text;
-                editdata.Description = dataMaster.Description;
-                _context.Update(editdata);
+                DataMaster editDatamaster = new DataMaster();
+                editDatamaster = _context.Datamaster.Where(x => x.Id.Equals(dataMasters.Id)).FirstOrDefault();
+                editDatamaster.Text = dataMasters.Text;
+                editDatamaster.Description = dataMasters.Description;
+                editDatamaster.UpdatedBy = user.Id;
+                editDatamaster.UpdatedDate = DateTime.Now;
+                editDatamaster.Isactive = dataMasters.Isactive;
+                _context.Update(editDatamaster);
                 _context.SaveChanges();
 
-                TempData[StaticString.StatusMessage] = "Edit existing data item success.";
-                return RedirectToAction(nameof(Data), new { id = dataMaster.Id });
+                TempData[StaticString.StatusMessage] = "Edit existing data master item success.";
+                return RedirectToAction(nameof(Form), new { id = dataMasters.Id > 0 ? dataMasters.Id : 0 });
             }
             catch (Exception ex)
             {
 
                 TempData[StaticString.StatusMessage] = "Error: " + ex.Message;
-                return RedirectToAction(nameof(Data), new { id = dataMaster.Id });
+                return RedirectToAction(nameof(Form), new { id = dataMasters.Id > 0 ? dataMasters.Id : 0 });
             }
         }
 
+        //display datamaster create edit form
         [HttpGet]
-        public IActionResult Delete(string id)
+        public IActionResult Form(int id)
         {
-            if (id == null)
+            ViewBag.SelectionList = Enum.GetValues(typeof(DataSelection)).Cast<DataSelection>().Select(v => new SelectListItem
+            {
+                Text = v.ToString(),
+                Value = ((int)v).ToString(),
+            }).ToList();
+
+            //create new
+            if (id == 0)
+            {
+                DataMaster newdatamaster = new DataMaster();
+                return View(newdatamaster);
+            }
+
+            //edit data master
+            DataMaster editnewdatamaster = new DataMaster();
+            editnewdatamaster = _context.Datamaster.Where(x => x.Id.Equals(id)).FirstOrDefault();
+
+            if (editnewdatamaster == null)
             {
                 return NotFound();
             }
 
-            var data = _context.Datamaster.Where(x => x.Id.Equals(id)).FirstOrDefault();
-            return View(data);
+            return View(editnewdatamaster);
+
         }
 
-        //delete submitted todo item if found, otherwise 404
+        //display data master item for deletion
+        [HttpGet]
+        public IActionResult Delete(int id)
+        {
+            if (id == 0)
+            {
+                return NotFound();
+            }
+
+            var datamaster = _context.Datamaster.Where(x => x.Id.Equals(id)).FirstOrDefault();
+            return View(datamaster);
+        }
+
+        //delete submitted data master item if found, otherwise 404
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult SubmitDelete([Bind("Id")] DataMaster dataMaster)
+        public IActionResult SubmitDelete([Bind("Id")] DataMaster data)
         {
             try
             {
-                var deletedata = _context.Datamaster.Where(x => x.Id.Equals(dataMaster.Id)).FirstOrDefault();
-                if (deletedata == null)
+                var deletedatamaster = _context.Datamaster.Where(x => x.Id.Equals(data.Id)).FirstOrDefault();
+                if (deletedatamaster == null)
                 {
                     return NotFound();
                 }
 
-                _context.Datamaster.Remove(deletedata);
+                deletedatamaster.Isdeleted = true;
+                _context.Datamaster.Update(deletedatamaster);
                 _context.SaveChanges();
 
-                TempData[StaticString.StatusMessage] = "Delete data item success.";
-                return RedirectToAction(nameof(DataMasters));
+                TempData[StaticString.StatusMessage] = "Delete data master item success.";
+                return RedirectToAction(nameof(Index));
             }
             catch (Exception ex)
             {
 
                 TempData[StaticString.StatusMessage] = "Error: " + ex.Message;
-                return RedirectToAction(nameof(Delete), new { id = dataMaster.Id });
+                return RedirectToAction(nameof(Delete), new { id = data.Id > 0 ? data.Id : 0 });
             }
         }
+
+        //[HttpPost]
+        //public async Task<IActionResult> AddOrEdit(DataMaster model)
+        //{
+        //    bool IsDataExist = false;
+
+        //    DataMaster data = await _context.Datamaster.FindAsync(model.Id);
+
+        //    if (data != null)
+        //    {
+        //        IsDataExist = true;
+        //    }
+        //    else
+        //    {
+        //        data = new DataMaster();
+        //    }
+        //    var user = _userManager.GetUserAsync(User).Result;
+        //    //if (ModelState.IsValid)
+        //    {
+        //        try
+        //        {
+        //            data.Type = model.Type;
+        //            data.Text = model.Text;
+        //            data.Description = model.Description;
+        //            data.Isactive = model.Isactive;
+
+        //            if (IsDataExist)
+        //            {
+        //                data.UpdatedBy = user.Id;
+        //                data.UpdatedDate = DateTime.Now;
+        //                _context.Update(data);
+        //            }
+        //            else
+        //            {
+        //                data.CreatedBy = user.Id;
+        //                data.CreatedDate = DateTime.Now;
+        //                _context.Add(data);
+        //            }
+        //            await _context.SaveChangesAsync();
+        //    }
+        //        catch (Exception ex)
+        //    {
+        //        return Json(new { success = false, message = ex.Message });
+        //    }
+        //}
+
+        //    return Json(new { success = true, message = "Data saved successfully." });
+        //}
+
+        [HttpGet]
+        public IActionResult EditData(int id)
+        {
+            var Data = _context.Datamaster.Where(x => x.Id == id).FirstOrDefault();
+            return Json(Data);
+        }
+
+        //[HttpPost]
+        //public async Task<IActionResult> Delete(int Id)
+        //{
+        //    var data = await _context.Datamaster.FindAsync(Id);
+        //    data.Isdeleted = true;
+        //    _context.Datamaster.Update(data);
+        //    await _context.SaveChangesAsync();
+
+        //    return Json(new { success = true, message = "Data deleted successfully." });
+        //}
     }
 }
+
+

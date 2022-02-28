@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using coderush.Models; 
+﻿using coderush.Models;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
@@ -19,5 +16,11 @@ namespace coderush.Data
         //custom entity, for simple todo app
         public DbSet<Todo> Todo { get; set; }
         public DbSet<DataMaster> Datamaster { get; set; }
+        public DbSet<CandidateMaster> CandidateMaster { get; set; }
+        public DbSet<ExpenseMaster> ExpenseMaster { get; set; }
+        public DbSet<InvoiceMaster> InvoiceMaster { get; set; }
+        public DbSet<ProjectMaster> ProjectMaster { get; set; }
+        public DbSet<LeadMaster> LeadMaster { get; set; }
+        public DbSet<LeaveCount> LeaveCount { get; set; }
     }
 }
