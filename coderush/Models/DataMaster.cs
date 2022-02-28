@@ -11,13 +11,17 @@ namespace coderush.Models
     public class DataMaster
     {
         public int Id { get; set; }
+        [Display(Name = "Type:")]
         [Required]
         public string Type { get; set; }
+        [Display(Name = "Text:")]
         [Required]
         public string Text { get; set; }
+        [Display(Name = "Description:")]
         [Required]
         [StringLength(60, MinimumLength = 3)]
         public string Description { get; set; }
+        [Display(Name = "Isactive:")]
         public bool Isactive { get; set; }
         public bool Isdeleted { get; set; }
         public string CreatedBy { get; set; }

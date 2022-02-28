@@ -15,6 +15,6 @@ namespace coderush.Models
         public string TodoItem { get; set; }
         [Display(Name = "Is Done?")]
         public bool IsDone { get; set; }
-        public DateTime CreatedDate { get; set; }
+        public DateTime? CreatedDate { get; set; }
     }
 }

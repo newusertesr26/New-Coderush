@@ -1,5 +1,5 @@
 ﻿@model coderush.Models.ViewModels.CandidateMastersViewModel
-@{ ViewData["Title"] = "CandidateMaster Form"; }
+@{ ViewData["Title"] = "Candidate Form"; }
 
 <!-- Content Wrapper. Contains page content -->
 <div class="content-wrapper">
@@ -19,7 +19,7 @@
         <form asp-controller="CandidateMaster" enctype="multipart/form-data" asp-action="SubmitForm" method="post">
             <div class="box">
                 <div class="box-header with-border">
-                    <h3 class="box-title">Create or edit existing CandidateMaster item</h3>
+                    <h3 class="box-title">Create or edit existing Candidate item</h3>
                     <div class="box-tools pull-right">
                         <button type="button" class="btn btn-box-tool" data-widget="collapse" data-toggle="tooltip"
                                 title="Collapse">
@@ -34,7 +34,7 @@
                     <input type="hidden" asp-for="Id" />
                     <div class="form-group">
                         <label asp-for="Name"></label>
-                        <input id="candidatename" asp-for="Name" class="form-control" />
+                        <input id="candidatename" maxlength="100" asp-for="Name" class="form-control" />
                         <span asp-validation-for="Name" class="text-danger"></span>
                         @*<span class="text-danger hidespan spantext">Please enter Text</span>*@
                     </div>
@@ -53,7 +53,10 @@
                     <div class="form-group">
                         <label asp-for="Technologies"></label>
                         @*@Html.DropDownList("Selection", new SelectList(ViewBag.SelectionList, "Value", "Text"), new { @class = "form-control", @id = "ddlSelectionList" })*@
-                        <select name="technologies" class="form-control" asp-items="@ViewBag.CandidatetechnologiesList" asp-for="Technologies"></select>
+                        <select name="technologies" class="form-control" asp-items="@ViewBag.CandidatetechnologiesList" asp-for="Technologies">
+                            <option value="">-- Select --</option>
+
+                        </select>
                         <span asp-validation-for="Technologies" class="text-danger"></span>
                         @*<span class="text-danger hidespan spanSelection">Please select Type</span>*@
                     </div>
@@ -68,6 +71,9 @@
                     <div class="form-group">
                         <label asp-for="IsActive"></label>
                         <input asp-for="IsActive" type="checkbox" id="ckisactive" class="flat-red" />
+                    </div>
+                    <div class="form-group">
+                        <textarea TextMode="MultiLine" rows="4" cols="50" type="text" value="" class="form-control"></textarea>
                     </div>
 
                 </div>

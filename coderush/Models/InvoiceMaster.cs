@@ -10,16 +10,27 @@ namespace coderush.Models
     {
         public int Id { get; set; }
         [Required]
+        [Display(Name = "ProjectId:")]
+
         public string ProjectId { get; set; }
+        [Display(Name = "Amount:")]
+
         [Required]
         [RegularExpression("^[0-9]*$", ErrorMessage = "Amount must be numeric")]
         public string Amount { get; set; }
+        [Display(Name = "Duedate:")]
+
         [Required]
-        public DateTime Duedate { get; set; }
+        public DateTime? Duedate { get; set; }
+        [Display(Name = "InvoiceNumber:")]
+
         [Required]
         public string InvoiceNumber { get; set; }
+        [Display(Name = "PendingAmount:")]
+
         public string PendingAmount { get; set; }
         public bool Isdeleted { get; set; }
+        [Display(Name = "Isverify:")]
         public bool Isverify { get; set; }
         public string CreatedBy { get; set; }
         public string UpdatedBy { get; set; }
@@ -35,7 +46,7 @@ namespace coderush.Models
         public int Id { get; set; }
         public int ProjectId { get; set; }
         public string Amount { get; set; }
-        public DateTime Duedate { get; set; }
+        public DateTime? Duedate { get; set; }
         public string InvoiceNumber { get; set; }
         public string PendingAmount { get; set; }
         public int TotalAmount { get; set; }

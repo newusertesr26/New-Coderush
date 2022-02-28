@@ -13,49 +13,49 @@ namespace coderush.Services.App
             public const string ControllerName = "DataMaster";
             public const string RoleName = "DataMaster";
             public const string UrlDefault = "/DataMaster/Index";
-            public const string NavigationName = "DataMaster";
+            public const string NavigationName = "Data";
         }
         public static class LeadMaster
         {
             public const string ControllerName = "LeadMaster";
             public const string RoleName = "LeadMaster";
             public const string UrlDefault = "/LeadMaster/LeadIndex";
-            public const string NavigationName = "LeadMaster";
+            public const string NavigationName = "Lead";
         }
         public static class ExpenseMaster
         {
             public const string ControllerName = "ExpenseMaster";
             public const string RoleName = "ExpenseMaster";
             public const string UrlDefault = "/ExpenseMaster/ExpenseIndex";
-            public const string NavigationName = "ExpenseMaster";
+            public const string NavigationName = "Expense";
         }
         public static class CandidateMaster
         {
             public const string ControllerName = "CandidateMaster";
             public const string RoleName = "CandidateMaster";
             public const string UrlDefault = "/CandidateMaster/CandidateIndex";
-            public const string NavigationName = "CandidateMaster";
+            public const string NavigationName = "Candidate";
         }
         public static class ProjectMaster
         {
             public const string ControllerName = "ProjectMaster";
             public const string RoleName = "ProjectMaster";
             public const string UrlDefault = "/ProjectMaster/ProjectIndex";
-            public const string NavigationName = "ProjectMaster";
+            public const string NavigationName = "Project";
         }
         public static class InvoiceMaster
         {
             public const string ControllerName = "InvoiceMaster";
             public const string RoleName = "InvoiceMaster";
             public const string UrlDefault = "/InvoiceMaster/InvoiceIndex";
-            public const string NavigationName = "InvoiceMaster";
+            public const string NavigationName = "Invoice";
         }
         public static class Leavecount
         {
             public const string ControllerName = "Leavecount";
             public const string RoleName = "Leavecount";
             public const string UrlDefault = "/Leavecount/LeaveIndex";
-            public const string NavigationName = "Leavecount";
+            public const string NavigationName = "Leave";
         }
         public static class Todo
         {
