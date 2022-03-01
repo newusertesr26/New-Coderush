@@ -1,14 +1,15 @@
 ﻿@using Microsoft.AspNetCore.Identity
 @inject UserManager<ApplicationUser> _userManager
-@{
-    var email = "";
+@{ var email = "";
     var user = await _userManager.GetUserAsync(User);
     if (user != null)
     {
         email = user.Email;
     }
-}
+    // Get the roles for the user
+    var roles = await _userManager.GetRolesAsync(user);
 
+}
 <aside class="main-sidebar">
     <!-- sidebar: style can be found in sidebar.less -->
     <section class="sidebar">
@@ -18,10 +19,10 @@
                 @*<img src="~/document/Userimage/" height="30" width="30" class="img-circle" alt="User Image">*@
                 @if (user.ProfilePicture != null && user.ProfilePicture != "")
                 {
-            <img src="~/document/Userimage/@user.ProfilePicture" class="user-image" alt="User Image" /> }
-        else
-        {
-            <img src="~/adminlte/dist/img/user2-160x160.jpg" class="user-image" alt="User Image">}
+                    <img src="~/document/Userimage/@user.ProfilePicture" class="user-image" alt="User Image" /> }
+                else
+                {
+                    <img src="~/adminlte/dist/img/user2-160x160.jpg" class="user-image" alt="User Image">}
             </div>
             <div class="pull-left info">
                 <p>@email</p>
@@ -43,87 +44,116 @@
         <!-- sidebar menu: : style can be found in sidebar.less -->
         <ul class="sidebar-menu" data-widget="tree">
             <li class="header">MAIN NAVIGATION</li>
-            <li class="@Html.IsSelected(controller: Pages.DataMaster.ControllerName)">
-                <a href="@Pages.DataMaster.UrlDefault">
-                    <i class="fa fa-th"></i> <span>@Pages.DataMaster.NavigationName</span>
-                    <span class="pull-right-container">
-                        <small class="label pull-right bg-green">List</small>
-                    </span>
-                </a>
-            </li>
-            <li class="@Html.IsSelected(controller: Pages.CandidateMaster.ControllerName)">
-                <a href="@Pages.CandidateMaster.UrlDefault">
-                    <i class="fa fa-th"></i> <span>@Pages.CandidateMaster.NavigationName</span>
-                    <span class="pull-right-container">
-                        <small class="label pull-right bg-green">List</small>
-                    </span>
-                </a>
-            </li>
-            <li class="@Html.IsSelected(controller: Pages.ExpenseMaster.ControllerName)">
-                <a href="@Pages.ExpenseMaster.UrlDefault">
-                    <i class="fa fa-th"></i> <span>@Pages.ExpenseMaster.NavigationName</span>
-                    <span class="pull-right-container">
-                        <small class="label pull-right bg-green">List</small>
-                    </span>
-                </a>
-            </li>
-            <li class="@Html.IsSelected(controller: Pages.LeadMaster.ControllerName)">
-                <a href="@Pages.LeadMaster.UrlDefault">
-                    <i class="fa fa-th"></i> <span>@Pages.LeadMaster.NavigationName</span>
-                    <span class="pull-right-container">
-                        <small class="label pull-right bg-green">List</small>
-                    </span>
-                </a>
-            </li>
-            <li class="@Html.IsSelected(controller: Pages.Leavecount.ControllerName)">
-                <a href="@Pages.Leavecount.UrlDefault">
-                    <i class="fa fa-th"></i> <span>@Pages.Leavecount.NavigationName</span>
-                    <span class="pull-right-container">
-                        <small class="label pull-right bg-green">List</small>
-                    </span>
-                </a>
-            </li>
-            <li class="@Html.IsSelected(controller: Pages.ProjectMaster.ControllerName)">
-                <a href="@Pages.ProjectMaster.UrlDefault">
-                    <i class="fa fa-th"></i> <span>@Pages.ProjectMaster.NavigationName</span>
-                    <span class="pull-right-container">
-                        <small class="label pull-right bg-green">List</small>
-                    </span>
-                </a>
-            </li>
-            <li class="@Html.IsSelected(controller: Pages.InvoiceMaster.ControllerName)">
-                <a href="@Pages.InvoiceMaster.UrlDefault">
-                    <i class="fa fa-th"></i> <span>@Pages.InvoiceMaster.NavigationName</span>
-                    <span class="pull-right-container">
-                        <small class="label pull-right bg-green">List</small>
-                    </span>
-                </a>
-            </li>
-            <li class="@Html.IsSelected(controller: Pages.Todo.ControllerName)">
-                <a href="@Pages.Todo.UrlDefault">
-                    <i class="fa fa-th"></i> <span>@Pages.Todo.NavigationName</span>
-                    <span class="pull-right-container">
-                        <small class="label pull-right bg-green">List</small>
-                    </span>
-                </a>
-            </li>
-            <li class="@Html.IsSelected(controller: Pages.Membership.ControllerName)">
-                <a href="@Pages.Membership.UrlDefault">
-                    <i class="fa fa-th"></i> <span>@Pages.Membership.NavigationName</span>
-                    <span class="pull-right-container">
-                        <small class="label pull-right bg-green">List</small>
-                    </span>
-                </a>
-            </li>
-            <li class="@Html.IsSelected(controller: Pages.Role.ControllerName)">
-                <a href="@Pages.Role.UrlDefault">
-                    <i class="fa fa-th"></i> <span>@Pages.Role.NavigationName</span>
-                    <span class="pull-right-container">
-                        <small class="label pull-right bg-green">List</small>
-                    </span>
-                </a>
-            </li>
-
+            @if (roles.Contains("SuperAdmin"))
+            {
+                <li class="@Html.IsSelected(controller: Pages.DataMaster.ControllerName)">
+                    <a href="@Pages.DataMaster.UrlDefault">
+                        <i class="fa fa-th"></i> <span>@Pages.DataMaster.NavigationName</span>
+                        <span class="pull-right-container">
+                            <small class="label pull-right bg-green">List</small>
+                        </span>
+                    </a>
+                </li>
+            }
+            @if (roles.Contains("SuperAdmin") || roles.Contains("HR"))
+            {
+                <li class="@Html.IsSelected(controller: Pages.CandidateMaster.ControllerName)">
+                    <a href="@Pages.CandidateMaster.UrlDefault">
+                        <i class="fa fa-th"></i> <span>@Pages.CandidateMaster.NavigationName</span>
+                        <span class="pull-right-container">
+                            <small class="label pull-right bg-green">List</small>
+                        </span>
+                    </a>
+                </li>
+            }
+            @if (roles.Contains("SuperAdmin"))
+            {
+                <li class="@Html.IsSelected(controller: Pages.ExpenseMaster.ControllerName)">
+                    <a href="@Pages.ExpenseMaster.UrlDefault">
+                        <i class="fa fa-th"></i> <span>@Pages.ExpenseMaster.NavigationName</span>
+                        <span class="pull-right-container">
+                            <small class="label pull-right bg-green">List</small>
+                        </span>
+                    </a>
+                </li>
+            }
+            @if (roles.Contains("SuperAdmin"))
+            {
+                <li class="@Html.IsSelected(controller: Pages.LeadMaster.ControllerName)">
+                    <a href="@Pages.LeadMaster.UrlDefault">
+                        <i class="fa fa-th"></i> <span>@Pages.LeadMaster.NavigationName</span>
+                        <span class="pull-right-container">
+                            <small class="label pull-right bg-green">List</small>
+                        </span>
+                    </a>
+                </li>
+            }
+            @if (roles.Contains("SuperAdmin") || roles.Contains("HR"))
+            {
+                <li class="@Html.IsSelected(controller: Pages.Leavecount.ControllerName)">
+                    <a href="@Pages.Leavecount.UrlDefault">
+                        <i class="fa fa-th"></i> <span>@Pages.Leavecount.NavigationName</span>
+                        <span class="pull-right-container">
+                            <small class="label pull-right bg-green">List</small>
+                        </span>
+                    </a>
+                </li>
+            }
+            @if (roles.Contains("SuperAdmin"))
+            {
+                <li class="@Html.IsSelected(controller: Pages.ProjectMaster.ControllerName)">
+                    <a href="@Pages.ProjectMaster.UrlDefault">
+                        <i class="fa fa-th"></i> <span>@Pages.ProjectMaster.NavigationName</span>
+                        <span class="pull-right-container">
+                            <small class="label pull-right bg-green">List</small>
+                        </span>
+                    </a>
+                </li>
+            }
+            @if (roles.Contains("SuperAdmin"))
+            {
+                <li class="@Html.IsSelected(controller: Pages.InvoiceMaster.ControllerName)">
+                    <a href="@Pages.InvoiceMaster.UrlDefault">
+                        <i class="fa fa-th"></i> <span>@Pages.InvoiceMaster.NavigationName</span>
+                        <span class="pull-right-container">
+                            <small class="label pull-right bg-green">List</small>
+                        </span>
+                    </a>
+                </li>
+            }
+            @if (roles.Contains("SuperAdmin")  || roles.Contains("HR"))
+            {
+                <li class="@Html.IsSelected(controller: Pages.Todo.ControllerName)">
+                    <a href="@Pages.Todo.UrlDefault">
+                        <i class="fa fa-th"></i> <span>@Pages.Todo.NavigationName</span>
+                        <span class="pull-right-container">
+                            <small class="label pull-right bg-green">List</small>
+                        </span>
+                    </a>
+                </li>
+            }
+            @if (roles.Contains("SuperAdmin"))
+            {
+                <li class="@Html.IsSelected(controller: Pages.Membership.ControllerName)">
+                    <a href="@Pages.Membership.UrlDefault">
+                        <i class="fa fa-th"></i> <span>@Pages.Membership.NavigationName</span>
+                        <span class="pull-right-container">
+                            <small class="label pull-right bg-green">List</small>
+                        </span>
+                    </a>
+                </li>
+            }
+            @if (roles.Contains("SuperAdmin"))
+            {
+                <li class="@Html.IsSelected(controller: Pages.Role.ControllerName)">
+                    <a href="@Pages.Role.UrlDefault">
+                        <i class="fa fa-th"></i> <span>@Pages.Role.NavigationName</span>
+                        <span class="pull-right-container">
+                            <small class="label pull-right bg-green">List</small>
+                        </span>
+                    </a>
+                </li>
+            }
         </ul>
     </section>
     <!-- /.sidebar -->

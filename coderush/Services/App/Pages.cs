@@ -75,7 +75,7 @@ namespace coderush.Services.App
         public static class Membership
         {
             public const string ControllerName = "Membership";
-            public const string RoleName = "HR";
+            public const string RoleName = "Membership";
             public const string UrlDefault = "/Membership/Index";
             public const string NavigationName = "Membership";
         }
@@ -83,7 +83,7 @@ namespace coderush.Services.App
         public static class Role
         {
             public const string ControllerName = "Role";
-            public const string RoleName = "HR";
+            public const string RoleName = "Role";
             public const string UrlDefault = "/Role/Index";
             public const string NavigationName = "Role";
         }

@@ -235,6 +235,17 @@ namespace coderush.Controllers
             changeRole.IsTodoRegistered = registeredRoles.Contains("Todo") ? true : false;
             changeRole.IsMembershipRegistered = registeredRoles.Contains("Membership") ? true : false;
             changeRole.IsRoleRegistered = registeredRoles.Contains("Role") ? true : false;
+            changeRole.IsCandidateMasterRegistered = registeredRoles.Contains("CandidateMaster") ? true : false;
+            changeRole.IsDataMasterRegistered = registeredRoles.Contains("DataMaster") ? true : false;
+            changeRole.IsExpenseMasterRegistered = registeredRoles.Contains("ExpenseMaster") ? true : false;
+            changeRole.IsInvoiceMasterRegistered = registeredRoles.Contains("InvoiceMaster") ? true : false;
+            changeRole.IsLeadMasterRegistered = registeredRoles.Contains("LeadMaster") ? true : false;
+            changeRole.IsLeavecountRegistered = registeredRoles.Contains("Leavecount") ? true : false;
+            changeRole.IsProjectMasterRegistered = registeredRoles.Contains("ProjectMaster") ? true : false;
+            changeRole.HR = registeredRoles.Contains("HR") ? true : false;
+            changeRole.SuperAdmin = registeredRoles.Contains("SuperAdmin") ? true : false;
+            changeRole.Admin = registeredRoles.Contains("Admin") ? true : false;
+            changeRole.Employee = registeredRoles.Contains("Employee") ? true : false;
 
             return View(changeRole);
         }
@@ -242,7 +253,7 @@ namespace coderush.Controllers
         //post submitted change role request
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> SubmitChangeRole([Bind("Id", "IsTodoRegistered", "IsMembershipRegistered", "IsRoleRegistered")]ChangeRoles changeRoles)
+        public async Task<IActionResult> SubmitChangeRole([Bind("Id", "IsTodoRegistered", "IsMembershipRegistered", "IsRoleRegistered", "IsDataMasterRegistered", "IsLeadMasterRegistered", "IsExpenseMasterRegistered", "IsCandidateMasterRegistered", "IsProjectMasterRegistered", "IsInvoiceMasterRegistered", "IsLeavecountRegistered")]ChangeRoles changeRoles)
         {
             try
             {                
@@ -294,6 +305,94 @@ namespace coderush.Controllers
                 else
                 {
                     await _userManager.RemoveFromRoleAsync(member, "Role");
+                }
+                if (changeRoles.IsCandidateMasterRegistered)
+                {
+                    await _userManager.AddToRoleAsync(member, "CandidateMaster");
+                }
+                else
+                {
+                    await _userManager.RemoveFromRoleAsync(member, "CandidateMaster");
+                }
+                if (changeRoles.IsDataMasterRegistered)
+                {
+                    await _userManager.AddToRoleAsync(member, "DataMaster");
+                }
+                else
+                {
+                    await _userManager.RemoveFromRoleAsync(member, "DataMaster");
+                }
+                if (changeRoles.IsExpenseMasterRegistered)
+                {
+                    await _userManager.AddToRoleAsync(member, "ExpenseMaster");
+                }
+                else
+                {
+                    await _userManager.RemoveFromRoleAsync(member, "ExpenseMaster");
+                }
+                if (changeRoles.IsInvoiceMasterRegistered)
+                {
+                    await _userManager.AddToRoleAsync(member, "InvoiceMaster");
+                }
+                else
+                {
+                    await _userManager.RemoveFromRoleAsync(member, "InvoiceMaster");
+                }
+                if (changeRoles.IsLeadMasterRegistered)
+                {
+                    await _userManager.AddToRoleAsync(member, "LeadMaster");
+                }
+                else
+                {
+                    await _userManager.RemoveFromRoleAsync(member, "LeadMaster");
+                }
+                if (changeRoles.IsLeavecountRegistered)
+                {
+                    await _userManager.AddToRoleAsync(member, "Leavecount");
+                }
+                else
+                {
+                    await _userManager.RemoveFromRoleAsync(member, "Leavecount");
+                }
+                if (changeRoles.IsProjectMasterRegistered)
+                {
+                    await _userManager.AddToRoleAsync(member, "ProjectMaster");
+                }
+                else
+                {
+                    await _userManager.RemoveFromRoleAsync(member, "ProjectMaster");
+                }
+                if (changeRoles.HR)
+                {
+                    await _userManager.AddToRoleAsync(member, "HR");
+                }
+                else
+                {
+                    await _userManager.RemoveFromRoleAsync(member, "HR");
+                }
+                if (changeRoles.SuperAdmin)
+                {
+                    await _userManager.AddToRoleAsync(member, "SuperAdmin");
+                }
+                else
+                {
+                    await _userManager.RemoveFromRoleAsync(member, "SuperAdmin");
+                }
+                if (changeRoles.Admin)
+                {
+                    await _userManager.AddToRoleAsync(member, "Admin");
+                }
+                else
+                {
+                    await _userManager.RemoveFromRoleAsync(member, "Admin");
+                }
+                if (changeRoles.Employee)
+                {
+                    await _userManager.AddToRoleAsync(member, "Employee");
+                }
+                else
+                {
+                    await _userManager.RemoveFromRoleAsync(member, "Employee");
                 }
 
                 TempData[StaticString.StatusMessage] = "Update success";
