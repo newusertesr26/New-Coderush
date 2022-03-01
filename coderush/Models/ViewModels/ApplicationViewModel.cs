@@ -12,7 +12,7 @@ namespace coderush.Models.ViewModels
         //public string UserName { get; set; }
         //public string PhoneNumber { get; set; }
         //public string EmailConfirmed { get; set; }
-        public DateTime JoiningDate { get; set; }
+        public DateTime? JoiningDate { get; set; }
         public IFormFile ProfilePicture { get; set; }
          public bool isSuperAdmin { get; set; } = false;
     }

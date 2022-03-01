@@ -12,21 +12,40 @@ namespace coderush.Models
     {
         [Key]
         public int Id { get; set; }
+        [Display(Name = "Name:")]
         [Required]
         [StringLength(50, MinimumLength = 2, ErrorMessage = "* A valid Name is required.")]
         public string Name { get; set; }
+        [Display(Name = "Email:")]
         [Required]
         [EmailAddress(ErrorMessage = "Invalid Email Address")]
         public string Email { get; set; }
+        [Display(Name = "Phone:")]
         [Required]
         [DataType(DataType.PhoneNumber)]
         [RegularExpression(@"^\(?([0-9]{3})\)?[-. ]?([0-9]{3})[-. ]?([0-9]{4})$", ErrorMessage = "Not a valid phone number")]
         public string Phone { get; set; }
+        [Display(Name = "Technologies:")]
         [Required]
-        public int Technologies { get; set; }
+        public CandidateTechnologies Technologies { get; set; }
+        [Display(Name = "CVUpload:")]
         [Required]
         public string FileUpload { get; set; }
+        [Display(Name = "IsActive:")]
         public bool IsActive { get; set; }
+        [Display(Name = "Interview Date:")]
+        [Required]
+        public DateTime? InterviewDate { get; set; }
+        [Display(Name = "Place Of Interview:")]
+        [Required]
+        public string PlaceOfInterview { get; set; }
+        [Display(Name = "Interview Time:")]
+        [Required]
+        public DateTime? InterviewTime { get; set; }
+        [Display(Name = "Interview Description:")]
+        [Required]
+        public string InterviewDescription { get; set; }
+        public bool IsReject { get; set; }
         public bool IsDelete { get; set; }
         public string CreatedBy { get; set; }
         public DateTime? CreatedDate { get; set; }
@@ -45,7 +64,7 @@ namespace coderush.Models
         public string Name { get; set; }
         public string Email { get; set; }
         public string Phone { get; set; }
-        public int Technologies { get; set; }
+        public CandidateTechnologies Technologies { get; set; }
     }
 
 }

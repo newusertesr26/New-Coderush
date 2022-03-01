@@ -1,5 +1,5 @@
 ﻿@model LeaveCount
-@{ ViewData["Title"] = "LeaveCount Form"; }
+@{ ViewData["Title"] = "Leave Form"; }
 
 <!-- Content Wrapper. Contains page content -->
 <div class="content-wrapper">
@@ -19,7 +19,7 @@
         <form asp-controller="LeaveCount" asp-action="SubmitForm" method="post">
             <div class="box">
                 <div class="box-header with-border">
-                    <h3 class="box-title">Create or edit existing LeaveCount item</h3>
+                    <h3 class="box-title">Create or edit existing Leave item</h3>
                     <div class="box-tools pull-right">
                         <button type="button" class="btn btn-box-tool" data-widget="collapse" data-toggle="tooltip"
                                 title="Collapse">
@@ -39,20 +39,25 @@
                         @*<span class="text-danger hidespan spantext">Please enter Text</span>*@
                     </div>
                     <div class="form-group">
-                        <label asp-for="Fromdate"></label>
-                        <input type="date" asp-for="Fromdate" id="levfrmdate" class="form-control" />
-                        <span asp-validation-for="Fromdate" class="text-danger"></span>
-                        @*<span class="text-danger hidespan spantext">Please enter Text</span>*@
+                        <div class="col-md-6">
+
+                            <label asp-for="Fromdate"></label>
+                            <input type="date" asp-for="Fromdate" id="levfrmdate" class="form-control" />
+                            <span asp-validation-for="Fromdate" class="text-danger"></span>
+                            @*<span class="text-danger hidespan spantext">Please enter Text</span>*@
+
+                        </div>
+                        <div class="col-md-6">
+                            <label asp-for="Todate"></label>
+                            <input id="levtodate" type="date" asp-for="Todate" class="form-control" />
+                            <span asp-validation-for="Todate" class="text-danger"></span>
+                            @*<span class="text-danger hidespan spantext">Please enter Text</span>*@
+                        </div>
                     </div>
-                    <div class="form-group">
-                        <label asp-for="Todate"></label>
-                        <input id="levtodate" type="date" asp-for="Todate" class="form-control" />
-                        <span asp-validation-for="Todate" class="text-danger"></span>
-                        @*<span class="text-danger hidespan spantext">Please enter Text</span>*@
-                    </div>
+                
                     <div class="form-group">
                         <label asp-for="Count"></label>
-                        <input id="levcount" asp-for="Count" class="form-control" />
+                        <input id="levcount" asp-for="Count" class="form-control" type="number" maxlength="15" />
                         <span asp-validation-for="Count" class="text-danger"></span>
                         @*<span class="text-danger hidespan spantext">Please enter Text</span>*@
                     </div>
@@ -107,11 +112,11 @@
             }
         });
 
-        //$(document).ready(function () {
-        //    debugger
-        //    var BinddrpdwnData = $("#leavedrpdwn option:selected").val();
-        //    $("#levuserid").val(BinddrpdwnData);
-        //});
+            //$(document).ready(function () {
+            //    debugger
+            //    var BinddrpdwnData = $("#leavedrpdwn option:selected").val();
+            //    $("#levuserid").val(BinddrpdwnData);
+            //});
     </script>
     @*<script type="text/javascript">
 

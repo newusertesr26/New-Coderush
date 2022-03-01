@@ -41,11 +41,35 @@ namespace coderush.Controllers
             _userManager = userManager;
         }
 
+
+        public async Task<IActionResult> NewLogin()
+        {
+            var user = _userManager.GetUserAsync(User).Result;
+            var adminrole = await _userManager.IsInRoleAsync(user, "HR");
+            if (adminrole)
+            {
+                HttpContext.Session.SetString("Role", "HR");
+                ViewBag.Role = HttpContext.Session.GetString("Role");
+                //TempData["Role"] = "HR";
+                //    ViewBag.HR = true;
+            }
+            else
+            {
+                HttpContext.Session.SetString("Role", "Other");
+                ViewBag.Role = HttpContext.Session.GetString("Role");
+                //TempData["Role"] = "Other";
+                //  ViewBag.HR = false;
+            }
+            return View();
+        }
+
         public IActionResult Index()
         {
             //return View();
             return LocalRedirect("/Identity/Account/Login");
         }
+
+        
 
         //public async Task<IActionResult> NewLogin()
         //{

@@ -27,10 +27,11 @@ namespace coderush.Controllers
         private readonly ApplicationDbContext _context;
         //private readonly IHostEnvironment _hostingEnvironment;
         public static string userid;
+        public static string username;
         public LeavecountController(ILogger<HomeController> logger, UserManager<ApplicationUser> userManager,
            RoleManager<IdentityRole> roleManager,
            ApplicationDbContext context)
-           //IHostEnvironment hostingEnvironment)
+        //IHostEnvironment hostingEnvironment)
         {
             _logger = logger;
             _roleManager = roleManager;
@@ -85,9 +86,10 @@ namespace coderush.Controllers
         }
 
         [HttpGet]
-        public IActionResult BindGridData(string id)
-            {
+        public IActionResult BindGridData(string id, string UserName)
+        {
             userid = id;
+            username = UserName;
             LeaveCountViewModel levcunt = new LeaveCountViewModel();
             var leavecount = _context.LeaveCount
                                 .Where(w => w.Userid == id)
@@ -205,7 +207,7 @@ namespace coderush.Controllers
             if (id == 0)
             {
                 LeaveCount newleavecount = new LeaveCount();
-                newleavecount.Userid = userid;
+                newleavecount.Userid = username;
                 return View(newleavecount);
             }
 
