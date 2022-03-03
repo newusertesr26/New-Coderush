@@ -44,7 +44,7 @@
         <!-- sidebar menu: : style can be found in sidebar.less -->
         <ul class="sidebar-menu" data-widget="tree">
             <li class="header">MAIN NAVIGATION</li>
-            @if (roles.Contains("SuperAdmin"))
+            @if (roles.Contains("SuperAdmin") || roles.Contains("Employee"))
             {
                 <li class="@Html.IsSelected(controller: Pages.DataMaster.ControllerName)">
                     <a href="@Pages.DataMaster.UrlDefault">
@@ -66,7 +66,7 @@
                     </a>
                 </li>
             }
-            @if (roles.Contains("SuperAdmin"))
+            @if (roles.Contains("SuperAdmin") || roles.Contains("Employee"))
             {
                 <li class="@Html.IsSelected(controller: Pages.ExpenseMaster.ControllerName)">
                     <a href="@Pages.ExpenseMaster.UrlDefault">
@@ -77,7 +77,7 @@
                     </a>
                 </li>
             }
-            @if (roles.Contains("SuperAdmin"))
+            @if (roles.Contains("SuperAdmin") || roles.Contains("Employee"))
             {
                 <li class="@Html.IsSelected(controller: Pages.LeadMaster.ControllerName)">
                     <a href="@Pages.LeadMaster.UrlDefault">
@@ -99,7 +99,7 @@
                     </a>
                 </li>
             }
-            @if (roles.Contains("SuperAdmin"))
+            @if (roles.Contains("SuperAdmin") || roles.Contains("Employee"))
             {
                 <li class="@Html.IsSelected(controller: Pages.ProjectMaster.ControllerName)">
                     <a href="@Pages.ProjectMaster.UrlDefault">
@@ -110,7 +110,7 @@
                     </a>
                 </li>
             }
-            @if (roles.Contains("SuperAdmin"))
+            @if (roles.Contains("SuperAdmin") || roles.Contains("Employee"))
             {
                 <li class="@Html.IsSelected(controller: Pages.InvoiceMaster.ControllerName)">
                     <a href="@Pages.InvoiceMaster.UrlDefault">
@@ -121,7 +121,7 @@
                     </a>
                 </li>
             }
-            @if (roles.Contains("SuperAdmin"))
+            @if (roles.Contains("SuperAdmin") || roles.Contains("Employee"))
             {
                 <li class="@Html.IsSelected(controller: Pages.Todo.ControllerName)">
                     <a href="@Pages.Todo.UrlDefault">

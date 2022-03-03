@@ -23,5 +23,6 @@ namespace coderush.Data
         public DbSet<LeadMaster> LeadMaster { get; set; }
         public DbSet<LeaveCount> LeaveCount { get; set; }
         public DbSet<RoleDetails> RoleDetails { get; set; }
+        public DbSet<LeaveHistory> LeaveHistory { get; set; }
     }
 }

@@ -142,16 +142,27 @@ namespace coderush.Controllers
                 if (leaveCounts.Id == 0)
                 {
                     LeaveCount newleaveCount = new LeaveCount();
+                    LeaveHistory leaveHistory = new LeaveHistory();
                     newleaveCount.Userid = userid;
-                    newleaveCount.Fromdate = DateTime.Now;
-                    newleaveCount.Todate = DateTime.Now;
+                    newleaveCount.Fromdate = leaveCounts.Fromdate;
+                    newleaveCount.Todate = leaveCounts.Todate;
                     newleaveCount.Count = leaveCounts.Count;
                     newleaveCount.Description = leaveCounts.Description;
                     newleaveCount.ApproveDate = DateTime.Now;
                     newleaveCount.Isapprove = leaveCounts.Isapprove;
                     newleaveCount.CreatedBy = user.Id;
                     newleaveCount.Approveby = user.Id;
+                    leaveHistory.Userid = userid;
+                    leaveHistory.Fromdate = leaveCounts.Fromdate;
+                    leaveHistory.Todate = leaveCounts.Todate;
+                    leaveHistory.Count = leaveCounts.Count;
+                    leaveHistory.Description = leaveCounts.Description;
+                    leaveHistory.ApproveDate = DateTime.Now;
+                    leaveHistory.Isapprove = leaveCounts.Isapprove;
+                    leaveHistory.CreatedBy = userid;
+                    leaveHistory.Approveby = user.Id;
                     _context.LeaveCount.Add(newleaveCount);
+                    _context.LeaveHistory.Add(leaveHistory);
                     _context.SaveChanges();
 
                     TempData[StaticString.StatusMessage] = "Create new leave count item success.";
@@ -160,17 +171,28 @@ namespace coderush.Controllers
 
                 //edit existing
                 LeaveCount editLeavecount = new LeaveCount();
+                LeaveHistory addleaveHistory = new LeaveHistory();
                 editLeavecount = _context.LeaveCount.Where(x => x.Id.Equals(leaveCounts.Id)).FirstOrDefault();
                 editLeavecount.Userid = userid;
-                editLeavecount.Fromdate = DateTime.Now;
-                editLeavecount.Todate = DateTime.Now;
+                editLeavecount.Fromdate = leaveCounts.Fromdate;
+                editLeavecount.Todate = leaveCounts.Todate;
                 editLeavecount.Count = leaveCounts.Count;
                 editLeavecount.Description = leaveCounts.Description;
                 editLeavecount.UpdatedBy = user.Id;
                 editLeavecount.Isapprove = true;
                 editLeavecount.Approveby = user.Id;
                 editLeavecount.ApproveDate = DateTime.Now;
+                addleaveHistory.Userid = userid;
+                addleaveHistory.Fromdate = leaveCounts.Fromdate;
+                addleaveHistory.Todate = leaveCounts.Todate;
+                addleaveHistory.Count = leaveCounts.Count;
+                addleaveHistory.Description = leaveCounts.Description;
+                addleaveHistory.UpdatedBy = user.Id;
+                addleaveHistory.Isapprove = true;
+                addleaveHistory.Approveby = user.Id;
+                addleaveHistory.ApproveDate = DateTime.Now;
                 _context.Update(editLeavecount);
+                _context.Add(addleaveHistory);
                 _context.SaveChanges();
 
                 TempData[StaticString.StatusMessage] = "Edit existing leave count item success.";
