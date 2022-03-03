@@ -17,7 +17,7 @@ using Microsoft.Extensions.Options;
 
 namespace coderush.Controllers
 {
-    [Authorize(Roles = Services.App.Pages.Membership.RoleName)]
+    //[Authorize(Roles = Services.App.Pages.Membership.RoleName)]
     public class MembershipController : Controller
     {
         private readonly Services.Security.ICommon _security;
@@ -99,8 +99,8 @@ namespace coderush.Controllers
                 List<string> uploadedFiles = new List<string>();
 
                 string fileName = Path.GetFileName(applicationUser.ProfilePicture.FileName);
-                string fileext = Path.GetExtension(fileName);
-                using (FileStream stream = new FileStream(Path.Combine(path, applicationUser.Id + fileext), FileMode.Create))
+                string filetext = Path.GetExtension(fileName);
+                using (FileStream stream = new FileStream(Path.Combine(path, applicationUser.Id + filetext), FileMode.Create))
                 {
                     applicationUser.ProfilePicture.CopyTo(stream);
                     uploadedFiles.Add(fileName);
@@ -123,7 +123,7 @@ namespace coderush.Controllers
                 updatedUser.PhoneNumber = applicationUser.PhoneNumber;
                 updatedUser.EmailConfirmed = applicationUser.EmailConfirmed;
                 updatedUser.JoiningDate = applicationUser.JoiningDate;
-                updatedUser.ProfilePicture = applicationUser.Id + fileext;
+                updatedUser.ProfilePicture = applicationUser.Id + filetext;
                 
 
                 _context.Update(updatedUser);
@@ -253,7 +253,7 @@ namespace coderush.Controllers
         //post submitted change role request
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> SubmitChangeRole([Bind("Id", "IsTodoRegistered", "IsMembershipRegistered", "IsRoleRegistered", "IsDataMasterRegistered", "IsLeadMasterRegistered", "IsExpenseMasterRegistered", "IsCandidateMasterRegistered", "IsProjectMasterRegistered", "IsInvoiceMasterRegistered", "IsLeavecountRegistered")]ChangeRoles changeRoles)
+        public async Task<IActionResult> SubmitChangeRole([Bind("Id", "IsTodoRegistered", "IsMembershipRegistered", "IsRoleRegistered", "IsDataMasterRegistered", "IsLeadMasterRegistered", "IsExpenseMasterRegistered", "IsCandidateMasterRegistered", "IsProjectMasterRegistered", "IsInvoiceMasterRegistered", "IsLeavecountRegistered", "HR", "Admin", "SuperAdmin", "Employee")]ChangeRoles changeRoles)
         {
             try
             {                

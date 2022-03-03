@@ -9,7 +9,7 @@
         var description = $("#levdescription").val();
         var isapprove = $("#isaprv").val();
         var approveDate = $("#apprvdate").val();
-
+        ``
 
         ////var Isvalid = true;
         ////if (userid == null || userid == undefined || userid == "") {
@@ -104,8 +104,10 @@
                     $.each(data.list, function (i, v) {
                         var rowdata = data.list[i]
                         innerHtml += "<tr>";
-                        innerHtml += "<td><i class='fa fa-edit' id='btnedit' data-id = " + rowdata.id + "></td>";
-                        innerHtml += "<td><i class='fa fa-trash' ></i></td>";
+                        //innerHtml += "<td><i class='fa fa-edit' style='font-size:20px' id='btnedit' data-id = " + rowdata.id + "></i></td>";
+                        //innerHtml += "<td><i class='fa fa-trash' ></i></td>";
+                        innerHtml += "<td><a href='/Leavecount/Form/" + rowdata.id + "'><i class='fa fa-edit'></i></a></td>";
+                        innerHtml += "<td><a href='/Leavecount/Delete/" + rowdata.id + "'><i class='fa fa-trash'></i></a></td>";
                         innerHtml += "<td scope='col' id='User ID'>" + rowdata.userid + "</td>";
                         innerHtml += "<td scope='col' id='From Date'>" + rowdata.fromdate + "</td>";
                         innerHtml += "<td scope='col' id='To Date'>" + rowdata.todate + "</td>";
@@ -171,7 +173,8 @@
 
     $("#leavedrpdwn").on('change', function () {
         debugger
-        var id = $(this).val();
+        //var id = $(this).val();
+        var id = $("#leavedrpdwn option:selected").val();
         var username = $("#leavedrpdwn option:selected").text();
         Bindtablegrid(id, username);
         $("#grid").show();

@@ -115,7 +115,7 @@ namespace coderush.Controllers
                     newcandidateMaster.Technologies = candidateMasters.Technologies;
                     newcandidateMaster.InterviewDate = candidateMasters.InterviewDate;
                     newcandidateMaster.PlaceOfInterview = candidateMasters.PlaceOfInterview;
-                    newcandidateMaster.InterviewTime = candidateMasters.InterviewTime ;
+                    newcandidateMaster.InterviewTime = candidateMasters.InterviewTime;
                     newcandidateMaster.InterviewDescription = candidateMasters.InterviewDescription ;
                     newcandidateMaster.FileUpload = candidateMasters.FileUpload.FileName.ToString();
                     newcandidateMaster.IsActive = candidateMasters.IsActive;
@@ -135,6 +135,10 @@ namespace coderush.Controllers
                 editCandidatemaster.Email = candidateMasters.Email;
                 editCandidatemaster.Phone = candidateMasters.Phone;
                 editCandidatemaster.Technologies = candidateMasters.Technologies;
+                editCandidatemaster.InterviewDate = candidateMasters.InterviewDate;
+                editCandidatemaster.PlaceOfInterview = candidateMasters.PlaceOfInterview;
+                editCandidatemaster.InterviewTime = candidateMasters.InterviewTime;
+                editCandidatemaster.InterviewDescription = candidateMasters.InterviewDescription;
                 editCandidatemaster.FileUpload = candidateMasters.FileUpload.ToString();
                 editCandidatemaster.UpdatedBy = user.Id;
                 editCandidatemaster.UpdatedDate = DateTime.Now;
@@ -173,8 +177,8 @@ namespace coderush.Controllers
 
             //edit candidate master
             CandidateMastersViewModel editnewcandidatemaster = new CandidateMastersViewModel();
-            var data = _context.CandidateMaster.Where(x => x.Id.Equals(id)).FirstOrDefault();
-            editnewcandidatemaster.Id = data.Id;
+            var candidatedata = _context.CandidateMaster.Where(x => x.Id.Equals(id)).FirstOrDefault();
+            editnewcandidatemaster.Id = candidatedata.Id;
 
 
             if (editnewcandidatemaster == null)

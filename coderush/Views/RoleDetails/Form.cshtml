@@ -1,0 +1,165 @@
+﻿@using Microsoft.AspNetCore.Identity;
+@model coderush.Models.ViewModels.RoleDetailsViewModel
+@{ ViewData["Title"] = "RoleDetails";
+    var roles = (List<IdentityRole>)ViewData["roles"]; }
+
+
+<!-- Content Wrapper. Contains page content -->
+<div class="content-wrapper">
+    <!-- Content Header (Page header) -->
+    <section class="content-header">
+        <h1>
+            @ViewData["Title"]
+        </h1>
+        <p>
+            @await Html.PartialAsync(PartialView.StatusMessage, TempData[StaticString.StatusMessage])
+        </p>
+
+    </section>
+    <!-- Main content -->
+    <section class="content">
+        <!-- Default box -->
+        <form asp-controller="RoleDetails" asp-action="SubmitForm" method="post">
+            <div class="box">
+                <div class="box-header with-border">
+                    <h3 class="box-title">Create or edit existing RoleDetails item</h3>
+                    <div class="box-tools pull-right">
+                        <button type="button" class="btn btn-box-tool" data-widget="collapse" data-toggle="tooltip"
+                                title="Collapse">
+                            <i class="fa fa-minus"></i>
+                        </button>
+                        <button type="button" class="btn btn-box-tool" data-widget="remove" data-toggle="tooltip" title="Remove">
+                            <i class="fa fa-times"></i>
+                        </button>
+                    </div>
+                </div>
+                <div class="box-body">
+                    <input type="hidden" asp-for="PageId" />
+                    <div class="form-group">
+                        <label asp-for="Pagename"></label>
+                        <input asp-for="Pagename" class="form-control" />
+                        <span asp-validation-for="Pagename" class="text-danger"></span>
+                        @*<span class="text-danger hidespan spantext">Please enter Text</span>*@
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="Rolename"></label>
+                        @*@Html.DropDownList("Selection", new SelectList(ViewBag.SelectionList, "Value", "Text"), new { @class = "form-control", @id = "ddlSelectionList" })*@
+                        <select id="multiselect" asp-for="Rolename" class="form-control" multiple="multiple"
+                                asp-items='new SelectList(roles,"name")'>
+                        </select>
+                        <span asp-validation-for="Rolename" class="text-danger"></span>
+                        @*<span class="text-danger hidespan spanSelection">Please select Type</span>*@
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="Isactive"></label>
+                        <input asp-for="Isactive" type="checkbox" class="flat-red" />
+                    </div>
+                </div>
+                <!-- /.box-body -->
+                <div class="box-footer">
+                    <a href="/RoleDetails/RoleIndex" class="btn btn-default">Back</a>
+                    <button type="submit" class="btn btn-primary">Save</button>
+                </div>
+                <!-- /.box-footer-->
+            </div>
+        </form>
+
+        <!-- /.box -->
+    </section>
+    <!-- /.content -->
+</div>
+<!-- /.content-wrapper -->
+
+
+@section Styles{
+    <!-- DataTables -->
+    <link rel="stylesheet" href="~/adminlte/components/datatables.net-bs/css/dataTables.bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/select2@4.0.13/dist/css/select2.min.css" />
+}
+
+
+@section Scripts{
+
+    <partial name="_ValidationScriptsPartial" />
+    <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/select2@4.0.13/dist/js/select2.min.js"></script>
+    @*<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js"></script>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>*@
+    <script type="text/javascript">
+
+        $(function () {
+            $("#multiselect").select2();
+        });
+
+        //$(document).ready(function () {
+
+        //    $('#savedata').click(function () {
+        //        debugger
+        //        var id = $("#hednid").val();
+        //        var Pagename = $("#pgname").val();
+        //        var Rolename = $("#multiselect").val();
+        //        var isactive = $("#isactv").val();
+
+        //        var formdata = new FormData();
+        //        formdata.append('PageId', id);
+        //        formdata.append('Pagename', Pagename);
+        //        formdata.append('Rolename', Rolename);
+        //        formdata.append('Isactive', isactive);
+
+        //        $.ajax({
+        //            url: "/RoleDetails/SubmitForm",
+        //            type: "Post",
+        //            data: formdata,
+        //            success: function (data) {
+        //                var s = '<option value="-1">Please Select a Role</option>';
+        //                for (var i = 0; i < data.length; i++) {
+        //                    s += '<option value="' + data[i].RoleId + '">' + data[i].RoleName + '</option>';
+        //                }
+        //                $("#multiselect").html(s);
+        //            }
+        //        });
+        //    });
+        //});
+            //$.ajax({
+            //    url: "RoleDetails/SubmitForm/",
+            //    typr: "Post",
+            //    contentType: "application/json;charset=UTF-8",
+            //    dataType: "json",
+            //    success: function (result) {
+            //        debugger
+            //        $('#multiselect').val();
+            //        var values = "HR,Admin,SuperAdmin,Employee";
+            //        $.each(values.split(","), function (i, e) {
+            //            $("#multiselect option[value='" + e + "']").prop("selected", true);
+            //        });
+            //        //var selectedOptions = result.EmployeeCity.split(",");
+            //        //for (var i in selectedOptions) {
+            //        //    var optionVal = selectedOptions[i];
+            //        //    $("#empcity").find("option[value=" + optionVal + "]").prop("selected", "selected");
+            //        //}
+            //        //$("#empcity").multiselect('reload');
+
+            //    },
+            //    error: function (errormessage) {
+            //        alert(errormessage.responseText);
+            //    }
+
+            //});
+
+
+
+                //var values = "Test,Prof,Off";
+                //$.each(values.split(","), function (i, e) {
+                //    $("#multiselect option[value='" + e + "']").prop("selected", true);
+                //});
+                        //$(document).ready(function () {
+
+                        //    $(".multi-select").select2({
+
+                        //    });
+
+
+
+                        //});</script>
+
+}

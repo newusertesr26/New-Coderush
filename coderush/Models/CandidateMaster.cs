@@ -41,7 +41,7 @@ namespace coderush.Models
         public string PlaceOfInterview { get; set; }
         [Display(Name = "Interview Time:")]
         [Required]
-        public DateTime? InterviewTime { get; set; }
+        public TimeSpan? InterviewTime { get; set; }
         [Display(Name = "Interview Description:")]
         [Required]
         public string InterviewDescription { get; set; }

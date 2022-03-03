@@ -142,7 +142,7 @@ namespace coderush.Controllers
                 if (leaveCounts.Id == 0)
                 {
                     LeaveCount newleaveCount = new LeaveCount();
-                    newleaveCount.Userid = leaveCounts.Userid;
+                    newleaveCount.Userid = userid;
                     newleaveCount.Fromdate = DateTime.Now;
                     newleaveCount.Todate = DateTime.Now;
                     newleaveCount.Count = leaveCounts.Count;
@@ -161,7 +161,7 @@ namespace coderush.Controllers
                 //edit existing
                 LeaveCount editLeavecount = new LeaveCount();
                 editLeavecount = _context.LeaveCount.Where(x => x.Id.Equals(leaveCounts.Id)).FirstOrDefault();
-                editLeavecount.Userid = leaveCounts.Userid;
+                editLeavecount.Userid = userid;
                 editLeavecount.Fromdate = DateTime.Now;
                 editLeavecount.Todate = DateTime.Now;
                 editLeavecount.Count = leaveCounts.Count;
@@ -214,7 +214,7 @@ namespace coderush.Controllers
             //edit leavecount master
             LeaveCount editnewleavecount = new LeaveCount();
             editnewleavecount = _context.LeaveCount.Where(x => x.Id.Equals(id)).FirstOrDefault();
-
+            editnewleavecount.Userid = username;
             if (editnewleavecount == null)
             {
                 return NotFound();

@@ -34,6 +34,7 @@ namespace coderush.Models
         [Display(Name = "Isapprove:")]
 
         public bool Isapprove { get; set; }
+        public bool IsDelete { get; set; }
         public DateTime? ApproveDate { get; set; }
         public string Approveby { get; set; }
         public string CreatedBy { get; set; }

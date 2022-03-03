@@ -87,5 +87,12 @@ namespace coderush.Services.App
             public const string UrlDefault = "/Role/Index";
             public const string NavigationName = "Role";
         }
+        public static class RoleDetails
+        {
+            public const string ControllerName = "RoleDetails";
+            public const string RoleName = "RoleDetails";
+            public const string UrlDefault = "/RoleDetails/RoleIndex";
+            public const string NavigationName = "RoleDetails";
+        }
     }
 }

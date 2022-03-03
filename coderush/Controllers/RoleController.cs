@@ -9,7 +9,7 @@ using Microsoft.AspNetCore.Identity;
 
 namespace coderush.Controllers
 {
-    [Authorize(Roles = Services.App.Pages.Role.RoleName)]
+    //[Authorize(Roles = Services.App.Pages.Role.RoleName)]
     public class RoleController : Controller
     {
         private readonly RoleManager<IdentityRole> _roleManager;

@@ -121,7 +121,7 @@
                     </a>
                 </li>
             }
-            @if (roles.Contains("SuperAdmin")  || roles.Contains("HR"))
+            @if (roles.Contains("SuperAdmin"))
             {
                 <li class="@Html.IsSelected(controller: Pages.Todo.ControllerName)">
                     <a href="@Pages.Todo.UrlDefault">
@@ -148,6 +148,17 @@
                 <li class="@Html.IsSelected(controller: Pages.Role.ControllerName)">
                     <a href="@Pages.Role.UrlDefault">
                         <i class="fa fa-th"></i> <span>@Pages.Role.NavigationName</span>
+                        <span class="pull-right-container">
+                            <small class="label pull-right bg-green">List</small>
+                        </span>
+                    </a>
+                </li>
+            }
+            @if (roles.Contains("SuperAdmin"))
+            {
+                <li class="@Html.IsSelected(controller: Pages.RoleDetails.ControllerName)">
+                    <a href="@Pages.RoleDetails.UrlDefault">
+                        <i class="fa fa-th"></i> <span>@Pages.RoleDetails.NavigationName</span>
                         <span class="pull-right-container">
                             <small class="label pull-right bg-green">List</small>
                         </span>
