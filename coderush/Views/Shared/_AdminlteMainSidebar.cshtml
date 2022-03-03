@@ -66,7 +66,7 @@
                     </a>
                 </li>
             }
-            @if (roles.Contains("SuperAdmin") || roles.Contains("Employee"))
+            @if (roles.Contains("SuperAdmin") || roles.Contains("HR"))
             {
                 <li class="@Html.IsSelected(controller: Pages.ExpenseMaster.ControllerName)">
                     <a href="@Pages.ExpenseMaster.UrlDefault">
