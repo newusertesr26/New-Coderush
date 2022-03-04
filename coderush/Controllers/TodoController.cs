@@ -9,7 +9,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace coderush.Controllers
 {
-    //[Authorize(Roles = Services.App.Pages.Todo.RoleName)]
+    [Authorize(Roles = "SuperAdmin")]
     public class TodoController : Controller
     {
         private readonly ApplicationDbContext _context;

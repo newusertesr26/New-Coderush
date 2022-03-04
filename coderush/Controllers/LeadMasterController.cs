@@ -17,7 +17,7 @@ using System.Threading.Tasks;
 
 namespace coderush.Controllers
 {
-   // [Authorize(Roles = Services.App.Pages.ExpenseMaster.RoleName)]
+    [Authorize(Roles = "SuperAdmin")]
     public class LeadMasterController : Controller
     {
         private readonly ILogger<HomeController> _logger;

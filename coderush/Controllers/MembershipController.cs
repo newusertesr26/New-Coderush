@@ -17,7 +17,7 @@ using Microsoft.Extensions.Options;
 
 namespace coderush.Controllers
 {
-    //[Authorize(Roles = Services.App.Pages.Membership.RoleName)]
+    [Authorize(Roles = "SuperAdmin")]
     public class MembershipController : Controller
     {
         private readonly Services.Security.ICommon _security;
@@ -243,7 +243,7 @@ namespace coderush.Controllers
         //post submitted change role request
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> SubmitChangeRole([Bind("Id", "HR", "Admin", "SuperAdmin", "Employee")]ChangeRoles changeRoles)
+        public async Task<IActionResult> SubmitChangeRole([Bind("Id", "HR", "Admin", "SuperAdmin", "Employee", "Sales")]ChangeRoles changeRoles)
         {
             try
             {                
@@ -383,6 +383,14 @@ namespace coderush.Controllers
                 else
                 {
                     await _userManager.RemoveFromRoleAsync(member, "Employee");
+                }
+                if (changeRoles.Sales)
+                {
+                    await _userManager.AddToRoleAsync(member, "Sales");
+                }
+                else
+                {
+                    await _userManager.RemoveFromRoleAsync(member, "Sales");
                 }
 
                 TempData[StaticString.StatusMessage] = "Update success";

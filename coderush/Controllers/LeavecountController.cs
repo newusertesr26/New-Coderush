@@ -18,7 +18,7 @@ using coderush.Models.ViewModels;
 
 namespace coderush.Controllers
 {
-    // [Authorize(Roles = Services.App.Pages.Leavecount.RoleName)]
+    [Authorize(Roles = "HR,SuperAdmin")]
     public class LeavecountController : Controller
     {
         private readonly ILogger<HomeController> _logger;

@@ -1,6 +1,7 @@
 ﻿using coderush.Data;
 using coderush.Models;
 using coderush.Models.ViewModels;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
@@ -11,6 +12,7 @@ using System.Threading.Tasks;
 
 namespace coderush.Controllers
 {
+    [Authorize(Roles = "SuperAdmin")]
 
     public class RoleDetailsController : Controller
     {
