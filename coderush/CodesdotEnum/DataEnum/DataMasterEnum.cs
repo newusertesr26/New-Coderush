@@ -18,7 +18,7 @@ namespace coderush.DataEnum
         React = 3,
         Shopify = 4
     }
-    public enum Expenses
+    public enum Expensestype
     {
         office = 1,
         other = 2,

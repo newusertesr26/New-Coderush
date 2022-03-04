@@ -1,4 +1,5 @@
-﻿using System;
+﻿using coderush.DataEnum;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
@@ -17,7 +18,7 @@ namespace coderush.Models
         public string ProjectName { get; set; }
         [Required]
         [Display(Name = "Technologies:")]
-        public string Technologies { get; set; }
+        public Technologies Technologies { get; set; }
         [Required]
         [StringLength(60, MinimumLength = 3)]
         [Display(Name = "Description:")]

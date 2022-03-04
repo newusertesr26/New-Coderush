@@ -87,29 +87,34 @@
                         @*<span asp-validation-for="FileUpload" class="text-danger"></span>*@
                         @*<span class="text-danger hidespan spantext">Please enter Text</span>*@
                     </div>
+                    <div class="form-group ">
+                        <div class="form-group col-md-3">
+                            <div class="form-group">
+                                <label asp-for="IsActive"></label>
+                                <input asp-for="IsActive" type="checkbox" id="ckisactive" class="flat-red" />
+                            </div>
+                        </div>
+                        <div class="form-group col-md-3">
+                            <div class="form-group">
+                                <label asp-for="IsReject"></label>
+                                <input asp-for="IsReject" type="checkbox" id="ckisactive" class="flat-red" />
+                            </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label asp-for="InterviewDescription"></label>
+                            <textarea asp-for="InterviewDescription" TextMode="MultiLine" rows="4" cols="50" type="text" value="" class="form-control"></textarea>
+                        </div>
 
-                    <div class="form-group">
-                        <label asp-for="IsActive"></label>
-                        <input asp-for="IsActive" type="checkbox" id="ckisactive" class="flat-red" />
                     </div>
-                    <div class="form-group">
-                        <label asp-for="IsReject"></label>
-                        <input asp-for="IsReject" type="checkbox" id="ckisactive" class="flat-red" />
+                        <!-- /.box-body -->
+                        <div class="box-footer">
+                            <a href="/CandidateMaster/CandidateIndex" class="btn btn-default">Back</a>
+                            <button type="submit" class="btn btn-primary" id="btnsave">Save</button>
+                        </div>
+                        <!-- /.box-footer-->
                     </div>
-                    <div class="form-group">
-                        <label asp-for="InterviewDescription"></label>
-                        <textarea asp-for="InterviewDescription" TextMode="MultiLine" rows="4" cols="50" type="text" value="" class="form-control"></textarea>
-                    </div>
-
-                </div>
-                <!-- /.box-body -->
-                <div class="box-footer">
-                    <a href="/CandidateMaster/CandidateIndex" class="btn btn-default">Back</a>
-                    <button type="submit" class="btn btn-primary" id="btnsave">Save</button>
-                </div>
-                <!-- /.box-footer-->
-            </div>
-        </form>
+</form>
 
         <!-- /.box -->
     </section>

@@ -31,20 +31,21 @@ namespace coderush.Models
         [Display(Name = "CVUpload:")]
         [Required]
         public string FileUpload { get; set; }
-        [Display(Name = "IsActive:")]
+        [Display(Name = "Active:")]
         public bool IsActive { get; set; }
         [Display(Name = "Interview Date:")]
         [Required]
         public DateTime? InterviewDate { get; set; }
-        [Display(Name = "Place Of Interview:")]
+        [Display(Name = "Place:")]
         [Required]
         public string PlaceOfInterview { get; set; }
         [Display(Name = "Interview Time:")]
         [Required]
         public TimeSpan? InterviewTime { get; set; }
-        [Display(Name = "Interview Description:")]
+        [Display(Name = "Description:")]
         [Required]
         public string InterviewDescription { get; set; }
+        [Display(Name = "Reject:")]
         public bool IsReject { get; set; }
         public bool IsDelete { get; set; }
         public string CreatedBy { get; set; }

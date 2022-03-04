@@ -1,13 +1,13 @@
+﻿using coderush.DataEnum;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
-using coderush.DataEnum;
 
-namespace coderush.Models
+namespace coderush.Models.ViewModels
 {
-    public class ExpenseMaster
+    public class ExpenseMasterViewModel
     {
         [Key]
         public int Id { get; set; }
@@ -33,20 +33,5 @@ namespace coderush.Models
         public DateTime? CreatedDate { get; set; }
         public string UpdatedBy { get; set; }
         public DateTime? UpdatedDate { get; set; }
-
     }
-
-    public class ExpensesMasterDetails
-    {
-        public List<ExpensesMasterDetailsViewModel> ExpensesMasterlist { get; set; }
-    }
-    public class ExpensesMasterDetailsViewModel
-    {
-        public int Id { get; set; }
-        public string ExpName { get; set; }
-        public string Exptype { get; set; }
-        public string Amount { get; set; }
-        public string Description { get; set; }
-    }
-
 }

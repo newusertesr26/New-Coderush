@@ -24,5 +24,6 @@ namespace coderush.ViewModels
         public bool Admin { get; set; }
         public bool SuperAdmin { get; set; }
         public bool Employee { get; set; }
+        public bool Sales { get; set; }
     }
 }

@@ -12,10 +12,11 @@ using Microsoft.AspNetCore.Hosting;
 using coderush.Models.ViewModels;
 using System.Collections.Generic;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Authorization;
 
 namespace coderush.Controllers
 {
-    //[Authorize(Roles = Services.App.Pages.CandidateMaster.RoleName)]
+    [Authorize(Roles = "HR,SuperAdmin")]
     public class CandidateMasterController : Controller
     {
         private readonly ILogger<HomeController> _logger;
@@ -103,6 +104,7 @@ namespace coderush.Controllers
                         uploadedFiles.Add(fileName);
                     }
               
+
                     //}
                     //create new
                     if (candidateMasters.Id == 0)

@@ -16,7 +16,7 @@ using coderush.Models.ViewModels;
 
 namespace coderush.Controllers
 {
-    //[Authorize(Roles = Services.App.Pages.ExpenseMaster.RoleName)]
+    [Authorize(Roles = "SuperAdmin,HR")]
     public class ExpenseMasterController : Controller
     {
         private readonly ILogger<HomeController> _logger;
@@ -37,7 +37,7 @@ namespace coderush.Controllers
         }
         public IActionResult ExpenseIndex()
         {
-            ViewBag.ExpensesList = Enum.GetValues(typeof(Expenses)).Cast<Expenses>().Select(v => new SelectListItem
+            ViewBag.ExpensesList = Enum.GetValues(typeof(Expensestype)).Cast<Expensestype>().Select(v => new SelectListItem
             {
                 Text = v.ToString(),
                 Value = ((int)v).ToString(),
@@ -50,7 +50,7 @@ namespace coderush.Controllers
         //post submitted expenseMasters data. if expenseMasters.expenseMastersId is null then create new, otherwise edit
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult SubmitForm([Bind("Id", "ExpName", "Exptype", "Amount", "Description", "isactive")] ExpenseMaster expenseMasters)
+        public IActionResult SubmitForm([Bind("Id", "ExpName", "Exptype", "Amount", "Description", "isactive")] ExpenseMasterViewModel expenseMasters)
         {
             try
             {
@@ -108,7 +108,7 @@ namespace coderush.Controllers
         [HttpGet]
         public IActionResult Form(int id)
         {
-            ViewBag.ExpensesList = Enum.GetValues(typeof(Expenses)).Cast<Expenses>().Select(v => new SelectListItem
+            ViewBag.ExpensesList = Enum.GetValues(typeof(Expensestype)).Cast<Expensestype>().Select(v => new SelectListItem
             {
                 Text = v.ToString(),
                 Value = ((int)v).ToString(),
@@ -118,13 +118,15 @@ namespace coderush.Controllers
             //create new
             if (id == 0)
             {
-                ExpenseMaster newexpensemaster = new ExpenseMaster();
+                ExpenseMasterViewModel newexpensemaster = new ExpenseMasterViewModel();
                 return View(newexpensemaster);
             }
 
             //edit expense master
-            ExpenseMaster editnewexpensemaster = new ExpenseMaster();
-            editnewexpensemaster = _context.ExpenseMaster.Where(x => x.Id.Equals(id)).FirstOrDefault();
+            ExpenseMasterViewModel editnewexpensemaster = new ExpenseMasterViewModel();
+            var  expensemaster = _context.ExpenseMaster.Where(x => x.Id.Equals(id)).FirstOrDefault();
+            editnewexpensemaster.Id = expensemaster.Id;
+
 
             if (editnewexpensemaster == null)
             {

@@ -13,7 +13,7 @@ namespace coderush.Models
         public int Id { get; set; }
         [Display(Name = "Type:")]
         [Required]
-        public string Type { get; set; }
+        public DataSelection Type { get; set; }
         [Display(Name = "Text:")]
         [Required]
         public string Text { get; set; }

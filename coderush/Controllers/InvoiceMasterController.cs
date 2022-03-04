@@ -16,7 +16,7 @@ using coderush.Models.ViewModels;
 
 namespace coderush.Controllers
 {
-    //[Authorize(Roles = Services.App.Pages.InvoiceMaster.RoleName)]
+    [Authorize(Roles = "SuperAdmin")]
     public class InvoiceMasterController : Controller
     {
         private readonly ILogger<HomeController> _logger;
