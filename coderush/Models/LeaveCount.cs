@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.AspNetCore.Http;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
@@ -31,6 +32,9 @@ namespace coderush.Models
         [Required]
         [StringLength(60, MinimumLength = 3)]
         public string Description { get; set; }
+        [Display(Name = "CVUpload:")]
+        [Required]
+        public string FileUpload { get; set; }
         [Display(Name = "Isapprove:")]
 
         public bool Isapprove { get; set; }

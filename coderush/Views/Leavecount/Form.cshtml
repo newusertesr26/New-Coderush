@@ -16,7 +16,7 @@
     <!-- Main content -->
     <section class="content">
         <!-- Default box -->
-        <form asp-controller="LeaveCount" asp-action="SubmitForm" method="post">
+        <form asp-controller="LeaveCount" enctype="multipart/form-data" asp-action="SubmitForm" method="post">
             <div class="box">
                 <div class="box-header with-border">
                     <h3 class="box-title">Create or edit existing Leave item</h3>
@@ -53,8 +53,10 @@
                             <span asp-validation-for="Todate" class="text-danger"></span>
                             @*<span class="text-danger hidespan spantext">Please enter Text</span>*@
                         </div>
+
                     </div>
-                
+
+
                     <div class="form-group">
                         <label asp-for="Count"></label>
                         <input id="levcount" asp-for="Count" class="form-control" type="number" maxlength="15" />
@@ -70,6 +72,12 @@
                     <div class="form-group">
                         <label asp-for="Isapprove"></label>
                         <input asp-for="Isapprove" type="checkbox" id="isaprv" class="flat-red" />
+                    </div>
+                    <div class="col-md-6">
+                        <label asp-for="FileUpload"></label>
+                        <input type="file" asp-for="FileUpload" class="form-control" />
+                        <span asp-validation-for="FileUpload" class="text-danger"></span>
+                        @*<span class="text-danger hidespan spantext">Please enter Text</span>*@
                     </div>
 
                 </div>

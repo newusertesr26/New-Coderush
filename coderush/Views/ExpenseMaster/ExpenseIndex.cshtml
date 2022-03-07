@@ -1,4 +1,5 @@
-﻿@model List<ExpenseMaster>
+﻿@using coderush.Models
+@model List<ExpenseMaster>
 @{ ViewData["Title"] = "Expense"; }
 
 
@@ -35,6 +36,7 @@
                                 <th width="10%">Exptype</th>
                                 <th width="10%">Amount</th>
                                 <th width="10%">Description</th>
+                                <th width="10%">FileUpload</th>
                                 <th width="10%">Is Active</th>
                             </tr>
                         </thead>
@@ -60,12 +62,18 @@
                     <td>
                         @item.Description
                     </td>
+                    <td>
+                        @item.FileUpload
+                        <br />
+                        @Html.ActionLink("Download", "DownloadFile", new { fileName = item.FileUpload })
+                    </td>
                     @*<td><span style="text-decoration-line:@(item.Isactive ? "line-through" : "none")">@item.Isactive</span></td>*@
                     <td>
                         <input type="checkbox" class="flat-red" @(item.isactive ? "checked" : "") onclick="return false;">
                     </td>
 
-                </tr>}
+                </tr>
+}
                         </tbody>
                     </table>
                 </div>

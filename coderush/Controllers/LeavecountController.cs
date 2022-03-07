@@ -15,6 +15,8 @@ using DemoCreate.Models.ViewModel;
 using Microsoft.AspNetCore.Http;
 using coderush.ViewModels;
 using coderush.Models.ViewModels;
+using Microsoft.AspNetCore.Hosting;
+using System.IO;
 
 namespace coderush.Controllers
 {
@@ -25,18 +27,21 @@ namespace coderush.Controllers
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly RoleManager<IdentityRole> _roleManager;
         private readonly ApplicationDbContext _context;
+        private readonly IWebHostEnvironment _webHostEnvironment;
         //private readonly IHostEnvironment _hostingEnvironment;
         public static string userid;
         public static string username;
         public LeavecountController(ILogger<HomeController> logger, UserManager<ApplicationUser> userManager,
            RoleManager<IdentityRole> roleManager,
-           ApplicationDbContext context)
+           ApplicationDbContext context,
+           IWebHostEnvironment webHostEnvironment)
         //IHostEnvironment hostingEnvironment)
         {
             _logger = logger;
             _roleManager = roleManager;
             _userManager = userManager;
             _context = context;
+            _webHostEnvironment = webHostEnvironment;
             //_hostingEnvironment = hostingEnvironment;
         }
         public IActionResult LeaveIndex(string selectedFilter)
@@ -99,6 +104,7 @@ namespace coderush.Controllers
                                    Userid = s.Userid,
                                    Fromdate = s.Fromdate,
                                    Todate = s.Todate,
+                                   Filename = s.FileUpload,
                                    Count = s.Count,
                                    Description = s.Description,
                                    Isapprove = s.Isapprove,
@@ -126,7 +132,7 @@ namespace coderush.Controllers
         //post submitted leavecount data. if todo.TodoId is null then create new, otherwise edit
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult SubmitForm([Bind("Id", "Userid", "Fromdate", "Todate", "Count", "Description", "ApproveDate", "Isapprove")] LeaveCount leaveCounts)
+        public IActionResult SubmitForm([Bind("Id", "Userid", "Fromdate", "Todate", "Count", "Description", "ApproveDate", "FileUpload", "Isapprove")] LeaveCountViewModel leaveCounts)
         {
             try
             {
@@ -138,6 +144,25 @@ namespace coderush.Controllers
 
                 var user = _userManager.GetUserAsync(User).Result;
 
+
+                string wwwPath = this._webHostEnvironment.WebRootPath;
+                string contentPath = this._webHostEnvironment.ContentRootPath;
+                var filename = leaveCounts.FileUpload.FileName;
+                string path = Path.Combine(this._webHostEnvironment.WebRootPath, "document/Leave");
+                //if (!Directory.Exists(path))
+                //{
+                //    Directory.CreateDirectory(path);
+                //}
+
+                List<string> uploadedFiles = new List<string>();
+
+                string fileName = Path.GetFileName(leaveCounts.FileUpload.FileName);
+                using (FileStream stream = new FileStream(Path.Combine(path, fileName), FileMode.Create))
+                {
+                    leaveCounts.FileUpload.CopyTo(stream);
+                    uploadedFiles.Add(fileName);
+                }
+
                 //create new
                 if (leaveCounts.Id == 0)
                 {
@@ -148,6 +173,7 @@ namespace coderush.Controllers
                     newleaveCount.Todate = leaveCounts.Todate;
                     newleaveCount.Count = leaveCounts.Count;
                     newleaveCount.Description = leaveCounts.Description;
+                    newleaveCount.FileUpload = leaveCounts.FileUpload.FileName.ToString(); ;
                     newleaveCount.ApproveDate = DateTime.Now;
                     newleaveCount.Isapprove = leaveCounts.Isapprove;
                     newleaveCount.CreatedBy = user.Id;
@@ -157,6 +183,7 @@ namespace coderush.Controllers
                     leaveHistory.Todate = leaveCounts.Todate;
                     leaveHistory.Count = leaveCounts.Count;
                     leaveHistory.Description = leaveCounts.Description;
+                    leaveHistory.FileUpload = leaveCounts.FileUpload.FileName.ToString();
                     leaveHistory.ApproveDate = DateTime.Now;
                     leaveHistory.Isapprove = leaveCounts.Isapprove;
                     leaveHistory.CreatedBy = userid;
@@ -178,6 +205,7 @@ namespace coderush.Controllers
                 editLeavecount.Todate = leaveCounts.Todate;
                 editLeavecount.Count = leaveCounts.Count;
                 editLeavecount.Description = leaveCounts.Description;
+                editLeavecount.FileUpload = leaveCounts.FileUpload.FileName.ToString(); 
                 editLeavecount.UpdatedBy = user.Id;
                 editLeavecount.Isapprove = true;
                 editLeavecount.Approveby = user.Id;
@@ -187,6 +215,7 @@ namespace coderush.Controllers
                 addleaveHistory.Todate = leaveCounts.Todate;
                 addleaveHistory.Count = leaveCounts.Count;
                 addleaveHistory.Description = leaveCounts.Description;
+                addleaveHistory.FileUpload = leaveCounts.FileUpload.FileName.ToString();
                 addleaveHistory.UpdatedBy = user.Id;
                 addleaveHistory.Isapprove = true;
                 addleaveHistory.Approveby = user.Id;
@@ -333,6 +362,18 @@ namespace coderush.Controllers
 
         //    return Json(new { success = true, message = "Data saved successfully." });
         //}
+
+        public FileResult DownloadFile(string fileName)
+        {
+            //Build the File Path.
+            string path = Path.Combine(this._webHostEnvironment.WebRootPath, "document/Leave/") + fileName;
+
+            //Read the File data into Byte Array.
+            byte[] bytes = System.IO.File.ReadAllBytes(path);
+
+            //Send the File to Download.
+            return File(bytes, "application/octet-stream", fileName);
+        }
 
         [HttpGet]
         public IActionResult EditData(int id)

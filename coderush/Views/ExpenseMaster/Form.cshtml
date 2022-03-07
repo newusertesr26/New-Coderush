@@ -16,7 +16,7 @@
     <!-- Main content -->
     <section class="content">
         <!-- Default box -->
-        <form asp-controller="ExpenseMaster" asp-action="SubmitForm" method="post">
+        <form asp-controller="ExpenseMaster" enctype="multipart/form-data" asp-action="SubmitForm" method="post">
             <div class="box">
                 <div class="box-header with-border">
                     <h3 class="box-title">Create or edit existing Expense item</h3>
@@ -35,9 +35,9 @@
                     <div class="form-group">
                         <label asp-for="Exptype"></label>
                         @*@Html.DropDownList("Selection", new SelectList(ViewBag.SelectionList, "Value", "Text"), new { @class = "form-control", @id = "ddlSelectionList" })*@
-                    <select name="exptype" class="form-control" asp-items="@ViewBag.ExpensesList" asp-for="Exptype">
-                        <option value="">-- Select --</option>
-                    </select>
+                        <select name="exptype" class="form-control" asp-items="@ViewBag.ExpensesList" asp-for="Exptype">
+                            <option value="">-- Select --</option>
+                        </select>
                         <span asp-validation-for="Exptype" class="text-danger"></span>
                         @*<span class="text-danger hidespan spanSelection">Please select Type</span>*@
                     </div>
@@ -55,9 +55,15 @@
                     </div>
                     <div class="form-group">
                         <label asp-for="Description"></label>
-                        <textarea asp-for="Description" rows="4" cols="50" type="text"  value="" class="form-control"></textarea>
+                        <textarea asp-for="Description" rows="4" cols="50" type="text" value="" class="form-control"></textarea>
                         <span asp-validation-for="Description" class="text-danger"></span>
                         @*<span class="text-danger hidespan spandescription">Please enter description</span>*@
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="FileUpload"></label>
+                        <input asp-for="FileUpload" type="file" class="form-control" />
+                        <span asp-validation-for="FileUpload" class="text-danger"></span>
+                        @*<span class="text-danger hidespan spantext">Please enter Text</span>*@
                     </div>
                     <div class="form-group">
                         <label asp-for="isactive"></label>

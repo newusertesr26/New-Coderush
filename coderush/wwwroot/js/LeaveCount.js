@@ -97,6 +97,7 @@
             method: 'Get',
             data: {},
             success: function (data) {
+                debugger
                 /*console.log(data);*/
                 $("#levtblbdy").empty();
                 if (data.list != null && data.list.length > 0) {
@@ -104,6 +105,7 @@
                     $.each(data.list, function (i, v) {
                         var rowdata = data.list[i]
                         innerHtml += "<tr>";
+                        debugger
                         //innerHtml += "<td><i class='fa fa-edit' style='font-size:20px' id='btnedit' data-id = " + rowdata.id + "></i></td>";
                         //innerHtml += "<td><i class='fa fa-trash' ></i></td>";
                         innerHtml += "<td><a href='/Leavecount/Form/" + rowdata.id + "'><i class='fa fa-edit'></i></a></td>";
@@ -115,6 +117,8 @@
                         innerHtml += "<td scope='col' id='Description'>" + rowdata.description + "</td>";
                         innerHtml += "<td scope='col' id='IsApprove'>" + rowdata.isapprove + "</td>";
                         innerHtml += "<td scope='col' id='Approve Date'>" + rowdata.approveDate + "</td>";
+                        //innerHtml += '<td>@Html.ActionLink("Download", "DownloadFile", new { fileName = item.FileUpload })</td>';
+                        innerHtml += "<td><a href='/Leavecount/DownloadFile/?fileName=" + rowdata.filename + "'>Download</a></td>";
                         innerHtml += "</tr>";
                     });
                     $("#levtblbdy").html(innerHtml);

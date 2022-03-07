@@ -1,4 +1,5 @@
 ﻿using coderush.DataEnum;
+using Microsoft.AspNetCore.Http;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -26,6 +27,8 @@ namespace coderush.Models.ViewModels
         [Required]
         [StringLength(60, MinimumLength = 3)]
         public string Description { get; set; }
+        [Display(Name = "CVUpload:")]
+        public IFormFile FileUpload { get; set; }
         [Display(Name = "isactive:")]
         public bool isactive { get; set; }
         public bool Isdelete { get; set; }

@@ -13,6 +13,8 @@ using coderush.DataEnum;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Authorization;
 using coderush.Models.ViewModels;
+using Microsoft.AspNetCore.Hosting;
+using System.IO;
 
 namespace coderush.Controllers
 {
@@ -23,16 +25,19 @@ namespace coderush.Controllers
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly RoleManager<IdentityRole> _roleManager;
         private readonly ApplicationDbContext _context;
+        private readonly IWebHostEnvironment _webHostEnvironment;
         //private readonly IHostEnvironment _hostingEnvironment;
         public ExpenseMasterController(ILogger<HomeController> logger, UserManager<ApplicationUser> userManager,
            RoleManager<IdentityRole> roleManager,
-           ApplicationDbContext context)
+           ApplicationDbContext context,
+           IWebHostEnvironment webHostEnvironment)
         //IHostEnvironment hostingEnvironment)
         {
             _logger = logger;
             _roleManager = roleManager;
             _userManager = userManager;
             _context = context;
+            _webHostEnvironment = webHostEnvironment;
             //_hostingEnvironment = hostingEnvironment;
         }
         public IActionResult ExpenseIndex()
@@ -50,7 +55,7 @@ namespace coderush.Controllers
         //post submitted expenseMasters data. if expenseMasters.expenseMastersId is null then create new, otherwise edit
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult SubmitForm([Bind("Id", "ExpName", "Exptype", "Amount", "Description", "isactive")] ExpenseMasterViewModel expenseMasters)
+        public IActionResult SubmitForm([Bind("Id", "ExpName", "Exptype", "Amount", "Description", "FileUpload", "isactive")] ExpenseMasterViewModel expenseMasters)
         {
             try
             {
@@ -62,6 +67,25 @@ namespace coderush.Controllers
 
                 var user = _userManager.GetUserAsync(User).Result;
 
+
+                string wwwPath = this._webHostEnvironment.WebRootPath;
+                string contentPath = this._webHostEnvironment.ContentRootPath;
+                var filename = expenseMasters.FileUpload.FileName;
+                string path = Path.Combine(this._webHostEnvironment.WebRootPath, "document/Expense");
+                //if (!Directory.Exists(path))
+                //{
+                //    Directory.CreateDirectory(path);
+                //}
+
+                List<string> uploadedFiles = new List<string>();
+
+                string fileName = Path.GetFileName(expenseMasters.FileUpload.FileName);
+                using (FileStream stream = new FileStream(Path.Combine(path, fileName), FileMode.Create))
+                {
+                    expenseMasters.FileUpload.CopyTo(stream);
+                    uploadedFiles.Add(fileName);
+                }
+
                 //create new
                 if (expenseMasters.Id == 0)
                 {
@@ -69,6 +93,7 @@ namespace coderush.Controllers
                     newexpenseMaster.Description = expenseMasters.Description;
                     newexpenseMaster.CreatedDate = DateTime.Now;
                     newexpenseMaster.ExpName = expenseMasters.ExpName;
+                    newexpenseMaster.FileUpload = expenseMasters.FileUpload.FileName.ToString();
                     newexpenseMaster.Exptype = expenseMasters.Exptype;
                     newexpenseMaster.Amount = expenseMasters.Amount;
                     newexpenseMaster.isactive = expenseMasters.isactive;
@@ -86,6 +111,7 @@ namespace coderush.Controllers
                 editexpensemaster.ExpName = expenseMasters.ExpName;
                 editexpensemaster.Exptype = expenseMasters.Exptype;
                 editexpensemaster.Amount = expenseMasters.Amount;
+                editexpensemaster.FileUpload = expenseMasters.FileUpload.FileName.ToString();
                 editexpensemaster.Description = expenseMasters.Description;
                 editexpensemaster.UpdatedBy = user.Id;
                 editexpensemaster.UpdatedDate = DateTime.Now;
@@ -178,7 +204,18 @@ namespace coderush.Controllers
             }
         }
 
-       
+        public FileResult DownloadFile(string fileName)
+        {
+            //Build the File Path.
+            string path = Path.Combine(this._webHostEnvironment.WebRootPath, "document/Expense/") + fileName;
+
+            //Read the File data into Byte Array.
+            byte[] bytes = System.IO.File.ReadAllBytes(path);
+
+            //Send the File to Download.
+            return File(bytes, "application/octet-stream", fileName);
+        }
+
 
         [HttpGet]
         public IActionResult EditData(int id)

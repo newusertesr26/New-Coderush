@@ -1,7 +1,6 @@
 ﻿@model List<LeadMaster>
 @{ ViewData["Title"] = "Lead"; }
 
-
 <!-- Content Wrapper. Contains page content -->
 <div class="content-wrapper">
     <!-- Content Header (Page header) -->
@@ -19,7 +18,7 @@
         <!-- Default box -->
         <div class="box">
             <div class="box-header with-border">
-                <h3 class="box-title">List of Lead item</h3>
+                <h3 class="box-title">List of Laed item</h3>
                 <div class="box-tools pull-right">
                     <a href="/LeadMaster/Form" class="btn btn-primary"><i class="fa fa-plus"></i></a>
                 </div>
@@ -42,34 +41,35 @@
                         <tbody>
                             @foreach (var item in Model)
                             {
-                <tr>
-                    <td>
-                        <a href="/LeadMaster/Form/@item.id"><i class="fa fa-edit"></i></a>
-                    </td>
-                    <td>
-                        <a href="/LeadMaster/Delete/@item.id"><i class="fa fa-trash"></i></a>
-                    </td>
-                    <td>
-                        @item.Name
-                    </td>
-                    <td>
-                        @item.Email
-                    </td>
-                    <td>
-                        @item.Phone
-                    </td>
-                    <td>
-                        @item.Technologies
-                    </td>
-                    <td>
-                        @item.FileUpload
-                    </td>
-                    @*<td><span style="text-decoration-line:@(item.Isactive ? "line-through" : "none")">@item.Isactive</span></td>*@
-                    <td>
-                        <input type="checkbox" class="flat-red" @(item.IsActive ? "checked" : "") onclick="return false;">
-                    </td>
+                            <tr>
+                                <td>
+                                    <a href="/LeadMaster/Form/@item.id"><i class="fa fa-edit"></i></a>
+                                </td>
+                                <td>
+                                    <a href="/LeadMaster/Delete/@item.id"><i class="fa fa-trash"></i></a>
+                                </td>
+                                <td>
+                                    @item.Name
+                                </td>
+                                <td>
+                                    @item.Email
+                                </td>
+                                <td>
+                                    @item.Phone
+                                </td>
+                                <td>
+                                    @item.Technologies
+                                </td>
+                                <td>
+                                    @item.FileUpload
+                                </td>
+                                @*<td><span style="text-decoration-line:@(item.Isactive ? "line-through" : "none")">@item.Isactive</span></td>*@
+                                <td>
+                                    <input type="checkbox" class="flat-red" @(item.IsActive ? "checked" : "") onclick="return false;">
+                                </td>
 
-                </tr>}
+                            </tr>
+}
                         </tbody>
                     </table>
                 </div>
@@ -103,7 +103,7 @@
     <script type="text/javascript">
         $(document).ready(function () {
 
-            $('#').DataTable({
+            $('#grid').DataTable({
                 lengthChange: false,
                 info: false,
                 searching: true,

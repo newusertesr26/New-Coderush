@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.AspNetCore.Http;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
@@ -17,6 +18,8 @@ namespace coderush.ViewModels
         public string Userid { get; set; }
         public DateTime? Fromdate { get; set; }
         public DateTime? Todate { get; set; }
+        public IFormFile FileUpload { get; set; }
+        public string Filename { get; set; }
         public string Count { get; set; }
         public string Description { get; set; }
         public bool Isapprove { get; set; }
