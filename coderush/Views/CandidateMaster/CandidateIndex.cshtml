@@ -68,6 +68,8 @@
                                 </td>
                                 <td>
                                     @item.FileUpload
+                                    <br />
+                                    @Html.ActionLink("Download", "DownloadFile", new { fileName = item.FileUpload })
                                 </td>
                                 <td>
                                     @item.InterviewDate

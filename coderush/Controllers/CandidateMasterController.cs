@@ -233,6 +233,18 @@ namespace coderush.Controllers
             }
         }
 
+        public FileResult DownloadFile(string fileName)
+        {
+            //Build the File Path.
+            string path = Path.Combine(this._webHostEnvironment.WebRootPath, "document/Candidate/") + fileName;
+
+            //Read the File data into Byte Array.
+            byte[] bytes = System.IO.File.ReadAllBytes(path);
+
+            //Send the File to Download.
+            return File(bytes, "application/octet-stream", fileName);
+        }   
+
         [HttpGet]
         public IActionResult EditData(int id)
         {
