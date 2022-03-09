@@ -49,10 +49,21 @@ namespace coderush.Areas.Identity.Pages.Account.Manage
             [Required]
             [EmailAddress]
             public string Email { get; set; }
-
             [Phone]
             [Display(Name = "Phone number")]
             public string PhoneNumber { get; set; }
+            //[Display(Name = "Gender")]
+            //public string Gender { get; set; }
+            //[Display(Name = "Date Of Birth")]
+            //public string DateOfBirth { get; set; }
+            //[Display(Name = "First Name")]
+            //public string FirstName { get; set; }
+            //[Display(Name = "Last Name")]
+            //public string LastName { get; set; }
+            //[Display(Name = "Profile Picture")]
+            //public string ProfilePicture { get; set; }
+
+
         }
 
         public async Task<IActionResult> OnGetAsync()
@@ -66,6 +77,7 @@ namespace coderush.Areas.Identity.Pages.Account.Manage
             var userName = await _userManager.GetUserNameAsync(user);
             var email = await _userManager.GetEmailAsync(user);
             var phoneNumber = await _userManager.GetPhoneNumberAsync(user);
+            
 
             Username = userName;
 

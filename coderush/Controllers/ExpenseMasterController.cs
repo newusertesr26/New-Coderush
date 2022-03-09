@@ -190,6 +190,7 @@ namespace coderush.Controllers
                 }
 
                 deleteexpensemaster.Isdelete = true;
+                deleteexpensemaster.isactive = false;
                 _context.ExpenseMaster.Update(deleteexpensemaster);
                 _context.SaveChanges();
 

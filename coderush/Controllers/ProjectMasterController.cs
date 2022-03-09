@@ -167,6 +167,7 @@ namespace coderush.Controllers
                 }
 
                 deleteprojectmaster.isdeleted = true;
+                deleteprojectmaster.isactive = false;
                 _context.ProjectMaster.Update(deleteprojectmaster);
                 _context.SaveChanges();
 

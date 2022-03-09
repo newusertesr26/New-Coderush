@@ -191,6 +191,7 @@ namespace coderush.Controllers
                 }
 
                 deleteInvoicemaster.Isdeleted = true;
+                deleteInvoicemaster.Isverify = false;
                 _context.InvoiceMaster.Update(deleteInvoicemaster);
                 _context.SaveChanges();
 

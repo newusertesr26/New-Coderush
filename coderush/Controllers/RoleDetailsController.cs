@@ -155,6 +155,7 @@ namespace coderush.Controllers
                 }
 
                 deleteroledetalis.Isdelete = true;
+                deleteroledetalis.Isactive = false;
                 _context.RoleDetails.Update(deleteroledetalis);
                 _context.SaveChanges();
 

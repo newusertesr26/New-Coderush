@@ -187,6 +187,7 @@ namespace coderush.Controllers
                 }
 
                 deleteleadmaster.IsDelete = true;
+                deleteleadmaster.IsActive = false;
                 _context.LeadMaster.Update(deleteleadmaster);
                 _context.SaveChanges();
 

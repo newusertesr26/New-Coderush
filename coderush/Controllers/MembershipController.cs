@@ -17,7 +17,7 @@ using Microsoft.Extensions.Options;
 
 namespace coderush.Controllers
 {
-    [Authorize(Roles = "SuperAdmin")]
+    [Authorize(Roles = "SuperAdmin,HR")]
     public class MembershipController : Controller
     {
         private readonly Services.Security.ICommon _security;

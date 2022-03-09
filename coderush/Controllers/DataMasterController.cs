@@ -157,6 +157,7 @@ namespace coderush.Controllers
                 }
 
                 deletedatamaster.Isdeleted = true;
+                deletedatamaster.Isactive = false;
                 _context.Datamaster.Update(deletedatamaster);
                 _context.SaveChanges();
 

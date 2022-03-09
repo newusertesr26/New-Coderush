@@ -302,6 +302,7 @@ namespace coderush.Controllers
                 }
 
                 deleteleavecount.Isapprove = true;
+                deleteleavecount.IsDelete = false;
                 _context.LeaveCount.Update(deleteleavecount);
                 _context.SaveChanges();
 

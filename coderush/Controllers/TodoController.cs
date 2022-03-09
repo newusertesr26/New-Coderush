@@ -9,7 +9,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace coderush.Controllers
 {
-    [Authorize(Roles = "SuperAdmin")]
+    [Authorize(Roles = "SuperAdmin,HR")]
     public class TodoController : Controller
     {
         private readonly ApplicationDbContext _context;
@@ -18,7 +18,6 @@ namespace coderush.Controllers
         public TodoController(ApplicationDbContext context) {
             _context = context;
         }
-
         //consume db context service, display all todo items
         public IActionResult Index()
         {
@@ -36,7 +35,7 @@ namespace coderush.Controllers
                 Todo newTodo = new Todo();
                 return View(newTodo);
             }
-
+                                                                                                 
             //edit todo
             Todo todo = new Todo();
             todo = _context.Todo.Where(x => x.TodoId.Equals(id)).FirstOrDefault();
@@ -49,7 +48,7 @@ namespace coderush.Controllers
             return View(todo);
 
         }
-
+         
         //post submitted todo data. if todo.TodoId is null then create new, otherwise edit
         [HttpPost]
         [ValidateAntiForgeryToken]
@@ -71,7 +70,7 @@ namespace coderush.Controllers
                     newTodo.CreatedDate = DateTime.Now;
                     newTodo.TodoItem = todo.TodoItem;
                     newTodo.IsDone = todo.IsDone;
-                    _context.Todo.Add(todo);
+                    _context.Todo.Add(newTodo);
                     _context.SaveChanges();
 
                     TempData[StaticString.StatusMessage] = "Create new todo item success.";
@@ -102,39 +101,39 @@ namespace coderush.Controllers
         public IActionResult Delete(string id)
         {
             if (id == null)
-            {
-                return NotFound();
-            }
-
-            var todo = _context.Todo.Where(x => x.TodoId.Equals(id)).FirstOrDefault();
-            return View(todo);
-        }
-
-        //delete submitted todo item if found, otherwise 404
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public IActionResult SubmitDelete([Bind("TodoId")]Todo todo)
-        {
-            try
-            {
+            {                                                                                    
+                return NotFound();                                                               
+            }                                                                                    
+                                                                                                 
+            var todo = _context.Todo.Where(x => x.TodoId.Equals(id)).FirstOrDefault();           
+            return View(todo);                                                                   
+        }                                                                                        
+                                                                                                 
+        //delete submitted todo item if found, otherwise 404                                     
+        [HttpPost]                                                                               
+        [ValidateAntiForgeryToken]                                                               
+        public IActionResult SubmitDelete([Bind("TodoId")]Todo todo)                             
+        {                                                                                        
+            try                                                                                  
+            {                                                                                    
                 var deleteTodo = _context.Todo.Where(x => x.TodoId.Equals(todo.TodoId)).FirstOrDefault();
-                if (deleteTodo == null)
-                {
-                    return NotFound();
-                }
-
-                _context.Todo.Remove(deleteTodo);
-                _context.SaveChanges();
-
-                TempData[StaticString.StatusMessage] = "Delete todo item success.";
-                return RedirectToAction(nameof(Index));
-            }
-            catch (Exception ex)
-            {
-
-                TempData[StaticString.StatusMessage] = "Error: " + ex.Message;
-                return RedirectToAction(nameof(Delete), new { id = todo.TodoId ?? "" });
-            }
-        }
-    }
-}
+                if (deleteTodo == null)                                                          
+                {                                                                                
+                    return NotFound();                                                           
+                }                                                                                
+                                                                                                 
+                _context.Todo.Remove(deleteTodo);                                                
+                _context.SaveChanges();                                                          
+                                                                                                 
+                TempData[StaticString.StatusMessage] = "Delete todo item success.";              
+                return RedirectToAction(nameof(Index));                                          
+            }                                                                                    
+            catch (Exception ex)                                                                 
+            {                                                                                    
+                                                                                                 
+                TempData[StaticString.StatusMessage] = "Error: " + ex.Message;                   
+                return RedirectToAction(nameof(Delete), new { id = todo.TodoId ?? "" });         
+            }                                                                                    
+        }                                                                                        
+    }                                                                                            
+}                                                                                                
