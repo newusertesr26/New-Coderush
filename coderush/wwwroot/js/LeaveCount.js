@@ -9,7 +9,7 @@
         var description = $("#levdescription").val();
         var isapprove = $("#isaprv").val();
         var approveDate = $("#apprvdate").val();
-        ``
+        
 
         ////var Isvalid = true;
         ////if (userid == null || userid == undefined || userid == "") {
@@ -118,8 +118,8 @@
                         innerHtml += "<td scope='col' id='IsApprove'>" + rowdata.isapprove + "</td>";
                         innerHtml += "<td scope='col' id='Approve Date'>" + rowdata.approveDate + "</td>";
                         //innerHtml += '<td>@Html.ActionLink("Download", "DownloadFile", new { fileName = item.FileUpload })</td>';
-                        innerHtml += "<td><a href='/Leavecount/DownloadFile/?fileName=" + rowdata.filename + "'>Download</a></td>";
-                        innerHtml += "</tr>";
+                        innerHtml += "<td><a href='/Leavecount/DownloadFile/?fileName=" + rowdata.filename + "'><i class='fa fa-download'></i></a></td>";
+                        innerHtml += "</tr>"
                     });
                     $("#levtblbdy").html(innerHtml);
                 }
