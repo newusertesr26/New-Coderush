@@ -219,6 +219,8 @@ namespace coderush.Controllers
                 }
 
                 deletecandidatemaster.IsDelete = true;
+                deletecandidatemaster.IsActive = false;
+
                 _context.CandidateMaster.Update(deletecandidatemaster);
                 _context.SaveChanges();
 

@@ -9,7 +9,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace coderush.Controllers
 {
-    [Authorize(Roles = "SuperAdmin")]
+    [Authorize(Roles = "SuperAdmin,HR")]
     public class TodoController : Controller
     {
         private readonly ApplicationDbContext _context;
@@ -71,7 +71,7 @@ namespace coderush.Controllers
                     newTodo.CreatedDate = DateTime.Now;
                     newTodo.TodoItem = todo.TodoItem;
                     newTodo.IsDone = todo.IsDone;
-                    _context.Todo.Add(todo);
+                    _context.Todo.Add(newTodo);
                     _context.SaveChanges();
 
                     TempData[StaticString.StatusMessage] = "Create new todo item success.";
@@ -122,8 +122,7 @@ namespace coderush.Controllers
                 {
                     return NotFound();
                 }
-
-                _context.Todo.Remove(deleteTodo);
+                _context.Todo.Update(deleteTodo);
                 _context.SaveChanges();
 
                 TempData[StaticString.StatusMessage] = "Delete todo item success.";
