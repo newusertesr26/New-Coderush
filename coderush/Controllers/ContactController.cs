@@ -1,5 +1,6 @@
 ﻿using coderush.Data;
 using coderush.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -11,6 +12,7 @@ using System.Threading.Tasks;
 
 namespace coderush.Controllers
 {
+    [Authorize(Roles = "HR,SuperAdmin")]
     public class ContactController : Controller
     {
         private readonly ILogger<HomeController> _logger;
