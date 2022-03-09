@@ -1,8 +1,11 @@
 ﻿@model List<CandidateMaster>
-@{ ViewData["Title"] = "Candidate"; }
+@using Microsoft.AspNetCore.Identity
+@inject UserManager<ApplicationUser> _userManager
 
-
-
+@{ ViewData["Title"] = "Candidate";
+    var user = await _userManager.GetUserAsync(User);
+    var roles = await _userManager.GetRolesAsync(user);
+}
 <!-- Content Wrapper. Contains page content -->
 <div class="content-wrapper">
     <!-- Content Header (Page header) -->
@@ -48,53 +51,57 @@
                         <tbody>
                             @foreach (var item in Model)
                             {
-                <tr>
-                    <td>
-                        <a href="/CandidateMaster/Form/@item.Id"><i class="fa fa-edit"></i></a> &nbsp; &nbsp;
-                        <a href="/CandidateMaster/Delete/@item.Id"><i class="fa fa-trash"></i></a>
-                    </td>
-                    <td>
-                        @item.Name
-                    </td>
-                    <td>
-                        @item.Email
-                    </td>
-                    <td>
-                        @item.Phone
-                    </td>
-                    <td>
-                        @item.Technologies
-                    </td>
-                    <td>
-                        @*@item.FileUpload
-                            <br />
-                             @Html.ActionLink("Download", "DownloadFile", new { fileName = item.FileUpload })*@
-                        <a asp-controller="CandidateMaster" asp-action="DownloadFile" asp-route-filename="@item.FileUpload"><i class="fa fa-download"></i></a>
-                    </td>
-                    <td>
-                        @item.InterviewDate
-                    </td>
-                    <td>
-                        @item.PlaceOfInterview
-                    </td>
-                    <td>
-                        @item.InterviewTime
-                    </td>
-                    <td>
-                        @item.InterviewDescription
-                    </td>
+                                <tr>
+                                    <td>
+                                        <a href="/CandidateMaster/Form/@item.Id"><i class="fa fa-edit"></i></a> &nbsp; &nbsp;
+                                        @if (roles.Contains("SuperAdmin"))
+                                        {
+                                            <a href="/CandidateMaster/Delete/@item.Id"><i class="fa fa-trash"></i></a>
+                                        }
+                                        </td>
+                                    <td>
+                                        @item.Name
+                                    </td>
+                                    <td>
+                                        @item.Email
+                                    </td>
+                                    <td>
+                                        @item.Phone
+                                    </td>
+                                    <td>
+                                        @item.Technologies
+                                    </td>
+                                    <td>
+                                        @*@item.FileUpload
+                                            <br />
+                                             @Html.ActionLink("Download", "DownloadFile", new { fileName = item.FileUpload })*@
+                                        <a asp-controller="CandidateMaster" asp-action="DownloadFile" asp-route-filename="@item.FileUpload"><i class="fa fa-download"></i></a>
+                                    </td>
+                                    <td>
+                                        @item.InterviewDate
+                                    </td>
+                                    <td>
+                                        @item.PlaceOfInterview
+                                    </td>
+                                    <td>
+                                        @item.InterviewTime
+                                    </td>
+                                    <td>
+                                        @item.InterviewDescription
+                                    </td>
 
-                    @*<td><span style="text-decoration-line:@(item.Isactive ? "line-through" : "none")">@item.Isactive</span></td>*@
-                    <td>
-                        <input type="checkbox" class="flat-red" @(item.IsActive ? "checked" : "") onclick="return false;">
-                    </td>
-                    <td>
-                        <input type="checkbox" class="flat-red" @(item.IsReject ? "checked" : "") onclick="return false;">
-                    </td>
-                    <td>
-                        <a href="#"><i id="myModal" onclick="openNote(@item.Id)" &nbsp; class="fa fa-comments-o"></i></a>
-                    </td>
-                </tr>}
+                                    @*<td><span style="text-decoration-line:@(item.Isactive ? "line-through" : "none")">@item.Isactive</span></td>*@
+                                    <td>
+                                        <input type="checkbox" class="flat-red" @(item.IsActive ? "checked" : "") onclick="return false;">
+                                    </td>
+                                    <td>
+                                        <input type="checkbox" class="flat-red" @(item.IsReject ? "checked" : "") onclick="return false;">
+                                    </td>
+                                    <td>
+                                        <a href="#"><i id="myModal" onclick="openNote(@item.Id)" &nbsp; class="fa fa-comments-o"></i></a>
+                                    </td>
+                                </tr>
+                            }
                         </tbody>
                     </table>
                 </div>
@@ -138,7 +145,7 @@
                     <input name="IsValid" type="hidden" id="noteid" />
                     <div class="form-group">
                         <label>Notes:</label>
-                        <textarea type="text" TextMode="MultiLine" rows="1" cols="10"  class="form-control" id="notes" style="width: 572px;height: 165px;"></textarea>
+                        <textarea type="text" TextMode="MultiLine" rows="1" cols="10" class="form-control" id="notes" style="width: 572px;height: 165px;"></textarea>
                         @*<span asp-validation-for="PositionName" class="text-danger"></span>*@
                         @*<span class="notereq">Note is Required</span>*@
                     </div>
@@ -226,8 +233,7 @@
             debugger
             var notes = $("#notes").val();
             var id = $("#noteid").val();
-            if (notes == '')
-            {
+            if (notes == '') {
                 alert("Note is Required");
                 return false;
             }

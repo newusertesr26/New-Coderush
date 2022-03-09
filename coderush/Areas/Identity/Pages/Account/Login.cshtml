@@ -44,7 +44,7 @@
         <!-- /.login-logo -->
         <div class="login-box-body">
             <p class="login-box-msg">Sign in to start your session</p>
-            <form id="account" method="post">
+            <form id="account" method="post" style="height:200px;">
                 <div asp-validation-summary="All" class="text-danger"></div>
                 <div class="form-group has-feedback">
                     <input asp-for="Input.Email" type="text" class="form-control" placeholder="Email">
@@ -69,7 +69,7 @@
                     <!-- /.col -->
                 </div>
             </form>
-                <div class="social-auth-links text-center">
+                @*<div class="social-auth-links text-center">
                     <p>- OR -</p>
                     <a href="#" class="btn btn-block btn-social btn-facebook btn-flat">
                         <i class="fa fa-facebook"></i> Sign in using
@@ -79,10 +79,10 @@
                         <i class="fa fa-google-plus"></i> Sign in using
                         Google+
                     </a>
-                </div>
+                </div>*@
             <!-- /.social-auth-links -->
             <a asp-page="./ForgotPassword">I forgot my password</a><br>
-            <a asp-page="./Register" class="text-center">Register a new membership</a>
+            @*<a asp-page="./Register" class="text-center">Register a new membership</a>*@
         </div>
         <!-- /.login-box-body -->
     </div>
