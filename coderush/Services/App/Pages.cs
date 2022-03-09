@@ -8,6 +8,21 @@ namespace coderush.Services.App
     //static class for app pages common information
     public static partial class Pages
     {
+        public static class Contact
+        {
+            public const string ControllerName = "Contact";
+            public const string RoleName = "Contact";
+            public const string UrlDefault = "/Contact/ContactIndex";
+            public const string NavigationName = "Contact";
+        }
+
+        public static class Hire
+        {
+            public const string ControllerName = "Hire";
+            public const string RoleName = "Hire";
+            public const string UrlDefault = "/Hire/HireIndex";
+            public const string NavigationName = "Hire";
+        }
         public static class DataMaster
         {
             public const string ControllerName = "DataMaster";

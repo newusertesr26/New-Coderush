@@ -24,6 +24,8 @@ namespace coderush.Data
         public DbSet<LeaveCount> LeaveCount { get; set; }
         public DbSet<RoleDetails> RoleDetails { get; set; }
         public DbSet<LeaveHistory> LeaveHistory { get; set; }
-        public DbSet<Comments> Comments { get; set; }
+        public DbSet<Contact> Contact { get; set; }
+        public DbSet<Hire> Hire { get; set; }
+
     }
 }
