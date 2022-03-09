@@ -219,6 +219,8 @@ namespace coderush.Controllers
                 }
 
                 deletecandidatemaster.IsDelete = true;
+                deletecandidatemaster.IsActive = false;
+
                 _context.CandidateMaster.Update(deletecandidatemaster);
                 _context.SaveChanges();
 
@@ -253,5 +255,39 @@ namespace coderush.Controllers
         }
 
 
+        public ActionResult Notes(int id)
+        {
+            if (id == 0)
+            {
+                return null;
+            }
+
+            Comments model = new Comments();
+
+           var models = _context.Comments.Where(x => x.CandidateId.Equals(id)).ToList();
+
+            return Json(models);
+        }
+
+        public ActionResult SaveNotes(int id, string notes)
+        {
+
+            try
+            {
+                Comments models = new Comments();
+                models.CandidateId = id;
+                models.Note = notes;
+                _context.Comments.Add(models);
+                _context.SaveChanges();
+                var result = new { Success = "true", Message = "Data save successfully." };
+                return Json(result);
+            }
+            catch(Exception ex)
+            {
+                var result = new { Success = "False", Message = ex.Message };
+                return Json(result);
+            }
+           
+        }
     }
 }

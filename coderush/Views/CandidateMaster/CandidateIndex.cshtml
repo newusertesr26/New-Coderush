@@ -1,7 +1,11 @@
 ﻿@model List<CandidateMaster>
-@{ ViewData["Title"] = "Candidate"; }
+@using Microsoft.AspNetCore.Identity
+@inject UserManager<ApplicationUser> _userManager
 
-
+@{ ViewData["Title"] = "Candidate";
+    var user = await _userManager.GetUserAsync(User);
+    var roles = await _userManager.GetRolesAsync(user);
+}
 <!-- Content Wrapper. Contains page content -->
 <div class="content-wrapper">
     <!-- Content Header (Page header) -->
@@ -29,76 +33,83 @@
                     <table id="grid" class="table table-striped" cellspacing="0" width="100%">
                         <thead>
                             <tr>
-                                <th width="5%">Edit</th>
-                                <th width="5%">Delete</th>
+                                <th>Action</th>
                                 <th width="20%">Name</th>
                                 <th width="10%">Email</th>
-                                <th width="10%">Phone</th>
+                                <th width="8%">Phone</th>
+                                <th width="10%">Technologies</th>
+                                <th width="4%">CV</th>
                                 <th width="10%">Interview Date</th>
                                 <th width="10%">Place Of Interview</th>
                                 <th width="10%">Interview Time</th>
                                 <th width="10%">Interview Description</th>
-                                <th width="10%">Technologies</th>
-                                <th width="10%">FileUpload</th>
-                                <th width="10%">Is Active</th>
-                                <th width="10%">Is Reject</th>
+                                <th width="10%">Active</th>
+                                <th width="10%">Reject</th>
+                                <th id="cmtopenbtn">Comment</th>
                             </tr>
                         </thead>
                         <tbody>
                             @foreach (var item in Model)
                             {
-                            <tr>
-                                <td>
-                                    <a href="/CandidateMaster/Form/@item.Id"><i class="fa fa-edit"></i></a>
-                                </td>
-                                <td>
-                                    <a href="/CandidateMaster/Delete/@item.Id"><i class="fa fa-trash"></i></a>
-                                </td>
-                                <td>
-                                    @item.Name
-                                </td>
-                                <td>
-                                    @item.Email
-                                </td>
-                                <td>
-                                    @item.Phone
-                                </td>
-                                <td>
-                                    @item.Technologies
-                                </td>
-                                <td>
-                                    @item.FileUpload
-                                    <br />
-                                    @Html.ActionLink("Download", "DownloadFile", new { fileName = item.FileUpload })
-                                </td>
-                                <td>
-                                    @item.InterviewDate
-                                </td>
-                                <td>
-                                    @item.PlaceOfInterview
-                                </td>
-                                <td>
-                                    @item.InterviewTime
-                                </td>
-                                <td>
-                                    @item.InterviewDescription
-                                </td>
-                                @*<td><span style="text-decoration-line:@(item.Isactive ? "line-through" : "none")">@item.Isactive</span></td>*@
-                                <td>
-                                    <input type="checkbox" class="flat-red" @(item.IsActive ? "checked" : "") onclick="return false;">
-                                </td>
-                                <td>
-                                    <input type="checkbox" class="flat-red" @(item.IsReject ? "checked" : "") onclick="return false;">
-                                </td>
+                                <tr>
+                                    <td>
+                                        <a href="/CandidateMaster/Form/@item.Id"><i class="fa fa-edit"></i></a> &nbsp; &nbsp;
+                                        @if (roles.Contains("SuperAdmin"))
+                                        {
+                                            <a href="/CandidateMaster/Delete/@item.Id"><i class="fa fa-trash"></i></a>
+                                        }
+                                        </td>
+                                    <td>
+                                        @item.Name
+                                    </td>
+                                    <td>
+                                        @item.Email
+                                    </td>
+                                    <td>
+                                        @item.Phone
+                                    </td>
+                                    <td>
+                                        @item.Technologies
+                                    </td>
+                                    <td>
+                                        @*@item.FileUpload
+                                            <br />
+                                             @Html.ActionLink("Download", "DownloadFile", new { fileName = item.FileUpload })*@
+                                        <a asp-controller="CandidateMaster" asp-action="DownloadFile" asp-route-filename="@item.FileUpload"><i class="fa fa-download"></i></a>
+                                    </td>
+                                    <td>
+                                        @item.InterviewDate
+                                    </td>
+                                    <td>
+                                        @item.PlaceOfInterview
+                                    </td>
+                                    <td>
+                                        @item.InterviewTime
+                                    </td>
+                                    <td>
+                                        @item.InterviewDescription
+                                    </td>
 
-                            </tr>
-}
+                                    @*<td><span style="text-decoration-line:@(item.Isactive ? "line-through" : "none")">@item.Isactive</span></td>*@
+                                    <td>
+                                        <input type="checkbox" class="flat-red" @(item.IsActive ? "checked" : "") onclick="return false;">
+                                    </td>
+                                    <td>
+                                        <input type="checkbox" class="flat-red" @(item.IsReject ? "checked" : "") onclick="return false;">
+                                    </td>
+                                    <td>
+                                        <a href="#"><i id="myModal" onclick="openNote(@item.Id)" &nbsp; class="fa fa-comments-o"></i></a>
+                                    </td>
+                                </tr>
+                            }
                         </tbody>
                     </table>
                 </div>
 
             </div>
             <!-- /.box-body -->
+
+
         </div>
 
         <!-- /.box -->
@@ -107,6 +118,46 @@
 </div>
 <!-- /.content-wrapper -->
 
+
+<div class="modal fade" id="addComments" tabindex="-1" role="dialog" aria-labelledby="addCommentsLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="addPositionsLabel">Add Comments</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+
+            <div class="modal-body">
+                <div class="table-responsive">
+                    <table id="grid" class="table table-striped" cellspacing="0" width="100%">
+                        <thead>
+                            <tr>
+                                <th width="10%"></th>
+                            </tr>
+                        </thead>
+                        <tbody id="notebody">
+                        </tbody>
+                    </table>
+                </div>
+                <form asp-action="Create">
+                    <input name="IsValid" type="hidden" id="noteid" />
+                    <div class="form-group">
+                        <label>Notes:</label>
+                        <textarea type="text" TextMode="MultiLine" rows="1" cols="10" class="form-control" id="notes" style="width: 572px;height: 165px;"></textarea>
+                        @*<span asp-validation-for="PositionName" class="text-danger"></span>*@
+                        @*<span class="notereq">Note is Required</span>*@
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                @*<button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>*@
+                <button type="button" class="btn btn-primary" id="savenotes" data-save="modal">Save</button>
+            </div>
+        </div>
+    </div>
+</div>
 
 
 @section Styles{
@@ -122,6 +173,9 @@
     <script src="~/adminlte/components/datatables.net/js/jquery.dataTables.min.js"></script>
     <script src="~/adminlte/components/datatables.net-bs/js/dataTables.bootstrap.min.js"></script>
 
+    @*<script type="text/javascript" src="https://code.jquery.com/jquery-1.11.3.min.js"></script>*@
+    <script type="text/javascript" src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+
     <!-- page script -->
     <script type="text/javascript">
         $(document).ready(function () {
@@ -132,11 +186,80 @@
                 searching: true,
                 dom: 'lrtip',
                 scrollX: false,
-                pageLength:25,
-                 
+                pageLength: 25,
+
             });
 
+
+
         });
+
+        //$(window).load(function () {
+        //    $('#myModal').modal('show');
+        //});
+
+        function openNote(id) {
+            debugger
+            $("#notes").val("");
+            $.ajax({
+                type: "GET",
+                url: "/CandidateMaster/Notes",
+                data: { "id": id },
+                success: function (response) {
+                    console.log(response);
+                    if (response != null) {
+                        $("#notes").val("");
+                        $("#noteid").val(id);
+                        var innerHtml = '';
+                        $.each(response, function (i, v) {
+                            var rowdata = response[i]
+                            innerHtml += "<tr>";
+                            innerHtml += "<td> " + rowdata.note + " </td>";
+                            innerHtml += "</tr>"
+                        });
+                        $("#notebody").html(innerHtml);
+
+                        $("#addComments").modal("show");
+                    }
+                },
+                error: function (response) {
+                    alert(response.responseText);
+                }
+            });
+
+        }
+
+        $("#savenotes").click(function () {
+            debugger
+            var notes = $("#notes").val();
+            var id = $("#noteid").val();
+            if (notes == '') {
+                alert("Note is Required");
+                return false;
+            }
+            //if (notes == null || notes == undefined || notes == "") {
+            //    $(".notereq").show();
+            //    return false;
+            //}
+
+            $.ajax({
+                type: "POST",
+                url: "/CandidateMaster/SaveNotes",
+                data: { "id": id, "notes": notes },
+                success: function (response) {
+                    console.log(response);
+                    if (response.success == "true") {
+                        alert(response.message);
+                        $("#addComments").modal("hide");
+                    }
+                },
+                error: function (response) {
+                    alert(response.message);
+                }
+            });
+
+        })
+
     </script>
 
 }
