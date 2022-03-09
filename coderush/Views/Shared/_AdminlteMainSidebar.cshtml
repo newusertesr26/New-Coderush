@@ -165,6 +165,29 @@
                     </a>
                 </li>
             }
+
+            @if (roles.Contains("SuperAdmin") || roles.Contains("HR"))
+            {
+                <li class="@Html.IsSelected(controller: Pages.Contact.ControllerName)">
+                    <a href="@Pages.Contact.UrlDefault">
+                        <i class="fa fa-th"></i> <span>@Pages.Contact.NavigationName</span>
+                        <span class="pull-right-container">
+                            <small class="label pull-right bg-green">List</small>
+                        </span>
+                    </a>
+                </li>
+            }
+            @if (roles.Contains("SuperAdmin") || roles.Contains("HR"))
+            {
+                <li class="@Html.IsSelected(controller: Pages.Hire.ControllerName)">
+                    <a href="@Pages.Hire.UrlDefault">
+                        <i class="fa fa-th"></i> <span>@Pages.Hire.NavigationName</span>
+                        <span class="pull-right-container">
+                            <small class="label pull-right bg-green">List</small>
+                        </span>
+                    </a>
+                </li>
+            }
         </ul>
     </section>
     <!-- /.sidebar -->

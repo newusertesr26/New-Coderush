@@ -85,6 +85,12 @@
 
 
     $("#btninsert").unbind().click(function () {
+      
+            var userid = $("#leavedrpdwn").val();
+            if (userid == null || userid == "" || userid == undefined) {
+                alert("Please select drowpdown menu first !!");
+                return false;
+            }
         $(".text-danger").hide();
         //$("#AddLeave").modal("show");
         //var BinddrpdwnData = $("#leavedrpdwn option:selected").text();
@@ -175,6 +181,8 @@
         });
     };
 
+    
+
     $("#leavedrpdwn").on('change', function () {
         debugger
         //var id = $(this).val();
@@ -182,7 +190,10 @@
         var username = $("#leavedrpdwn option:selected").text();
         Bindtablegrid(id, username);
         $("#grid").show();
-    })
+    });
+
+ 
+
 
     $('body').on('click', '#btnedit', function () {
         debugger
