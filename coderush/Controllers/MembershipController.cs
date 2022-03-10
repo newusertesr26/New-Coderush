@@ -113,11 +113,11 @@ namespace coderush.Controllers
                     return RedirectToAction(nameof(ChangeProfile), new { id = applicationUser.Id });
                 }
 
-                if (_identityDefaultOptions.IsDemo && _superAdminDefaultOptions.Email.Equals(applicationUser.Email))
-                {
-                    TempData[StaticString.StatusMessage] = "Error: Demo mode can not change super@admin.com data.";
-                    return RedirectToAction(nameof(ChangeProfile), new { id = applicationUser.Id });
-                }                
+                //if (_identityDefaultOptions.IsDemo && _superAdminDefaultOptions.Email.Equals(applicationUser.Email))
+                //{
+                //    TempData[StaticString.StatusMessage] = "Error: Demo mode can not change super@admin.com data.";
+                //    return RedirectToAction(nameof(ChangeProfile), new { id = applicationUser.Id });
+                //}                
 
                 updatedUser.Email = applicationUser.Email;
                 updatedUser.PhoneNumber = applicationUser.PhoneNumber;
