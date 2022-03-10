@@ -1,8 +1,12 @@
 ﻿@model ChangeRoles
+@using Microsoft.AspNetCore.Identity
+@inject UserManager<ApplicationUser> _userManager
+
 @{
     ViewData["Title"] = "Change Role";
+    var user = await _userManager.GetUserAsync(User);
+    var roles = await _userManager.GetRolesAsync(user);
 }
-
 <!-- Content Wrapper. Contains page content -->
 <div class="content-wrapper">
     <!-- Content Header (Page header) -->
@@ -206,75 +210,81 @@
                 <input class="flat-red" asp-for="IsProjectMasterRegistered">
             </td>
         </tr>*@
-                            <tr>
-                                <td>
-                                    <label class="label label-success">HR</label>
-                                </td>
-                                <td>
-                                    <input class="flat-red" asp-for="HR">
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>
-                                    <label class="label label-success">SuperAdmin</label>
-                                </td>
-                                <td>
-                                    <input class="flat-red" asp-for="SuperAdmin">
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>
-                                    <label class="label label-success">Admin</label>
-                                </td>
-                                <td>
-                                    <input class="flat-red" asp-for="Admin">
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>
-                                    <label class="label label-success">Employee</label>
-                                </td>
-                                <td>
-                                    <input class="flat-red" asp-for="Employee">
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>
-                                    <label class="label label-success">Sales</label>
-                                </td>
-                                <td>
-                                    <input class="flat-red" asp-for="Sales">
-                                </td>
-                            </tr>
+                            @if (roles.Contains("HR"))
+                            {
+
+                                <tr>
+                                    <td>
+                                        <label class="label label-success">Employee</label>
+                                    </td>
+                                    <td>
+                                        <input class="flat-red" asp-for="Employee">
+                                    </td>
+                                </tr>
+                            }
+                            else
+                            {
+                                <tr>
+                                    <td>
+                                        <label class="label label-success">HR</label>
+                                    </td>
+                                    <td>
+                                        <input class="flat-red" asp-for="HR">
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <label class="label label-success">SuperAdmin</label>
+                                    </td>
+                                    <td>
+                                        <input class="flat-red" asp-for="SuperAdmin">
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <label class="label label-success">Admin</label>
+                                    </td>
+                                    <td>
+                                        <input class="flat-red" asp-for="Admin">
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <label class="label label-success">Sales</label>
+                                    </td>
+                                    <td>
+                                        <input class="flat-red" asp-for="Sales">
+                                    </td>
+                                </tr>
+                            }
                             </tbody>
-                        </table>
+                            </table>
+                        </div>
                     </div>
-
+                    <!-- /.box-body -->
+                    <div class="box-footer">
+                        <a href="/Membership/Index" class="btn btn-default">Back</a>
+                        <button type="submit" class="btn btn-primary">Save</button>
+                    </div>
+                    <!-- /.box-footer-->
                 </div>
-                <!-- /.box-body -->
-                <div class="box-footer">
-                    <a href="/Membership/Index" class="btn btn-default">Back</a>
-                    <button type="submit" class="btn btn-primary">Save</button>
-                </div>
-                <!-- /.box-footer-->
-            </div>
-        </form>
+            </form>
 
-        <!-- /.box -->
-    </section>
-    <!-- /.content -->
-</div>
-<!-- /.content-wrapper -->
+            <!-- /.box -->
+        </section>
+        <!-- /.content -->
+    </div>
+    <!-- /.content-wrapper -->
 
-@section Styles{
+    @section Styles{
 
-}
+    }
 
 
-@section Scripts{
+    @section Scripts{
 
-    <partial name="_ValidationScriptsPartial" />
-}
+        <partial name="_ValidationScriptsPartial" />
+    }
 
 
 

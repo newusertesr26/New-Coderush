@@ -18,7 +18,7 @@ namespace coderush.Services.App
 
         public static class Hire
         {
-            public const string ControllerName = "Hire";
+            public const string ControllerName = "Hire Us";
             public const string RoleName = "Hire";
             public const string UrlDefault = "/Hire/HireIndex";
             public const string NavigationName = "Hire";

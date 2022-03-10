@@ -60,10 +60,7 @@
                                             <ul class="dropdown-menu">
                                                 <li><a href="/Membership/ChangeProfile/@item.Id">Change Profile</a></li>
                                                 <li><a href="/Membership/ChangePassword/@item.Id">Reset Password</a></li>
-                                                @if (roles.Contains("SuperAdmin"))
-                                                {
-                                                    <li><a href="/Membership/ChangeRole/@item.Id">Change Role</a></li>
-                                                }
+                                                  <li><a href="/Membership/ChangeRole/@item.Id">Change Role</a></li>
                                                 </ul>
                                         </div>
                                     </div>
