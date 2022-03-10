@@ -1,6 +1,11 @@
 ﻿@model List<Todo>
+@using Microsoft.AspNetCore.Identity
+@inject UserManager<ApplicationUser> _userManager
 @{
     ViewData["Title"] = "Todo";
+
+    var user = await _userManager.GetUserAsync(User);
+    var roles = await _userManager.GetRolesAsync(user);
 }
 
 
@@ -31,8 +36,7 @@
                     <table id="grid" class="table table-striped" cellspacing="0" width="100%">
                         <thead>
                             <tr>
-                                <th width="5%">Edit</th>
-                                <th width="5%">Delete</th>
+                                <th width="10%">Action</th>
                                 <th width="50%">Todo Item</th>
                                 <th width="30%">Duedate</th>
                                 <th width="40%">FileUpload</th>
@@ -46,9 +50,12 @@
                                     <td>
                                         <a href="/Todo/Form/@item.TodoId"><i class="fa fa-edit"></i></a>
                                     </td>
-                                    <td>
-                                        <a href="/Todo/Delete/@item.TodoId"><i class="fa fa-trash"></i></a>
-                                    </td>
+                                    @if (roles.Contains("SuperAdmin"))
+                                    {
+                                        <td>
+                                            <a href="/Todo/Delete/@item.TodoId"><i class="fa fa-trash"></i></a>
+                                        </td>
+                                    }
                                     <td><span style="text-decoration-line:@(item.IsDone ? "line-through" : "none")">@item.TodoItem</span></td>
                                     <td>
                                         @item.Duedate
@@ -58,7 +65,7 @@
                                     </td>
 
                                     <td>
-                                        <input type="checkbox" class="flat-red" @(item.IsDone ? "checked" : "") onclick="return false;">                                       
+                                        <input type="checkbox" class="flat-red" @(item.IsDone ? "checked" : "") onclick="return false;">
                                     </td>
 
                                 </tr>
