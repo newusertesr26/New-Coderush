@@ -33,8 +33,10 @@
                             <tr>
                                 <th width="5%">Edit</th>
                                 <th width="5%">Delete</th>
-                                <th width="60%">Todo Item</th>
-                                <th width="30%">Is Done</th>
+                                <th width="50%">Todo Item</th>
+                                <th width="30%">Duedate</th>
+                                <th width="40%">FileUpload</th>
+                                <th width="30%">Done</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -48,6 +50,13 @@
                                         <a href="/Todo/Delete/@item.TodoId"><i class="fa fa-trash"></i></a>
                                     </td>
                                     <td><span style="text-decoration-line:@(item.IsDone ? "line-through" : "none")">@item.TodoItem</span></td>
+                                    <td>
+                                        @item.Duedate
+                                    </td>
+                                    <td>
+                                        <a asp-controller="Todo" asp-action="DownloadFile" asp-route-filename="@item.FileUpload"><i class="fa fa-download"></i></a>
+                                    </td>
+
                                     <td>
                                         <input type="checkbox" class="flat-red" @(item.IsDone ? "checked" : "") onclick="return false;">                                       
                                     </td>

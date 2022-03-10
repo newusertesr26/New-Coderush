@@ -1,23 +1,44 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using coderush.Data;
 using coderush.Models;
+using coderush.Models.ViewModels;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
 
 namespace coderush.Controllers
 {
     [Authorize(Roles = "SuperAdmin,HR")]
     public class TodoController : Controller
     {
+        private readonly ILogger<HomeController> _logger;
+        private readonly UserManager<ApplicationUser> _userManager;
+        private readonly RoleManager<IdentityRole> _roleManager;
         private readonly ApplicationDbContext _context;
+        private readonly IWebHostEnvironment _webHostEnvironment;
+        public TodoController(ILogger<HomeController> logger, UserManager<ApplicationUser> userManager,
+            RoleManager<IdentityRole> roleManager,
+            ApplicationDbContext context,
+            IWebHostEnvironment webHostEnvironment)
+        {
+            _logger = logger;
+            _roleManager = roleManager;
+            _userManager = userManager;
+            _webHostEnvironment = webHostEnvironment;
+            _context = context;
+            //_hostingEnvironment = hostingEnvironment;
+        }
 
         //dependency injection through constructor, to directly access services
-        public TodoController(ApplicationDbContext context) {
-            _context = context;
-        }
+        //public TodoController(ApplicationDbContext context) {
+        //    _context = context;
+        //}
         //consume db context service, display all todo items
         public IActionResult Index()
         {
@@ -32,13 +53,14 @@ namespace coderush.Controllers
             //create new
             if (id == null)
             {
-                Todo newTodo = new Todo();
+                TodoViewModel newTodo = new TodoViewModel();
                 return View(newTodo);
             }
-                                                                                                 
+
             //edit todo
-            Todo todo = new Todo();
-            todo = _context.Todo.Where(x => x.TodoId.Equals(id)).FirstOrDefault();
+            TodoViewModel todo = new TodoViewModel();
+            var edittodo = _context.Todo.Where(x => x.TodoId.Equals(id)).FirstOrDefault();
+            todo.TodoId = edittodo.TodoId;
 
             if (todo == null)
             {
@@ -52,7 +74,7 @@ namespace coderush.Controllers
         //post submitted todo data. if todo.TodoId is null then create new, otherwise edit
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult SubmitForm([Bind("TodoId", "TodoItem", "IsDone")]Todo todo)
+        public IActionResult SubmitForm([Bind("TodoId", "TodoItem", "Duedate", "FileUpload", "IsDone")] TodoViewModel todo)
         {
             try
             {
@@ -62,11 +84,33 @@ namespace coderush.Controllers
                     return RedirectToAction(nameof(Form), new { id = todo.TodoId ?? "" });
                 }
 
+                var user = _userManager.GetUserAsync(User).Result;
+
+                string wwwPath = this._webHostEnvironment.WebRootPath;
+                string contentPath = this._webHostEnvironment.ContentRootPath;
+                var filename = todo.FileUpload.FileName;
+                string path = Path.Combine(this._webHostEnvironment.WebRootPath, "document/Todo");
+                //if (!Directory.Exists(path))
+                //{
+                //    Directory.CreateDirectory(path);
+                //}
+
+                List<string> uploadedFiles = new List<string>();
+
+                string fileName = Path.GetFileName(todo.FileUpload.FileName);
+                using (FileStream stream = new FileStream(Path.Combine(path, fileName), FileMode.Create))
+                {
+                    todo.FileUpload.CopyTo(stream);
+                    uploadedFiles.Add(fileName);
+                }
+
                 //create new
                 if (todo.TodoId == null)
                 {
                     Todo newTodo = new Todo();
                     newTodo.TodoId = Guid.NewGuid().ToString();
+                    newTodo.Duedate = todo.Duedate;
+                    newTodo.FileUpload = todo.FileUpload.FileName.ToString();
                     newTodo.CreatedDate = DateTime.Now;
                     newTodo.TodoItem = todo.TodoItem;
                     newTodo.IsDone = todo.IsDone;
@@ -81,6 +125,8 @@ namespace coderush.Controllers
                 Todo editTodo = new Todo();
                 editTodo = _context.Todo.Where(x => x.TodoId.Equals(todo.TodoId)).FirstOrDefault();
                 editTodo.TodoItem = todo.TodoItem;
+                editTodo.Duedate = todo.Duedate;
+                editTodo.FileUpload = todo.FileUpload.FileName.ToString();
                 editTodo.IsDone = todo.IsDone;
                 _context.Update(editTodo);
                 _context.SaveChanges();
@@ -94,6 +140,19 @@ namespace coderush.Controllers
                 TempData[StaticString.StatusMessage] = "Error: " + ex.Message;
                 return RedirectToAction(nameof(Form), new { id = todo.TodoId ?? "" });
             }
+        }
+
+
+        public FileResult DownloadFile(string fileName)
+        {
+            //Build the File Path.
+            string path = Path.Combine(this._webHostEnvironment.WebRootPath, "document/Todo/") + fileName;
+
+            //Read the File data into Byte Array.
+            byte[] bytes = System.IO.File.ReadAllBytes(path);
+
+            //Send the File to Download.
+            return File(bytes, "application/octet-stream", fileName);
         }
 
         //display todo item for deletion

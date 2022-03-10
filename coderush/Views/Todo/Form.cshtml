@@ -1,4 +1,4 @@
-﻿@model Todo
+﻿@model coderush.Models.ViewModels.TodoViewModel
 @{
     ViewData["Title"] = "Todo Form";
 }
@@ -18,7 +18,7 @@
     <!-- Main content -->
     <section class="content">
         <!-- Default box -->
-        <form asp-controller="Todo" asp-action="SubmitForm" method="post">
+        <form asp-controller="Todo" enctype="multipart/form-data" asp-action="SubmitForm" method="post">
             <div class="box">
                 <div class="box-header with-border">
                     <h3 class="box-title">Create or edit existing todo item</h3>
@@ -38,6 +38,16 @@
                         <label asp-for="TodoItem"></label>
                         <input asp-for="TodoItem" class="form-control" />
                         <span asp-validation-for="TodoItem" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="Duedate"></label>
+                        <input type="date" asp-for="Duedate" class="form-control" />
+                        <span asp-validation-for="Duedate" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="FileUpload"></label>
+                        <input type="file" asp-for="FileUpload" class="form-control" />
+                        <span asp-validation-for="FileUpload" class="text-danger"></span>
                     </div>
                     <div class="form-group">
                         <label>Is Done</label>
