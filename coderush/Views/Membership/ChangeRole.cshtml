@@ -210,9 +210,8 @@
                 <input class="flat-red" asp-for="IsProjectMasterRegistered">
             </td>
         </tr>*@
-                            @if (roles.Contains("HR"))
+                            @if (roles.Contains("SuperAdmin"))
                             {
-
                                 <tr>
                                     <td>
                                         <label class="label label-success">Employee</label>
@@ -221,9 +220,6 @@
                                         <input class="flat-red" asp-for="Employee">
                                     </td>
                                 </tr>
-                            }
-                            else
-                            {
                                 <tr>
                                     <td>
                                         <label class="label label-success">HR</label>
@@ -254,6 +250,25 @@
                                     </td>
                                     <td>
                                         <input class="flat-red" asp-for="Sales">
+                                    </td>
+                                </tr>
+                            }
+                            else
+                            {
+                                <tr>
+                                    <td>
+                                        <label class="label label-success">Employee</label>
+                                    </td>
+                                    <td>
+                                        <input class="flat-red" asp-for="Employee">
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <label class="label label-success">HR</label>
+                                    </td>
+                                    <td>
+                                        <input class="flat-red" asp-for="HR">
                                     </td>
                                 </tr>
                             }
