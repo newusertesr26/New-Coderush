@@ -1,4 +1,4 @@
-﻿@model List<Todo>
+﻿@model List<coderush.Models.ViewModels.TodoViewModel>
 @using Microsoft.AspNetCore.Identity
 @inject UserManager<ApplicationUser> _userManager
 @{
@@ -38,6 +38,7 @@
                             <tr>
                                 <th width="10%">Action</th>
                                 <th width="50%">Todo Item</th>
+                                <th width="50%">Users</th>
                                 <th width="30%">Duedate</th>
                                 <th width="40%">FileUpload</th>
                                 <th width="30%">Done</th>
@@ -49,14 +50,18 @@
                                 <tr>
                                     <td>
                                         <a href="/Todo/Form/@item.TodoId"><i class="fa fa-edit"></i></a>
-                                    </td>
+                                     
                                     @if (roles.Contains("SuperAdmin"))
                                     {
-                                        <td>
+                                        
                                             <a href="/Todo/Delete/@item.TodoId"><i class="fa fa-trash"></i></a>
-                                        </td>
+
                                     }
+                                    </td>
                                     <td><span style="text-decoration-line:@(item.IsDone ? "line-through" : "none")">@item.TodoItem</span></td>
+                                    <td>
+                                        @item.Users
+                                    </td>
                                     <td>
                                         @item.Duedate
                                     </td>
@@ -110,7 +115,7 @@
                 searching: true,
                 dom: 'lrtip',
                 scrollX: false,
-                pageLength: 5,
+                pageLength: 25,
             });
 
         });
