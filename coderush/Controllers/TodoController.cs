@@ -17,16 +17,18 @@ namespace coderush.Controllers
     [Authorize(Roles = "SuperAdmin,HR")]
     public class TodoController : Controller
     {
+        private readonly Services.Security.ICommon _security;
         private readonly ILogger<HomeController> _logger;
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly RoleManager<IdentityRole> _roleManager;
         private readonly ApplicationDbContext _context;
         private readonly IWebHostEnvironment _webHostEnvironment;
-        public TodoController(ILogger<HomeController> logger, UserManager<ApplicationUser> userManager,
+        public TodoController(Services.Security.ICommon security, ILogger<HomeController> logger, UserManager<ApplicationUser> userManager,
             RoleManager<IdentityRole> roleManager,
             ApplicationDbContext context,
             IWebHostEnvironment webHostEnvironment)
         {
+            _security = security;
             _logger = logger;
             _roleManager = roleManager;
             _userManager = userManager;
@@ -61,14 +63,11 @@ namespace coderush.Controllers
             TodoViewModel todo = new TodoViewModel();
             var edittodo = _context.Todo.Where(x => x.TodoId.Equals(id)).FirstOrDefault();
             todo.TodoId = edittodo.TodoId;
-
             if (todo == null)
             {
                 return NotFound();
             }
-
             return View(todo);
-
         }
          
         //post submitted todo data. if todo.TodoId is null then create new, otherwise edit
