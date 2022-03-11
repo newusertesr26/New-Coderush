@@ -23,6 +23,11 @@ namespace coderush.Models.ViewModels
         [Required]
         [RegularExpression("^[0-9]*$", ErrorMessage = "Amount must be numeric")]
         public string Amount { get; set; }
+
+        [Required]
+        [Display(Name = "Expense Date:")]
+        public DateTime? ExpenseDate { get; set; }
+
         [Display(Name = "Description:")]
         [Required]
         [StringLength(60, MinimumLength = 3)]
@@ -36,5 +41,6 @@ namespace coderush.Models.ViewModels
         public DateTime? CreatedDate { get; set; }
         public string UpdatedBy { get; set; }
         public DateTime? UpdatedDate { get; set; }
+        
     }
 }
