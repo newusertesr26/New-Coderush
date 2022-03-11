@@ -76,8 +76,12 @@
                     </div>
                     <div class="form-group">
                         <label asp-for="PlaceOfInterview"></label>
-                        <input asp-for="PlaceOfInterview" class="form-control" />
+                        @*<input asp-for="PlaceOfInterview" class="form-control" />*@
                         <span asp-validation-for="PlaceOfInterview" class="text-danger"></span>
+                        <select name="PlaceOfInterview" class="form-control" asp-items="@ViewBag.CandidatePlaceOfInterview" asp-for="PlaceOfInterview">
+                            <option value="">-- Select --</option>
+
+                        </select>
                         @*<span class="text-danger hidespan spantext">Please enter Text</span>*@
                     </div>
                     <div class="form-group">
