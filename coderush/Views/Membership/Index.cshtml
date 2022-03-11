@@ -60,23 +60,20 @@
                                             <ul class="dropdown-menu">
                                                 <li><a href="/Membership/ChangeProfile/@item.Id">Change Profile</a></li>
                                                 <li><a href="/Membership/ChangePassword/@item.Id">Reset Password</a></li>
-                                                  <li><a href="/Membership/ChangeRole/@item.Id">Change Role</a></li>
-                                                </ul>
+                                                <li><a href="/Membership/ChangeRole/@item.Id">Change Role</a></li>
+                                            </ul>
                                         </div>
                                     </div>
-
                                 </td>
                                 <td>@item.Email</td>
                                 <td>@item.PhoneNumber</td>
                                 <td>
                                     <span class="label label-@(item.EmailConfirmed ? "success" : "danger")">@(item.EmailConfirmed ? "Active" : "Pending")</span>
-
                                 </td>
                                 @if (roles.Contains("SuperAdmin"))
                                 {
                                     <td>
                                         <input type="checkbox" class="flat-red" @(item.isSuperAdmin ? "checked" : "") onclick="return false;">
-
                                     </td>
                                 }
                             </tr>
