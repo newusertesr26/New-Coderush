@@ -35,6 +35,7 @@
                                 <th width="20%">ExpName</th>
                                 <th width="10%">Exptype</th>
                                 <th width="10%">Amount</th>
+                                <th width="10%">Expense Date</th>
                                 <th width="10%">Description</th>
                                 <th width="10%">FileUpload</th>
                                 <th width="10%">Is Active</th>
@@ -43,37 +44,41 @@
                         <tbody>
                             @foreach (var item in Model)
                             {
-                <tr>
-                    <td>
-                        <a href="/ExpenseMaster/Form/@item.Id"><i class="fa fa-edit"></i></a>
-                    </td>
-                    <td>
-                        <a href="/ExpenseMaster/Delete/@item.Id"><i class="fa fa-trash"></i></a>
-                    </td>
-                    <td>
-                        @item.ExpName
-                    </td>
-                    <td>
-                        @item.Exptype
-                    </td>
-                    <td>
-                        @item.Amount
-                    </td>
-                    <td>
-                        @item.Description
-                    </td>
-                    <td>
-                        @*@item.FileUpload
-                            <br />
-                            @Html.ActionLink("Download", "DownloadFile", new { fileName = item.FileUpload })*@
-                        <a asp-controller="ExpenseMaster" asp-action="DownloadFile" asp-route-filename="@item.FileUpload"><i class="fa fa-download"></i></a>
-                    </td>
-                    @*<td><span style="text-decoration-line:@(item.Isactive ? "line-through" : "none")">@item.Isactive</span></td>*@
-                    <td>
-                        <input type="checkbox" class="flat-red" @(item.isactive ? "checked" : "") onclick="return false;">
-                    </td>
+                            <tr>
+                                <td>
+                                    <a href="/ExpenseMaster/Form/@item.Id"><i class="fa fa-edit"></i></a>
+                                </td>
+                                <td>
+                                    <a href="/ExpenseMaster/Delete/@item.Id"><i class="fa fa-trash"></i></a>
+                                </td>
+                                <td>
+                                    @item.ExpName
+                                </td>
+                                <td>
+                                    @item.Exptype
+                                </td>
+                                <td>
+                                    @item.Amount
+                                </td>
 
-                </tr>}
+                                <td>
+                                    @item.ExpenseDate
+                                </td>
+                                <td>
+                                    @item.Description
+                                </td>
+                                <td>
+                                    @*@item.FileUpload
+            <br />
+            @Html.ActionLink("Download", "DownloadFile", new { fileName = item.FileUpload })*@
+                                    <a asp-controller="ExpenseMaster" asp-action="DownloadFile" asp-route-filename="@item.FileUpload"><i class="fa fa-download"></i></a>
+                                </td>
+                                @*<td><span style="text-decoration-line:@(item.Isactive ? "line-through" : "none")">@item.Isactive</span></td>*@
+                                <td>
+                                    <input type="checkbox" class="flat-red" @(item.isactive ? "checked" : "") onclick="return false;">
+                                </td>
+
+                            </tr>}
                         </tbody>
                     </table>
                 </div>
