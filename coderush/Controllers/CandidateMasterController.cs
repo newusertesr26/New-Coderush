@@ -14,6 +14,7 @@ using System.Collections.Generic;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Authorization;
 
+
 namespace coderush.Controllers
 {
     [Authorize(Roles = "HR,SuperAdmin")]
@@ -38,11 +39,19 @@ namespace coderush.Controllers
         }
         public IActionResult CandidateIndex()
         {
-            ViewBag.CandidatetechnologiesList = Enum.GetValues(typeof(CandidateTechnologies)).Cast<CandidateTechnologies>().Select(v => new SelectListItem
+            //ViewBag.CandidatetechnologiesList = Enum.GetValues(typeof(CandidateTechnologies)).Cast<CandidateTechnologies>().Select(v => new SelectListItem
+            //{
+            //    Text = v.ToString(),
+            //    Value = ((int)v).ToString(),
+            //}).ToList();
+            var typelist1 = _context.Datamaster.Where(x => x.Type == DataSelection.technologies).ToList();
+
+            ViewBag.CandidatetechnologiesList = typelist1.Select(v => new SelectListItem
             {
-                Text = v.ToString(),
-                Value = ((int)v).ToString(),
+                Text = v.Text.ToString(),
+                Value = v.Id.ToString(),
             }).ToList();
+
             //ViewBag.Role = HttpContext.Session.GetString("Role");
             //if (HttpContext.Session.GetString("Role") == "Other")
             //{
@@ -164,12 +173,18 @@ namespace coderush.Controllers
         [HttpGet]
         public IActionResult Form(int id)
         {
-            ViewBag.CandidatetechnologiesList = Enum.GetValues(typeof(Technologies)).Cast<Technologies>().Select(v => new SelectListItem
-            {
-                Text = v.ToString(),
-                Value = ((int)v).ToString(),
-            }).ToList();
+            //ViewBag.CandidatetechnologiesList = Enum.GetValues(typeof(Technologies)).Cast<Technologies>().Select(v => new SelectListItem
+            //{
+            //    Text = v.ToString(),
+            //    Value = ((int)v).ToString(),
+            //}).ToList();
+            var typelist1 = _context.Datamaster.Where(x => x.Type == DataSelection.technologies).ToList();
 
+            ViewBag.CandidatetechnologiesList = typelist1.Select(v => new SelectListItem
+            {
+                Text = v.Text.ToString(),
+                Value = v.Id.ToString(),
+            }).ToList();
             //create new
             if (id == 0)
             {
