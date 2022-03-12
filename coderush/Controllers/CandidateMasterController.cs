@@ -43,11 +43,7 @@ namespace coderush.Controllers
                 Text = v.ToString(),
                 Value = ((int)v).ToString(),
             }).ToList();
-            ViewBag.CandidatePlaceOfInterview = Enum.GetValues(typeof(PlaceOfInterview)).Cast<PlaceOfInterview>().Select(v => new SelectListItem
-            {
-                Text = v.ToString(),
-                Value = ((int)v).ToString(),
-            }).ToList();
+          
             //ViewBag.Role = HttpContext.Session.GetString("Role");
             //if (HttpContext.Session.GetString("Role") == "Other")
             //{
@@ -175,12 +171,7 @@ namespace coderush.Controllers
                 Value = ((int)v).ToString(),
             }).ToList();
 
-            ViewBag.CandidatePlaceOfInterview = Enum.GetValues(typeof(PlaceOfInterview)).Cast<PlaceOfInterview>().Select(v => new SelectListItem
-            {
-                Text = v.ToString(),
-                Value = ((int)v).ToString(),
-            }).ToList();
-
+           
             //create new
             if (id == 0)
             {

@@ -45,17 +45,27 @@
                         @*<span class="text-danger hidespan spantext">Please enter Text</span>*@
                     </div>
                     <div class="form-group">
+                        <label asp-for="PlaceOfInterview"></label>
+                        <select  asp-for="PlaceOfInterview" class="form-control" >
+                            <option value="0">--Select--</option>
+                            <option >AT Office</option>
+                            <option >AT Virtual</option>
+                        </select>
+                        <span asp-validation-for="PlaceOfInterview" class="text-danger"></span>
+                        @*<span class="text-danger hidespan spantext">Please enter Text</span>*@
+                    </div>
+                    <div class="form-group">
                         <label asp-for="Phone"></label>
                         <input id="candidatephone" asp-for="Phone" class="form-control" />
                         <span asp-validation-for="Phone" class="text-danger"></span>
                         @*<span class="text-danger hidespan spantext">Please enter Text</span>*@
                     </div>
+
                     <div class="form-group">
                         <label asp-for="Technologies"></label>
                         @*@Html.DropDownList("Selection", new SelectList(ViewBag.SelectionList, "Value", "Text"), new { @class = "form-control", @id = "ddlSelectionList" })*@
                         <select name="technologies" class="form-control" asp-items="@ViewBag.CandidatetechnologiesList" asp-for="Technologies">
                             <option value="">-- Select --</option>
-
                         </select>
                         <span asp-validation-for="Technologies" class="text-danger"></span>
                         @*<span class="text-danger hidespan spanSelection">Please select Type</span>*@
@@ -74,16 +84,7 @@
                             @*<span class="text-danger hidespan spantext">Please enter Text</span>*@
                         </div>
                     </div>
-                    <div class="form-group">
-                        <label asp-for="PlaceOfInterview"></label>
-                        @*<input asp-for="PlaceOfInterview" class="form-control" />*@
-                        <span asp-validation-for="PlaceOfInterview" class="text-danger"></span>
-                        <select name="PlaceOfInterview" class="form-control" asp-items="@ViewBag.CandidatePlaceOfInterview" asp-for="PlaceOfInterview">
-                            <option value="">-- Select --</option>
 
-                        </select>
-                        @*<span class="text-danger hidespan spantext">Please enter Text</span>*@
-                    </div>
                     <div class="form-group">
                         <label asp-for="FileUpload"></label>
                         <input type="file" asp-for="FileUpload" id="FileUpload" class="form-control" />

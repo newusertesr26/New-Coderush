@@ -38,9 +38,5 @@ namespace coderush.DataEnum
         React = 3,
         Shopify = 4
     }
-    public enum PlaceOfInterview
-    {
-      At_Office = 1,
-      At_Vartual = 2
-    }
+  
 }
