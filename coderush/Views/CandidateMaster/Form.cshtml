@@ -96,11 +96,11 @@
                         <div class="form-group col-md-3">
                             <div class="form-group">
                                 <label asp-for="IsActive"></label>
-                                <input asp-for="IsActive" type="checkbox" id="ckisactive" class="flat-red" />
+                                <input asp-for="IsActive" type="checkbox"  class="flat-red check_class" />
                             </div>
                             <div class="form-group">
                                 <label asp-for="IsReject"></label>
-                                <input asp-for="IsReject" type="checkbox" id="ckisactive" class="flat-red" />
+                                <input asp-for="IsReject" type="checkbox"  class="flat-red check_class" />
                             </div>
                         </div>
                     </div>
@@ -136,7 +136,12 @@
 @section Scripts{
 
     <partial name="_ValidationScriptsPartial" />
-    <script src="~/js/Candidate.js"></script>
+    @*<script src="~/js/Candidate.js"></script>*@
 
-
+    <script>
+        $('input[type="checkbox"]').click(function () {
+            $(".check_class").attr("checked", false);
+            $(this).attr("checked", true);
+        });
+    </script>
 }
