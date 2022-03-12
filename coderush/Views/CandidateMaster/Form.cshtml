@@ -51,6 +51,12 @@
                         @*<span class="text-danger hidespan spantext">Please enter Text</span>*@
                     </div>
                     <div class="form-group">
+                        <label asp-for="PlaceOfInterview"></label>
+                        <input  asp-for="PlaceOfInterview" class="form-control" />
+                        <span asp-validation-for="PlaceOfInterview" class="text-danger"></span>
+                        @*<span class="text-danger hidespan spantext">Please enter Text</span>*@
+                    </div>
+                    <div class="form-group">
                         <label asp-for="Technologies"></label>
                         @*@Html.DropDownList("Selection", new SelectList(ViewBag.SelectionList, "Value", "Text"), new { @class = "form-control", @id = "ddlSelectionList" })*@
                         <select name="technologies" class="form-control" asp-items="@ViewBag.CandidatetechnologiesList" asp-for="Technologies">
@@ -74,12 +80,7 @@
                             @*<span class="text-danger hidespan spantext">Please enter Text</span>*@
                         </div>
                     </div>
-                    <div class="form-group">
-                        <label asp-for="PlaceOfInterview"></label>
-                        <input asp-for="PlaceOfInterview" class="form-control" />
-                        <span asp-validation-for="PlaceOfInterview" class="text-danger"></span>
-                        @*<span class="text-danger hidespan spantext">Please enter Text</span>*@
-                    </div>
+
                     <div class="form-group">
                         <label asp-for="FileUpload"></label>
                         <input type="file" asp-for="FileUpload" id="FileUpload" class="form-control" />
@@ -87,31 +88,47 @@
                         @*<span asp-validation-for="FileUpload" class="text-danger"></span>*@
                         @*<span class="text-danger hidespan spantext">Please enter Text</span>*@
                     </div>
-                    <div class="form-group ">
+                    <!--<div class="form-group ">
+    <div class="form-group col-md-3">-->
+                    @*<table id="checkple">
+            <tr>
+                <td><label asp-for="IsActive">IsActive</label> <input id="IsActive" type="checkbox" value="1" class="flat-red" /> </td>
+            </tr>
+            <tr>
+                <td><label asp-for="IsReject">IsReject</label> <input id="IsReject" type="checkbox" value="2" class="flat-red" /></td>
+            </tr>
+        </table>*@
+                    <!--</div>
+    </div>-->
+
+                    <div class="form-group " id="checkple">
                         <div class="form-group col-md-3">
                             <div class="form-group">
                                 <label asp-for="IsActive"></label>
-                                <input asp-for="IsActive" type="checkbox"  class="flat-red check_class" />
+                                <input asp-for="IsActive" type="checkbox" id="IsActive" class="flat-red icheckbox_flat-green checked check" />
                             </div>
                             <div class="form-group">
                                 <label asp-for="IsReject"></label>
-                                <input asp-for="IsReject" type="checkbox"  class="flat-red check_class" />
+                                <input asp-for="IsReject" type="checkbox" id="IsReject" class="flat-red icheckbox_flat-green checked check" />
                             </div>
                         </div>
                     </div>
+                    <br />
+                    <br />
                     <div class="form-group">
-                        <label asp-for="InterviewDescription"></label>
-                        <textarea asp-for="InterviewDescription" TextMode="MultiLine" rows="4" cols="50" type="text" value="" class="form-control"></textarea>
-                    </div>
+                        <div class="form-group col-md-12">
+                            <label asp-for="InterviewDescription">Description:</label>
+                            <textarea asp-for="InterviewDescription" TextMode="MultiLine" rows="4" cols="50" type="text" value="" class="form-control"></textarea>
+                        </div>
 
+                    </div>
+                    <!-- /.box-body -->
+                    <div class="box-footer">
+                        <a href="/CandidateMaster/CandidateIndex" class="btn btn-default">Back</a>
+                        <button type="submit" class="btn btn-primary" id="btnsave">Save</button>
+                    </div>
+                    <!-- /.box-footer-->
                 </div>
-                <!-- /.box-body -->
-                <div class="box-footer">
-                    <a href="/CandidateMaster/CandidateIndex" class="btn btn-default">Back</a>
-                    <button type="submit" class="btn btn-primary" id="btnsave">Save</button>
-                </div>
-                <!-- /.box-footer-->
-            </div>
         </form>
 
         <!-- /.box -->
@@ -133,10 +150,24 @@
     <partial name="_ValidationScriptsPartial" />
     @*<script src="~/js/Candidate.js"></script>*@
 
-    <script>
-        $('input[type="checkbox"]').click(function () {
-            $(".check_class").attr("checked", false);
-            $(this).attr("checked", true);
+    <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
+    <script type="text/javascript">
+        $(function () {
+            $("#checkple input[type=checkbox]").click(function () {
+                if ($(this).is(":checked")) {
+                    $("#checkple input[type=checkbox]").removeAttr("checked");
+                    $(this).attr("checked", "checked");
+                }
+            });
+            $(".check").each(function () {
+
+                if (element.checked == true) {
+
+                    alert('checked');
+
+                }
+
+            });
         });
     </script>
 }

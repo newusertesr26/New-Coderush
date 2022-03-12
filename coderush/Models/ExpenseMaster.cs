@@ -25,6 +25,9 @@ namespace coderush.Models
         [Display(Name = "Description:")]
         [Required]
         [StringLength(60, MinimumLength = 3)]
+
+        
+        public DateTime? ExpenseDate { get; set; }
         public string Description { get; set; }
         [Display(Name = "CVUpload:")]
         [Required]
