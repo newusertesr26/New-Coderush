@@ -36,7 +36,7 @@ namespace coderush.Models
         [Display(Name = "Interview Date:")]
         [Required]
         public DateTime? InterviewDate { get; set; }
-        [Display(Name = "Place:")]
+        [Display(Name = "PlaceOfInterview:")]
         [Required]
         public string PlaceOfInterview { get; set; }
         [Display(Name = "Interview Time:")]

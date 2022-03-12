@@ -143,7 +143,7 @@ namespace coderush.Controllers
         //post submitted expenseMasters data. if expenseMasters.expenseMastersId is null then create new, otherwise edit
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult SubmitForm([Bind("Id", "ExpName", "Exptype", "Amount", "Description", "FileUpload", "isactive")] ExpenseMasterViewModel expenseMasters)
+        public IActionResult SubmitForm([Bind("Id", "ExpName", "Exptype", "Amount", " ExpenseDate ", "Description", "FileUpload", "isactive")] ExpenseMasterViewModel expenseMasters)
         {
             try
             {
@@ -184,6 +184,7 @@ namespace coderush.Controllers
                     newexpenseMaster.FileUpload = expenseMasters.FileUpload.FileName.ToString();
                     newexpenseMaster.Exptype = expenseMasters.Exptype;
                     newexpenseMaster.Amount = expenseMasters.Amount;
+                    newexpenseMaster.ExpenseDate = expenseMasters.ExpenseDate;
                     newexpenseMaster.isactive = expenseMasters.isactive;
                     newexpenseMaster.CreatedBy = user.Id;
                     _context.ExpenseMaster.Add(newexpenseMaster);
@@ -199,6 +200,7 @@ namespace coderush.Controllers
                 editexpensemaster.ExpName = expenseMasters.ExpName;
                 editexpensemaster.Exptype = expenseMasters.Exptype;
                 editexpensemaster.Amount = expenseMasters.Amount;
+                editexpensemaster.ExpenseDate = expenseMasters.ExpenseDate;
                 editexpensemaster.FileUpload = expenseMasters.FileUpload.FileName.ToString();
                 editexpensemaster.Description = expenseMasters.Description;
                 editexpensemaster.UpdatedBy = user.Id;
@@ -238,7 +240,7 @@ namespace coderush.Controllers
 
             //edit expense master
             ExpenseMasterViewModel editnewexpensemaster = new ExpenseMasterViewModel();
-            var  expensemaster = _context.ExpenseMaster.Where(x => x.Id.Equals(id)).FirstOrDefault();
+            var expensemaster = _context.ExpenseMaster.Where(x => x.Id.Equals(id)).FirstOrDefault();
             editnewexpensemaster.Id = expensemaster.Id;
 
 

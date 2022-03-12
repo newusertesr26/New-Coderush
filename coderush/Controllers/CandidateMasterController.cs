@@ -185,6 +185,8 @@ namespace coderush.Controllers
                 Text = v.Text.ToString(),
                 Value = v.Id.ToString(),
             }).ToList();
+
+           
             //create new
             if (id == 0)
             {

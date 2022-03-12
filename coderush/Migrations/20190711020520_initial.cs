@@ -42,7 +42,9 @@ namespace coderush.Migrations
                     LockoutEnabled = table.Column<bool>(nullable: false),
                     AccessFailedCount = table.Column<int>(nullable: false),
                     Discriminator = table.Column<string>(nullable: false),
-                    isSuperAdmin = table.Column<bool>(nullable: true)
+                    isSuperAdmin = table.Column<bool>(nullable: true),
+                    FirstName=table.Column<string>(nullable:true),
+                    LastName=table.Column<string>(nullable:true)
                 },
                 constraints: table =>
                 {

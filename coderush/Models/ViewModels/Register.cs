@@ -9,11 +9,16 @@ namespace coderush.ViewModels
     //view model for register screen
     public class Register
     {
+
+        public int Id { get; set; }
         [Required]
         [EmailAddress]
         [Display(Name = "Email")]
         public string Email { get; set; }
-
+        [Required]
+        public string FirstName { get; set; }
+        [Required]
+        public string LastName { get; set; }
         [Phone]
         [Display(Name = "Phone number")]
         public string PhoneNumber { get; set; }
