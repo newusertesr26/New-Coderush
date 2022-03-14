@@ -40,7 +40,7 @@ namespace coderush.Controllers
             _webHostEnvironment = webHostEnvironment;
             //_hostingEnvironment = hostingEnvironment;
         }
-        public IActionResult ExpenseIndex()
+        public IActionResult ExpenseIndex(string sdate,string edate,string curentmonth ,string lastmont)
         {
             ViewBag.ExpensesList = Enum.GetValues(typeof(Expensestype)).Cast<Expensestype>().Select(v => new SelectListItem
             {
@@ -49,13 +49,101 @@ namespace coderush.Controllers
 
             }).ToList();
             //ViewBag.Role = HttpContext.Session.GetString("Role");
-            return View(_context.ExpenseMaster.Where(x => !x.Isdelete).ToList());
+            var serchadata = new List<ExpenseMaster>();
+            try
+            {
+                int montha;
+                if (curentmonth =="2")
+                {
+                    int dt = DateTime.Now.Month;
+                    serchadata = _context.ExpenseMaster.Where(x => !x.Isdelete && x.CreatedDate.Value.Month ==dt).ToList();
+                    return View(serchadata);
+                }else if(lastmont=="1")
+                    {
+                    var today = DateTime.Today;
+                    var month = new DateTime(today.Year, today.Month, 1);
+                    var first = month.AddMonths(-1);
+                     montha = first.Month;
+                    serchadata = _context.ExpenseMaster.Where(x => !x.Isdelete && x.CreatedDate.Value.Month == montha).ToList();
+                    return View(serchadata);
+                }
+
+                if (sdate == null)
+                {
+                    serchadata = _context.ExpenseMaster.Where(x => !x.Isdelete).ToList();
+                    return View(serchadata);
+                }
+                else
+                {
+                    ViewBag.startdate = sdate;
+                    ViewBag.enddate = edate;
+                    serchadata = _context.ExpenseMaster.Where(x => !x.Isdelete && x.CreatedDate >= Convert.ToDateTime(sdate) && x.UpdatedDate <= Convert.ToDateTime(edate)).ToList();
+                   // serchadata = _context.ExpenseMaster.Where(x => !x.Isdelete && x.CreatedDate >= Convert.ToDateTime(sdate)).ToList();
+                    return View(serchadata);
+
+                }
+            }
+            catch (Exception ex)
+            {
+                throw;
+            }       
+                
+            return View(serchadata);
+        }
+        [HttpGet]
+        public IActionResult Searchdata(string sdate, string edate)
+        {
+
+            var serchadata = new List<ExpenseMaster>();
+            serchadata = _context.ExpenseMaster.Where(x => !x.Isdelete && x.CreatedDate >= Convert.ToDateTime(sdate) && x.UpdatedDate <= Convert.ToDateTime(edate)).ToList();
+            return View(serchadata);
+            //string y = null;
+            //var searchingDate = y;
+            //try
+            //{
+            //    ViewBag.ExpensesList = Enum.GetValues(typeof(Expensestype)).Cast<Expensestype>().Select(v => new SelectListItem
+            //    {
+            //        Text = v.ToString(),
+            //        Value = ((int)v).ToString(),
+
+            //    }).ToList();
+            //    //ViewBag.Role = HttpContext.Session.GetString("Role");
+            //    var Searching = _context.ExpenseMaster.ToList();
+            // searchingDate = Convert.ToString(Searching.Where(s => s.CreatedDate >= Convert.ToDateTime(sdate) && s.UpdatedDate <= Convert.ToDateTime(edate)).ToList());
+
+            //}
+            //catch (Exception ex)
+            //{
+
+            //    throw;
+            //}
+            //return View(searchingDate);
+        }
+
+
+        public IActionResult SearchdataByCurrentmonth()
+        {
+            ViewBag.ExpensesList = Enum.GetValues(typeof(Expensestype)).Cast<Expensestype>().Select(v => new SelectListItem
+            {
+                Text = v.ToString(),
+                Value = ((int)v).ToString(),
+
+            }).ToList();
+            //ViewBag.Role = HttpContext.Session.GetString("Role");
+            var SearchingList = _context.ExpenseMaster.ToList();
+            var searching = SearchingList.Where(x=>x.CreatedDate == DateTime.Today.AddMonths(-1));
+
+            return View(searching);
+
+
+
+
         }
 
         //post submitted expenseMasters data. if expenseMasters.expenseMastersId is null then create new, otherwise edit
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult SubmitForm([Bind("Id", "ExpName", "Exptype", "Amount", "Description", "FileUpload", "isactive")] ExpenseMasterViewModel expenseMasters)
+        public IActionResult SubmitForm([Bind("Id", "ExpName", "Exptype", "Amount", " ExpenseDate ", "Description", "FileUpload", "isactive")] ExpenseMasterViewModel expenseMasters)
         {
             try
             {
@@ -96,6 +184,7 @@ namespace coderush.Controllers
                     newexpenseMaster.FileUpload = expenseMasters.FileUpload.FileName.ToString();
                     newexpenseMaster.Exptype = expenseMasters.Exptype;
                     newexpenseMaster.Amount = expenseMasters.Amount;
+                    newexpenseMaster.ExpenseDate = expenseMasters.ExpenseDate;
                     newexpenseMaster.isactive = expenseMasters.isactive;
                     newexpenseMaster.CreatedBy = user.Id;
                     _context.ExpenseMaster.Add(newexpenseMaster);
@@ -111,6 +200,7 @@ namespace coderush.Controllers
                 editexpensemaster.ExpName = expenseMasters.ExpName;
                 editexpensemaster.Exptype = expenseMasters.Exptype;
                 editexpensemaster.Amount = expenseMasters.Amount;
+                editexpensemaster.ExpenseDate = expenseMasters.ExpenseDate;
                 editexpensemaster.FileUpload = expenseMasters.FileUpload.FileName.ToString();
                 editexpensemaster.Description = expenseMasters.Description;
                 editexpensemaster.UpdatedBy = user.Id;
@@ -150,7 +240,7 @@ namespace coderush.Controllers
 
             //edit expense master
             ExpenseMasterViewModel editnewexpensemaster = new ExpenseMasterViewModel();
-            var  expensemaster = _context.ExpenseMaster.Where(x => x.Id.Equals(id)).FirstOrDefault();
+            var expensemaster = _context.ExpenseMaster.Where(x => x.Id.Equals(id)).FirstOrDefault();
             editnewexpensemaster.Id = expensemaster.Id;
 
 

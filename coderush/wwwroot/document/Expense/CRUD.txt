@@ -1,0 +1,252 @@
+*******************************DataMasterController *************************************
+
+using DemoCreate.Data;
+using DemoCreate.DataEnum;
+using DemoCreate.Models;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.Extensions.Logging;
+using System;
+using System.Collections.Generic;
+using System.Diagnostics;
+using System.Linq;
+using System.Threading.Tasks;
+using static DemoCreate.DataEnum.Selection;
+
+namespace DemoCreate.Controllers
+{
+    public class DataMasterController : Controller
+    {
+        private readonly ILogger<HomeController> _logger;
+        private readonly UserManager<IdentityUser> _userManager;
+        private readonly RoleManager<IdentityRole> _roleManager;
+        private readonly ApplicationDbContext _context;
+        public DataMasterController(ILogger<HomeController> logger, UserManager<IdentityUser> userManager,
+           RoleManager<IdentityRole> roleManager,
+           ApplicationDbContext context)
+        {
+            _logger = logger;
+            _roleManager = roleManager;
+            _userManager = userManager;
+            _context = context;
+        }
+        public IActionResult DataMaster()
+        {
+            ViewBag.SelectionList = Enum.GetValues(typeof(Selection)).Cast<Selection>().Select(v => new SelectListItem
+            {
+                Text = v.ToString(),
+                Value = ((int)v).ToString(),
+            }).ToList();
+
+            return View(_context.Datamaster.ToList());
+        }
+
+        public async Task<IActionResult> AddOrEdit(DataMaster model)
+        {
+            bool IsDataExist = false;
+
+            DataMaster data = await _context.Datamaster.FindAsync(model.ID);
+
+            if (data != null)
+            {
+                IsDataExist = true;
+            }
+            else
+            {
+                data = new DataMaster();
+            }
+            var user = _userManager.GetUserAsync(User).Result;
+            if (ModelState.IsValid)
+            {
+                try
+                {
+                    
+
+                    data.Type = model.Type;
+                    data.Text = model.Text;
+                    data.Description = model.Description;
+                    data.Isactive = model.Isactive;
+
+                    if (IsDataExist)
+                    {
+                        data.UpdatedBy = user.Id;
+                        data.UpdatedDate = DateTime.Now;
+                        _context.Update(data);
+                    }
+                    else
+                    {
+                        data.CreatedBy = user.Id;
+                        data.CreatedDate = DateTime.Now;
+                        _context.Add(data);
+                    }
+                    await _context.SaveChangesAsync();
+                }
+                catch (Exception ex)
+                {
+                    return Json(new { success = false, message = ex.Message });
+                }
+            }
+
+            return Json(new { success = true, message = "Record saved successfully." });
+        }
+    }
+}
+
+
+********************************************DataMaster*******************************************
+
+
+using DemoCreate.DataEnum;
+using System;
+using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+using System.Linq;
+using System.Threading.Tasks;
+using static DemoCreate.DataEnum.Selection;
+
+namespace DemoCreate.Models
+{
+    
+    public class DataMaster
+    {
+        public int ID { get; set; }
+        public string Type { get; set; }
+        public string Text { get; set; }
+        public string Description { get; set; }
+        public bool Isactive { get; set; }
+        public bool Isdeleted { get; set; }
+        public string CreatedBy { get; set; }
+        public string UpdatedBy { get; set; }
+        public DateTime? CreatedDate { get; set; }
+        public DateTime? UpdatedDate { get; set; }
+    }
+
+    public class DataMasterDeatils
+    {
+        public List<DataMasterViewModel> DataMasterList { get; set; }
+    }
+    public class DataMasterViewModel
+    {
+        public int ID { get; set; }
+        public Selection Type { get; set; }
+        public string Text { get; set; }
+        public string Description { get; set; }
+    }
+
+}
+
+
+***********************************Db context******************
+using DemoCreate.Models;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
+using System;
+using System.Collections.Generic;
+using System.Text;
+
+namespace DemoCreate.Data
+{
+    public class ApplicationDbContext : IdentityDbContext
+    {
+
+        public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
+            : base(options)
+        {
+        }
+        
+        public DbSet<DataMaster> Datamaster { get; set; }
+
+    }
+}
+
+
+********************
+
+@model List<DemoCreate.Models.DataMaster>
+@{
+    ViewData["Title"] = "DataMaster";
+}
+
+<h1>DataMaster</h1>
+
+<p style="text-align:right;margin-right:20px;">
+    <button type="button" class="btn btn-outline-primary" data-toggle="modal" data-target="#AddData">Create New</button>
+</p>
+
+<div class="table-responsive">
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Type</th>
+                <th>Text</th>
+                <th>Description</th>
+                <th>Edit Action</th>
+                <th>Delete</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Text)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Type)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Description)
+                    </td>
+                    <td class="text-center">
+                        <a asp-action="AddOrEdit" class="btn btn-outline-primary" asp-route-Id="@item.ID">Edit</a>
+                    </td>
+                    <td class="text-center">
+                        <a asp-action="Delete" class="btn btn-outline-danger" asp-route-Id="@item.ID">Delete</a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+
+<form enctype="multipart/form-data">
+    <div id="AddData" class="modal" tabindex="-1" role="dialog">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Add Lead</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label>Type:</label>
+                        @Html.DropDownList("Selection", new SelectList(ViewBag.SelectionList, "Value", "Text"), new { @class = "form-control", @id = "ddlSelectionList" })
+                    </div>
+                    <div class="form-group">
+                        <label>Text:</label>
+                        <input type="text" id="datatext" class="form-control" />
+                    </div>
+                    <div class="form-group">
+                        <label>Description:</label>
+                        <input type="text" id="datadescription" class="form-control" />
+                    </div>
+                    <div class="form-group">
+                        <label>Is Active:</label>
+                        <input type="checkbox" id="chkisactive" />
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-primary" id="btnsave">Save</button>
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+<script src="~/js/Data.js"></script>
+
