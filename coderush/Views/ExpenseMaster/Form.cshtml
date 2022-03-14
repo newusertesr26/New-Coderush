@@ -18,7 +18,7 @@
         <!-- Default box -->
         <form asp-controller="ExpenseMaster" enctype="multipart/form-data" asp-action="SubmitForm" method="post">
             <div class="box">
-                <div class="box-header with-border">
+                <div class="box-header with-border">    
                     <h3 class="box-title">Create or edit existing Expense item</h3>
                     <div class="box-tools pull-right">
                         <button type="button" class="btn btn-box-tool" data-widget="collapse" data-toggle="tooltip"
@@ -53,6 +53,14 @@
                         <span asp-validation-for="Amount" class="text-danger"></span>
                         @*<span class="text-danger hidespan spantext">Please enter Text</span>*@
                     </div>
+
+                    <div class="form-group">
+                        <label asp-for="ExpenseDate"></label>
+                        <input asp-for="ExpenseDate" class="form-control" />
+                        <span asp-validation-for="ExpenseDate" class="text-danger"></span>
+                        @*<span class="text-danger hidespan spantext">Please enter Text</span>*@
+                    </div>  
+
                     <div class="form-group">
                         <label asp-for="Description"></label>
                         <textarea asp-for="Description" rows="4" cols="50" type="text" value="" class="form-control"></textarea>

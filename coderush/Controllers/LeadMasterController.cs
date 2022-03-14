@@ -70,7 +70,7 @@ namespace coderush.Controllers
                 string path = Path.Combine(this._webHostEnvironment.WebRootPath, "document/Lead");
                 //if (!Directory.Exists(path))
                 //{
-                //    Directory.CreateDirectory(path);
+                //    Directory.CreateDirectory(path); 
                 //}
 
                 List<string> uploadedFiles = new List<string>();

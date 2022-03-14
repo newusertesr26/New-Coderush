@@ -22,6 +22,8 @@ namespace coderush.Models
         [Required]
         [RegularExpression("^[0-9]*$", ErrorMessage = "Amount must be numeric")]
         public string Amount { get; set; }
+        [Display(Name = "Expense Date:")]
+        public DateTime? ExpenseDate { get; set; }
         [Display(Name = "Description:")]
         [Required]
         [StringLength(60, MinimumLength = 3)]

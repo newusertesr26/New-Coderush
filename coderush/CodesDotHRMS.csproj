@@ -22,6 +22,7 @@
   <ItemGroup>
     <Folder Include="wwwroot\document\Candidate\" />
     <Folder Include="wwwroot\document\Lead\" />
+    <Folder Include="wwwroot\document\Todo\" />
     <Folder Include="wwwroot\document\Userimage\" />
   </ItemGroup>
 

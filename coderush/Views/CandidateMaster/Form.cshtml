@@ -45,17 +45,27 @@
                         @*<span class="text-danger hidespan spantext">Please enter Text</span>*@
                     </div>
                     <div class="form-group">
+                        <label asp-for="PlaceOfInterview"></label>
+                        <select  asp-for="PlaceOfInterview" class="form-control" >
+                            <option value="0">--Select--</option>
+                            <option >AT Office</option>
+                            <option >AT Virtual</option>
+                        </select>
+                        <span asp-validation-for="PlaceOfInterview" class="text-danger"></span>
+                        @*<span class="text-danger hidespan spantext">Please enter Text</span>*@
+                    </div>
+                    <div class="form-group">
                         <label asp-for="Phone"></label>
                         <input id="candidatephone" asp-for="Phone" class="form-control" />
                         <span asp-validation-for="Phone" class="text-danger"></span>
                         @*<span class="text-danger hidespan spantext">Please enter Text</span>*@
                     </div>
+
                     <div class="form-group">
                         <label asp-for="Technologies"></label>
                         @*@Html.DropDownList("Selection", new SelectList(ViewBag.SelectionList, "Value", "Text"), new { @class = "form-control", @id = "ddlSelectionList" })*@
                         <select name="technologies" class="form-control" asp-items="@ViewBag.CandidatetechnologiesList" asp-for="Technologies">
                             <option value="">-- Select --</option>
-
                         </select>
                         <span asp-validation-for="Technologies" class="text-danger"></span>
                         @*<span class="text-danger hidespan spanSelection">Please select Type</span>*@
@@ -74,12 +84,7 @@
                             @*<span class="text-danger hidespan spantext">Please enter Text</span>*@
                         </div>
                     </div>
-                    <div class="form-group">
-                        <label asp-for="PlaceOfInterview"></label>
-                        <input asp-for="PlaceOfInterview" class="form-control" />
-                        <span asp-validation-for="PlaceOfInterview" class="text-danger"></span>
-                        @*<span class="text-danger hidespan spantext">Please enter Text</span>*@
-                    </div>
+
                     <div class="form-group">
                         <label asp-for="FileUpload"></label>
                         <input type="file" asp-for="FileUpload" id="FileUpload" class="form-control" />
@@ -87,15 +92,15 @@
                         @*<span asp-validation-for="FileUpload" class="text-danger"></span>*@
                         @*<span class="text-danger hidespan spantext">Please enter Text</span>*@
                     </div>
-                    <div class="form-group ">
+                    <div class="form-group " id="checkple">
                         <div class="form-group col-md-3">
                             <div class="form-group">
                                 <label asp-for="IsActive"></label>
-                                <input asp-for="IsActive" type="checkbox" id="ckisactive" class="flat-red" />
+                                <input asp-for="IsActive" type="checkbox" id="IsActive" class="flat-red icheckbox_flat-green checked check" />
                             </div>
                             <div class="form-group">
                                 <label asp-for="IsReject"></label>
-                                <input asp-for="IsReject" type="checkbox" id="ckisactive" class="flat-red" />
+                                <input asp-for="IsReject" type="checkbox" id="IsReject" class="flat-red icheckbox_flat-green checked check" />
                             </div>
                         </div>
                     </div>
@@ -131,7 +136,35 @@
 @section Scripts{
 
     <partial name="_ValidationScriptsPartial" />
-    <script src="~/js/Candidate.js"></script>
+    @*<script src="~/js/Candidate.js"></script>*@
+
+    <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
+    <script type="text/javascript">
+        $(function () {
+            $("#checkple input[type=checkbox]").click(function () {
+                if ($(this).is(":checked")) {
+                    $("#checkple input[type=checkbox]").removeAttr("checked");
+                    $(this).attr("checked", "checked");
+                }
+            });
+            $(".check").each(function () {
+
+                if (element.checked == true) {
+
+                    alert('checked');
+
+                }
+
+            });
+        });
+    </script>
 
 
+
+    <script>
+        $('input[type="checkbox"]').click(function () {
+            $(".check_class").attr("checked", false);
+            $(this).attr("checked", true);
+        });
+    </script>
 }

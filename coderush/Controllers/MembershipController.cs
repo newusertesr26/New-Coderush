@@ -76,7 +76,7 @@ namespace coderush.Controllers
         //post submited change profile request
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> SubmitChangeProfile([Bind("Id,EmailConfirmed,Email,PhoneNumber,JoiningDate,ProfilePicture")] ApplicationViewModel applicationUser)
+        public async Task<IActionResult> SubmitChangeProfile([Bind("Id,EmailConfirmed,Email,FirstName,LastName,PhoneNumber,JoiningDate,ProfilePicture")] ApplicationViewModel applicationUser)
         {
             try
             {
@@ -120,6 +120,8 @@ namespace coderush.Controllers
                 //}                
 
                 updatedUser.Email = applicationUser.Email;
+                updatedUser.FirstName = applicationUser.FirstName;
+                updatedUser.LastName = applicationUser.LastName;
                 updatedUser.PhoneNumber = applicationUser.PhoneNumber;
                 updatedUser.EmailConfirmed = applicationUser.EmailConfirmed;
                 updatedUser.JoiningDate = applicationUser.JoiningDate;
@@ -414,7 +416,7 @@ namespace coderush.Controllers
         //post submitted registration request
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> SubmitRegister([Bind("EmailConfirmed,Email,PhoneNumber,Password,ConfirmPassword")] Register register)
+        public async Task<IActionResult> SubmitRegister([Bind("EmailConfirmed,Email,FirstName,LastName,PhoneNumber,Password,ConfirmPassword")] Register register)
         {
             try
             {
@@ -426,6 +428,8 @@ namespace coderush.Controllers
 
                 ApplicationUser newMember = new ApplicationUser();
                 newMember.Email = register.Email;
+                newMember.FirstName = register.FirstName;
+                newMember.LastName = register.LastName;
                 newMember.UserName = register.Email;
                 newMember.PhoneNumber = register.PhoneNumber;
                 newMember.EmailConfirmed = register.EmailConfirmed;
