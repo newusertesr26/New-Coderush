@@ -34,15 +34,37 @@ namespace coderush.Controllers
             _context = context;
             //_hostingEnvironment = hostingEnvironment;
         }
-        public IActionResult Index()
+        public ActionResult Index(string Searcvalue)
         {
+            var datamaster =new List<DataMaster>();
             ViewBag.SelectionList = Enum.GetValues(typeof(DataSelection)).Cast<DataSelection>().Select(v => new SelectListItem
             {
                 Text = v.ToString(),
                 Value = ((int)v).ToString(),
             }).ToList();
+            if (Searcvalue == null)
+            {
+                datamaster = _context.Datamaster.Where(x => !x.Isdeleted).ToList();
+            }
+            else
+            {
+                if (Searcvalue == "1")
+                {
+                    ViewBag.key = "1";
+                    datamaster = _context.Datamaster.Where(x => !x.Isdeleted && x.Type == DataSelection.Expenses).ToList();
+                }
+                else if(Searcvalue=="2")
+                {
+                    ViewBag.key = "2";
+                    datamaster = _context.Datamaster.Where(x => !x.Isdeleted && x.Type == DataSelection.LEAVE).ToList();
 
-            var datamaster = _context.Datamaster.Where(x => !x.Isdeleted).ToList();
+                }
+                else if(Searcvalue == "3")
+                {
+                    ViewBag.key = "3";
+                    datamaster = _context.Datamaster.Where(x => !x.Isdeleted && x.Type == DataSelection.technologies).ToList();
+                }
+            }
             return View(datamaster);
         }
 
@@ -94,7 +116,6 @@ namespace coderush.Controllers
             }
             catch (Exception ex)
             {
-
                 TempData[StaticString.StatusMessage] = "Error: " + ex.Message;
                 return RedirectToAction(nameof(Form), new { id = dataMasters.Id > 0 ? dataMasters.Id : 0 });
             }
@@ -225,6 +246,18 @@ namespace coderush.Controllers
         {
             var Data = _context.Datamaster.Where(x => x.Id == id).FirstOrDefault();
             return Json(Data);
+        }
+       [HttpPost]
+       public ActionResult Serchbytechnology(string Searcvalue)
+        {
+            ViewBag.SelectionList = Enum.GetValues(typeof(DataSelection)).Cast<DataSelection>().Select(v => new SelectListItem
+            {
+                Text = v.ToString(),
+                Value = ((int)v).ToString(),
+            }).ToList();
+
+           var  datamaster = _context.Datamaster.Where(x => !x.Isdeleted && x.Id==3).ToList();
+            return View("~/Views/DataMaster/index.cshtml", datamaster);
         }
 
         //[HttpPost]

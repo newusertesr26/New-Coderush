@@ -87,15 +87,15 @@
                         @*<span asp-validation-for="FileUpload" class="text-danger"></span>*@
                         @*<span class="text-danger hidespan spantext">Please enter Text</span>*@
                     </div>
-                    <div class="form-group ">
+                    <div class="form-group " id="checkple">
                         <div class="form-group col-md-3">
                             <div class="form-group">
                                 <label asp-for="IsActive"></label>
-                                <input asp-for="IsActive" type="checkbox" id="ckisactive" class="flat-red" />
+                                <input asp-for="IsActive" type="checkbox" id="IsActive" class="flat-red icheckbox_flat-green checked check" />
                             </div>
                             <div class="form-group">
                                 <label asp-for="IsReject"></label>
-                                <input asp-for="IsReject" type="checkbox" id="ckisactive" class="flat-red" />
+                                <input asp-for="IsReject" type="checkbox" id="IsReject" class="flat-red icheckbox_flat-green checked check" />
                             </div>
                         </div>
                     </div>
@@ -131,7 +131,29 @@
 @section Scripts{
 
     <partial name="_ValidationScriptsPartial" />
-    <script src="~/js/Candidate.js"></script>
+    @*<script src="~/js/Candidate.js"></script>*@
+
+    <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
+    <script type="text/javascript">
+        $(function () {
+            $("#checkple input[type=checkbox]").click(function () {
+                if ($(this).is(":checked")) {
+                    $("#checkple input[type=checkbox]").removeAttr("checked");
+                    $(this).attr("checked", "checked");
+                }
+            });
+            $(".check").each(function () {
+
+                if (element.checked == true) {
+
+                    alert('checked');
+
+                }
+
+            });
+        });
+    </script>
+
 
 
 }
