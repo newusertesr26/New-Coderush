@@ -37,7 +37,7 @@ namespace coderush.Controllers
             _context = context;
             //_hostingEnvironment = hostingEnvironment;
         }
-        public IActionResult CandidateIndex()
+        public IActionResult CandidateIndex(string sdate, string edate, string curentmonth, string lastmont)
         {
             //ViewBag.CandidatetechnologiesList = Enum.GetValues(typeof(CandidateTechnologies)).Cast<CandidateTechnologies>().Select(v => new SelectListItem
             //{
@@ -52,13 +52,83 @@ namespace coderush.Controllers
                 Value = v.Id.ToString(),
             }).ToList();
 
-            //ViewBag.Role = HttpContext.Session.GetString("Role");
-            //if (HttpContext.Session.GetString("Role") == "Other")
-            //{
-            //    return RedirectToAction("PageError", "Home");
-            //}
+            var serchadata = new List<CandidateMaster>();
+            try
+            {
+                int montha;
+                if (curentmonth == "2")
+                {
+                    int dt = DateTime.Now.Month;
+                    serchadata = _context.CandidateMaster.Where(x => !x.IsDelete && x.CreatedDate.Value.Month == dt).ToList();
+                    return View(serchadata);
+                }
+                else if (lastmont == "1")
+                {
+                    var today = DateTime.Today;
+                    var month = new DateTime(today.Year, today.Month, 1);
+                    var first = month.AddMonths(-1);
+                    montha = first.Month;
+                    serchadata = _context.CandidateMaster.Where(x => !x.IsDelete && x.CreatedDate.Value.Month == montha).ToList();
+                    return View(serchadata);
+                }
 
-            return View(_context.CandidateMaster.Where(x => !x.IsDelete).ToList());
+                if (sdate == null)
+                {
+                    serchadata = _context.CandidateMaster.Where(x => !x.IsDelete).ToList();
+                    return View(serchadata);
+                }
+                else
+                {
+                    ViewBag.startdate = sdate;
+                    ViewBag.enddate = edate;
+                    serchadata = _context.CandidateMaster.Where(x => !x.IsDelete && x.CreatedDate >= Convert.ToDateTime(sdate) && x.UpdatedDate <= Convert.ToDateTime(edate)).ToList();
+                    // serchadata = _context.ExpenseMaster.Where(x => !x.Isdelete && x.CreatedDate >= Convert.ToDateTime(sdate)).ToList();
+                    return View(serchadata);
+
+                }
+            }
+            catch (Exception ex)
+            {
+                throw;
+            }
+
+            return View(serchadata);
+        }
+
+        //ViewBag.Role = HttpContext.Session.GetString("Role");
+        //if (HttpContext.Session.GetString("Role") == "Other")
+        //{
+        //    return RedirectToAction("PageError", "Home");
+        //}
+
+        //return View(_context.CandidateMaster.Where(x => !x.IsDelete).ToList());
+        [HttpGet]
+        public IActionResult Searchdata(string sdate, string edate)
+        {
+
+            var serchadata = new List<CandidateMaster>();
+            serchadata = _context.CandidateMaster.Where(x => !x.IsDelete && x.CreatedDate >= Convert.ToDateTime(sdate) && x.UpdatedDate <= Convert.ToDateTime(edate)).ToList();
+            return View(serchadata);
+        }
+
+
+        public IActionResult SearchdataByCurrentmonth()
+        {
+            ViewBag.CandidatetechnologiesList = Enum.GetValues(typeof(CandidateTechnologies)).Cast<CandidateTechnologies>().Select(v => new SelectListItem
+            {
+                Text = v.ToString(),
+                Value = ((int)v).ToString(),
+
+            }).ToList();
+            //ViewBag.Role = HttpContext.Session.GetString("Role");
+            var SearchingList = _context.CandidateMaster.ToList();
+            var searching = SearchingList.Where(x => x.CreatedDate == DateTime.Today.AddMonths(-1));
+
+            return View(searching);
+
+
+
+
         }
 
         //post submitted candidate data. if todo.CandidateId is null then create new, otherwise edit
@@ -173,6 +243,9 @@ namespace coderush.Controllers
         [HttpGet]
         public IActionResult Form(int id)
         {
+
+ 
+
             //ViewBag.CandidatetechnologiesList = Enum.GetValues(typeof(Technologies)).Cast<Technologies>().Select(v => new SelectListItem
             //{
             //    Text = v.ToString(),

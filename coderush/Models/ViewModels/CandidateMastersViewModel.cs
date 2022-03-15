@@ -26,7 +26,7 @@ namespace coderush.Models.ViewModels
         [Required]
         [Display(Name = "Technologies:")]
 
-        public CandidateTechnologies Technologies { get; set; }
+        public int Technologies { get; set; }
         [Display(Name = "CVUpload:")]
         [Required]
         public IFormFile FileUpload { get; set; }
