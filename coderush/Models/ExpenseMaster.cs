@@ -29,7 +29,6 @@ namespace coderush.Models
         [StringLength(60, MinimumLength = 3)]
         public string Description { get; set; }
         [Display(Name = "CVUpload:")]
-        [Required]
         public string FileUpload { get; set; }
         [Display(Name = "isactive:")]
         public bool isactive { get; set; }
