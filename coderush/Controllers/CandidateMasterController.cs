@@ -37,13 +37,16 @@ namespace coderush.Controllers
             _context = context;
             //_hostingEnvironment = hostingEnvironment;
         }
-        public IActionResult CandidateIndex()
+        public IActionResult CandidateIndex(string searchvalue)
+
         {
-            //ViewBag.CandidatetechnologiesList = Enum.GetValues(typeof(CandidateTechnologies)).Cast<CandidateTechnologies>().Select(v => new SelectListItem
-            //{
-            //    Text = v.ToString(),
-            //    Value = ((int)v).ToString(),
-            //}).ToList();
+            ViewBag.CandidatetechnologiesList = Enum.GetValues(typeof(CandidateTechnologies)).Cast<CandidateTechnologies>().Select(v => new SelectListItem
+            {
+                Text = v.ToString(),
+                Value = ((int)v).ToString(),
+            }).ToList();
+            var Candidatemaster = new List<CandidateMaster>();
+
             var typelist1 = _context.Datamaster.Where(x => x.Type == DataSelection.technologies).ToList();
 
             ViewBag.CandidatetechnologiesList = typelist1.Select(v => new SelectListItem
@@ -57,8 +60,25 @@ namespace coderush.Controllers
             //{
             //    return RedirectToAction("PageError", "Home");
             //}
+            if (searchvalue == null || searchvalue == "All")
+            {
+                Candidatemaster = _context.CandidateMaster.Where(x => !x.IsDelete).ToList();
+            }
+            else if (searchvalue == "Reject")
+            {
 
-            return View(_context.CandidateMaster.Where(x => !x.IsDelete).ToList());
+                Candidatemaster = _context.CandidateMaster.Where(x => !x.IsDelete && x.IsReject).ToList();
+
+            }
+            else
+            {
+
+                Candidatemaster = _context.CandidateMaster.Where(x => !x.IsDelete && x.IsActive).ToList();
+
+            }
+
+
+            return View(Candidatemaster);
         }
 
         //post submitted candidate data. if todo.CandidateId is null then create new, otherwise edit
