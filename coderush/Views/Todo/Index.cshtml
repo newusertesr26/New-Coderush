@@ -58,7 +58,7 @@
                                     }
                                     <td><span style="text-decoration-line:@(item.IsDone ? "line-through" : "none")">@item.TodoItem</span></td>
                                     <td>
-                                        @item.Duedate
+                                        @item.Duedate.Value.ToString("dd MMMM yyyy")
                                     </td>
                                     <td>
                                         <a asp-controller="Todo" asp-action="DownloadFile" asp-route-filename="@item.FileUpload"><i class="fa fa-download"></i></a>

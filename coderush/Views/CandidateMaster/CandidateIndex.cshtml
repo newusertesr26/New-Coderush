@@ -1,5 +1,7 @@
 ﻿@model List<CandidateMaster>
 @using Microsoft.AspNetCore.Identity
+@using System.Globalization
+
 @inject UserManager<ApplicationUser> _userManager
 
 @{ ViewData["Title"] = "Candidate";
@@ -51,6 +53,10 @@
                         <tbody>
                             @foreach (var item in Model)
                             {
+                                var dtDateTime = DateTime.Now;
+                                if (item.InterviewTime.HasValue) {
+                                    dtDateTime = dtDateTime.AddSeconds(item.InterviewTime.Value.TotalSeconds).ToLocalTime();
+                                }
                                 <tr>
                                     <td>
                                         <a href="/CandidateMaster/Form/@item.Id"><i class="fa fa-edit"></i></a> &nbsp; &nbsp;
@@ -58,7 +64,7 @@
                                         {
                                             <a href="/CandidateMaster/Delete/@item.Id"><i class="fa fa-trash"></i></a>
                                         }
-                                        </td>
+                                    </td>
                                     <td>
                                         @item.Name
                                     </td>
@@ -78,13 +84,13 @@
                                         <a asp-controller="CandidateMaster" asp-action="DownloadFile" asp-route-filename="@item.FileUpload"><i class="fa fa-download"></i></a>
                                     </td>
                                     <td>
-                                        @item.InterviewDate
+                                        @item.InterviewDate.Value.ToString("dd MMMM yyyy")
                                     </td>
                                     <td>
                                         @item.PlaceOfInterview
                                     </td>
                                     <td>
-                                        @item.InterviewTime
+                                        @(item.InterviewTime.HasValue? dtDateTime.ToString("hh:mm tt", CultureInfo.InvariantCulture):"")
                                     </td>
                                     <td>
                                         @item.InterviewDescription

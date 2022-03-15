@@ -123,11 +123,18 @@ namespace coderush.Controllers
                                 .Where(w => w.UserName != null)
                                .Select(s => new SelectListItem()
                                {
-                                   Text = s.UserName,
+
+                                   Text = String.Format("{0} {1} {2}", s.UserName, s.FirstName != null ?  "|| " + s.FirstName : "",  s.LastName != null ? "|| " + s.LastName : "").ToString(),
+                                   //Text = String.Format("{0}  {1} || {2}", s.UserName, s.FirstName != null ? s.FirstName : "" , s.LastName != null ? s.LastName : "").ToString(),
+                                   //Text = String.Format("{0},{1},{2}", s.UserName,s.FirstName,s.LastName).ToString(),
+                                   //Text = s.UserName + " || " + s.FirstName == null ? "" : s.FirstName + "||" + s.LastName == null ? "" : s.LastName,
+                                   //Text = s.UserName + " || " + (s.FirstName == null )+ " || " + (s.LastName == null), 
                                    Value = s.Id.ToString()
                                }).ToList();
             return Json(leavecount);
         }
+
+      
 
         //post submitted leavecount data. if todo.TodoId is null then create new, otherwise edit
         [HttpPost]

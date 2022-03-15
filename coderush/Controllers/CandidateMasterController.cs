@@ -46,11 +46,17 @@ namespace coderush.Controllers
             //}).ToList();
             var typelist1 = _context.Datamaster.Where(x => x.Type == DataSelection.technologies).ToList();
 
+            //TimeSpan timespan = new TimeSpan(03, 00, 00);
+            //DateTime time = DateTime.Today.Add(timespan);
+            //string displayTime = time.ToString("hh:mm tt");
+
+
             ViewBag.CandidatetechnologiesList = typelist1.Select(v => new SelectListItem
             {
                 Text = v.Text.ToString(),
                 Value = v.Id.ToString(),
             }).ToList();
+
 
             //ViewBag.Role = HttpContext.Session.GetString("Role");
             //if (HttpContext.Session.GetString("Role") == "Other")
