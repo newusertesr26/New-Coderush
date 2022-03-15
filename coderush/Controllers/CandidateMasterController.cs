@@ -204,8 +204,17 @@ namespace coderush.Controllers
             CandidateMastersViewModel editnewcandidatemaster = new CandidateMastersViewModel();
             var candidatedata = _context.CandidateMaster.Where(x => x.Id.Equals(id)).FirstOrDefault();
             editnewcandidatemaster.Id = candidatedata.Id;
-
-
+            editnewcandidatemaster.Name = candidatedata.Name;           
+            editnewcandidatemaster.Email = candidatedata.Email;
+            editnewcandidatemaster.Phone = candidatedata.Phone;
+            editnewcandidatemaster.Technologies = candidatedata.Technologies;
+            editnewcandidatemaster.InterviewDate = candidatedata.InterviewDate;
+            editnewcandidatemaster.InterviewTime = candidatedata.InterviewTime;
+            editnewcandidatemaster.PlaceOfInterview = candidatedata.PlaceOfInterview;
+            editnewcandidatemaster.filename = candidatedata.FileUpload;           
+            editnewcandidatemaster.IsReject = candidatedata.IsReject;
+            editnewcandidatemaster.IsActive = candidatedata.IsActive;
+            editnewcandidatemaster.InterviewDescription = candidatedata.InterviewDescription;
             if (editnewcandidatemaster == null)
             {
                 return NotFound();

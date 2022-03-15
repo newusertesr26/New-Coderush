@@ -30,6 +30,7 @@ namespace coderush.Models.ViewModels
         [Display(Name = "CVUpload:")]
         [Required]
         public IFormFile FileUpload { get; set; }
+        public string filename{ get; set; }
         [Display(Name = "Active:")]
         public bool IsActive { get; set; }
         [Display(Name = "Interview Date:")]
