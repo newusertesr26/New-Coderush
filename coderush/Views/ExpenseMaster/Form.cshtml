@@ -35,7 +35,7 @@
                     <div class="form-group">
                         <label asp-for="Exptype"></label>
                         @*@Html.DropDownList("Selection", new SelectList(ViewBag.SelectionList, "Value", "Text"), new { @class = "form-control", @id = "ddlSelectionList" })*@
-                        <select name="exptype" class="form-control" asp-items="@ViewBag.ExpensesList" asp-for="Exptype">
+                        <select name="exptype" class="form-control" asp-items="@ViewBag.Expensetypelist" asp-for="Exptype">
                             <option value="">-- Select --</option>
                         </select>
                         <span asp-validation-for="Exptype" class="text-danger"></span>
@@ -56,7 +56,7 @@
 
                     <div class="form-group">
                         <label asp-for="ExpenseDate"></label>
-                        <input asp-for="ExpenseDate" class="form-control" />
+                        <input type="date" asp-for="ExpenseDate" class="form-control" />
                         <span asp-validation-for="ExpenseDate" class="text-danger"></span>
                         @*<span class="text-danger hidespan spantext">Please enter Text</span>*@
                     </div>  

@@ -1,5 +1,5 @@
-﻿@using coderush.Models
-@model List<ExpenseMaster>
+﻿@using coderush.Models.ViewModels
+@model List<ExpenseMasterViewModel>
 @{ ViewData["Title"] = "Expense"; }
 
 
@@ -87,24 +87,26 @@
                                     @item.ExpName
                                 </td>
                                 <td>
-                                    @item.Exptype
+                                    @item.exptype
                                 </td>
                                 <td>
                                     @item.Amount
                                 </td>
-
                                 <td>
-                                    @item.ExpenseDate
+                                    @item.ExpenseDate.Value
                                 </td>
                                 <td>
                                     @item.Description
                                 </td>
                                 <td>
-                                    @*@item.FileUpload
+                                    @if (item.filename != null && item.filename != "")
+                                    {
+                                        @*@item.FileUpload
             <br />
             @Html.ActionLink("Download", "DownloadFile", new { fileName = item.FileUpload })*@
-                                    <a asp-controller="ExpenseMaster" asp-action="DownloadFile" asp-route-filename="@item.FileUpload"><i class="fa fa-download"></i></a>
-                                </td>
+                                        <a href="~/document/Expense/@item.filename" target="_blank"><i class="fa fa-download"></i></a>
+                                    }
+                                    </td>
                                 @*<td><span style="text-decoration-line:@(item.Isactive ? "line-through" : "none")">@item.Isactive</span></td>*@
                                 <td>
                                     <input type="checkbox" class="flat-red" @(item.isactive ? "checked" : "") onclick="return false;">
