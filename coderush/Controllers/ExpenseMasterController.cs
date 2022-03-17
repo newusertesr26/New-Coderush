@@ -54,7 +54,7 @@ namespace coderush.Controllers
                             Description = expense.Description,
                             filename = expense.FileUpload,
                             isactive = expense.isactive,
-
+                            CreatedDate = expense.CreatedDate
                         }).ToList();
 
             //return View(data);
@@ -67,12 +67,12 @@ namespace coderush.Controllers
             }).ToList();
 
 
-            //ViewBag.ExpensesList = Enum.GetValues(typeof(Expensestype)).Cast<Expensestype>().Select(v => new SelectListItem
-            //{
-            //    Text = v.ToString(),
-            //    Value = ((int)v).ToString(),
+            ViewBag.ExpensesList = Enum.GetValues(typeof(Expensestype)).Cast<Expensestype>().Select(v => new SelectListItem
+            {
+                Text = v.ToString(),
+                Value = ((int)v).ToString(),
 
-            //}).ToList();
+            }).ToList();
             //ViewBag.Role = HttpContext.Session.GetString("Role");
             var serchadata = new List<ExpenseMasterViewModel>();
             try
@@ -81,23 +81,9 @@ namespace coderush.Controllers
                 if (curentmonth == "2")
                 {
                     int dt = DateTime.Now.Month;
-                    serchadata = (from expense in _context.ExpenseMaster
-                                  where expense.Isdelete == false &&
-                                  expense.CreatedDate.Value.Month == dt
-                                  select new ExpenseMasterViewModel
-                                  {
-                                      Id = expense.Id,
-                                      ExpName = expense.ExpName,
-                                      exptype = _context.Datamaster.Where(x => x.Id == expense.Exptype).Select(x => x.Text).FirstOrDefault(),
-                                      Amount = expense.Amount,
-                                      ExpenseDate = expense.ExpenseDate,
-                                      Description = expense.Description,
-                                      filename = expense.FileUpload,
-                                      isactive = expense.isactive,
 
-                                  }).ToList();
-
-
+                    data = data.Where(x => x.Isdelete == false && x.ExpenseDate.Value.Month == dt).ToList();
+                    //  return View(data);
                 }
                 else if (lastmont == "1")
                 {
@@ -105,70 +91,24 @@ namespace coderush.Controllers
                     var month = new DateTime(today.Year, today.Month, 1);
                     var first = month.AddMonths(-1);
                     montha = first.Month;
-                    //serchadata = _context.ExpenseMaster.Where(x => !x.Isdelete && x.CreatedDate.Value.Month == montha).ToList();
-                    serchadata = (from expense in _context.ExpenseMaster
-                                  where expense.Isdelete == false
-                                  //expense.CreatedDate.Value.Month == month
-                                  select new ExpenseMasterViewModel
-                                  {
-                                      Id = expense.Id,
-                                      ExpName = expense.ExpName,
-                                      exptype = _context.Datamaster.Where(x => x.Id == expense.Exptype).Select(x => x.Text).FirstOrDefault(),
-                                      Amount = expense.Amount,
-                                      ExpenseDate = expense.ExpenseDate,
-                                      Description = expense.Description,
-                                      filename = expense.FileUpload,
-                                      isactive = expense.isactive,
 
-                                  }).ToList();
+                    data = data.Where(x => x.Isdelete == false && x.ExpenseDate.Value.Month == montha).ToList();
+                    // return View(data);
                 }
 
-                if (sdate == null)
-                {
-                    //serchadata = _context.ExpenseMaster.Where(x => !x.Isdelete).ToList();
-                    serchadata = (from expense in _context.ExpenseMaster
-                                  where expense.Isdelete == false
-                                  select new ExpenseMasterViewModel
-                                  {
-                                      Id = expense.Id,
-                                      ExpName = expense.ExpName,
-                                      exptype = _context.Datamaster.Where(x => x.Id == expense.Exptype).Select(x => x.Text).FirstOrDefault(),
-                                      Amount = expense.Amount,
-                                      ExpenseDate = expense.ExpenseDate,
-                                      Description = expense.Description,
-                                      filename = expense.FileUpload,
-                                      isactive = expense.isactive,
 
-                                  }).ToList();
-
-                }
-                else
+                else if (sdate != null && edate != null)
                 {
                     ViewBag.startdate = sdate;
                     ViewBag.enddate = edate;
-                    //serchadata = _context.ExpenseMaster.Where(x => !x.Isdelete && x.CreatedDate >= Convert.ToDateTime(sdate) && x.UpdatedDate <= Convert.ToDateTime(edate)).ToList();
-                    serchadata = (from expense in _context.ExpenseMaster
-                                  where expense.Isdelete == false &&
-                                  expense.CreatedDate >= Convert.ToDateTime(sdate) && expense.UpdatedDate <= Convert.ToDateTime(edate)
-                                  select new ExpenseMasterViewModel
-                                  {
-                                      Id = expense.Id,
-                                      ExpName = expense.ExpName,
-                                      exptype = _context.Datamaster.Where(x => x.Id == expense.Exptype).Select(x => x.Text).FirstOrDefault(),
-                                      Amount = expense.Amount,
-                                      ExpenseDate = expense.ExpenseDate,
-                                      Description = expense.Description,
-                                      filename = expense.FileUpload,
-                                      isactive = expense.isactive,
 
-                                  }).ToList();
-                    // serchadata = _context.ExpenseMaster.Where(x => !x.Isdelete && x.CreatedDate >= Convert.ToDateTime(sdate)).ToList();
-
+                    data = data.Where(x => x.Isdelete == false
+                                         && x.ExpenseDate >= Convert.ToDateTime(sdate) && x.ExpenseDate <= Convert.ToDateTime(edate)).ToList();
                 }
             }
             catch (Exception ex)
             {
-                throw;
+                throw ex;
             }
 
             return View(data);
@@ -214,7 +154,7 @@ namespace coderush.Controllers
             }).ToList();
             //ViewBag.Role = HttpContext.Session.GetString("Role");
             var SearchingList = _context.ExpenseMaster.ToList();
-            var searching = SearchingList.Where(x=>x.CreatedDate == DateTime.Today.AddMonths(-1));
+            var searching = SearchingList.Where(x => x.CreatedDate == DateTime.Today.AddMonths(-1));
 
             return View(searching);
 

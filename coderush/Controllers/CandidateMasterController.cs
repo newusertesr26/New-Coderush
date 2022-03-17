@@ -151,6 +151,8 @@ namespace coderush.Controllers
                                   }).ToList();
 
                 }
+
+                
                 else
                 {
                     ViewBag.startdate = sdate;
@@ -158,7 +160,7 @@ namespace coderush.Controllers
                     //serchadata = _context.ExpenseMaster.Where(x => !x.Isdelete && x.CreatedDate >= Convert.ToDateTime(sdate) && x.UpdatedDate <= Convert.ToDateTime(edate)).ToList();
                     serchadata = (from candidate in _context.CandidateMaster
                                   where candidate.IsDelete == false &&
-                                  candidate.CreatedDate >= Convert.ToDateTime(sdate) && candidate.UpdatedDate <= Convert.ToDateTime(edate)
+                                  candidate.InterviewDate >= Convert.ToDateTime(sdate) && candidate.InterviewDate <= Convert.ToDateTime(edate)
                                   select new CandidateMastersViewModel
                                   {
                                       Id = candidate.Id,

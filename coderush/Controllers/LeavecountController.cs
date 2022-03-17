@@ -48,6 +48,20 @@ namespace coderush.Controllers
         {
             List<LeaveCountViewModel> model = new List<LeaveCountViewModel>();
 
+            //var data = (from leave in _context.LeadMaster
+            //            where leave.IsDelete == false
+            //            select new LeaveCountViewModel
+            //            {
+            //                Id = leave.id,
+            //                Userid = _context.ApplicationUser.Where(x => x.Id == Userid).Select(x => x.FirstName + " " + x.LastName).FirstOrDefault(),
+            //                Amount = leave.Amount,
+            //                ExpenseDate = leave.ExpenseDate,
+            //                Description = leave.Description,
+            //                filename = leave.FileUpload,
+            //                isactive = leave.isactive 
+
+            //            }).ToList();
+
             //ViewBag.UserList = _userManager.Users
             //                    .Where(w => w.UserName != null)
             //                   .Select(s => new SelectListItem()
@@ -364,17 +378,17 @@ namespace coderush.Controllers
         //    return Json(new { success = true, message = "Data saved successfully." });
         //}
 
-        public FileResult DownloadFile(string fileName)
-        {
-            //Build the File Path.
-            string path = Path.Combine(this._webHostEnvironment.WebRootPath, "document/Leave/") + fileName;
+        //public FileResult DownloadFile(string fileName)
+        //{
+        //    //Build the File Path.
+        //    string path = Path.Combine(this._webHostEnvironment.WebRootPath, "document/Leave/") + fileName;
 
-            //Read the File data into Byte Array.
-            byte[] bytes = System.IO.File.ReadAllBytes(path);
+        //    //Read the File data into Byte Array.
+        //    byte[] bytes = System.IO.File.ReadAllBytes(path);
 
-            //Send the File to Download.
-            return File(bytes, "application/octet-stream", fileName);
-        }
+        //    //Send the File to Download.
+        //    return File(bytes, "application/octet-stream", fileName);
+        //}
 
         [HttpGet]
         public IActionResult EditData(int id)
