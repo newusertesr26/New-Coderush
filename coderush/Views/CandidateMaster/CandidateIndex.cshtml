@@ -57,7 +57,7 @@
                     <table id="grid" class="table table-striped" cellspacing="0" width="100%">
                         <thead>
                             <tr>
-                                <th>Action</th>
+                                <th>Sr. No</th>
                                 <th width="20%">Name</th>
                                 <th width="10%">Email</th>
                                 <th width="8%">Phone</th>
@@ -70,6 +70,8 @@
                                 <th width="10%">Active</th>
                                 <th width="10%">Reject</th>
                                 <th id="cmtopenbtn">Comment</th>
+                                <th>Action</th>
+
                             </tr>
                         </thead>
                         <tbody>
@@ -79,57 +81,60 @@
                                 if (item.InterviewTime.HasValue) {
                                     dtDateTime = dtDateTime.AddSeconds(item.InterviewTime.Value.TotalSeconds).ToLocalTime();
                                 }
-                                <tr>
-                                    <td>
-                                        <a href="/CandidateMaster/Form/@item.Id"><i class="fa fa-edit"></i></a> &nbsp; &nbsp;
-                                        @if (roles.Contains("SuperAdmin"))
-                                        {
-                                            <a href="/CandidateMaster/Delete/@item.Id"><i class="fa fa-trash"></i></a>
-                                        }
-                                    </td>
-                                    <td>
-                                        @item.Name
-                                    </td>
-                                    <td>
-                                        @item.Email
-                                    </td>
-                                    <td>
-                                        @item.Phone
-                                    </td>
-                                    <td>
-                                        @item.technologies
-                                    </td>
-                                    <td>
-                                        @*@item.FileUpload
-                                            <br />
-                                             @Html.ActionLink("Download", "DownloadFile", new { fileName = item.FileUpload })*@
-                                        @*<a asp-controller="CandidateMaster" asp-action="DownloadFile" asp-route-filename="@item.FileUpload"><i class="fa fa-download"></i></a>*@
-                                        <a href="~/document/Candidate/@item.filename" target="_blank"><i class="fa fa-download"></i></a>
-                                    </td>
-                                    <td>
-                                        @item.InterviewDate.Value.ToString("dd MMMM yyyy")
-                                    </td>
-                                    <td>
-                                        @item.PlaceOfInterview
-                                    </td>
-                                    <td>
-                                        @(item.InterviewTime.HasValue? dtDateTime.ToString("hh:mm tt", CultureInfo.InvariantCulture):"")
-                                    </td>
-                                    <td>
-                                        @item.InterviewDescription
-                                    </td>
+                            <tr>
+                                <td>
+                                    @item.Id
+                                </td>
+                                <td>
+                                    @item.Name
+                                </td>
+                                <td>
+                                    @item.Email
+                                </td>
+                                <td>
+                                    @item.Phone
+                                </td>
+                                <td>
+                                    @item.technologies
+                                </td>
+                                <td>
+                                    @*@item.FileUpload
+            <br />
+             @Html.ActionLink("Download", "DownloadFile", new { fileName = item.FileUpload })*@
+                                    @*<a asp-controller="CandidateMaster" asp-action="DownloadFile" asp-route-filename="@item.FileUpload"><i class="fa fa-download"></i></a>*@
+                                    <a href="~/document/Candidate/@item.filename" target="_blank"><i class="fa fa-download"></i></a>
+                                </td>
+                                <td>
+                                    @item.InterviewDate.Value.ToString("dd MMMM yyyy")
+                                </td>
+                                <td>
+                                    @item.PlaceOfInterview
+                                </td>
+                                <td>
+                                    @(item.InterviewTime.HasValue? dtDateTime.ToString("hh:mm tt", CultureInfo.InvariantCulture):"")
+                                </td>
+                                <td>
+                                    @item.InterviewDescription
+                                </td>
 
-                                    @*<td><span style="text-decoration-line:@(item.Isactive ? "line-through" : "none")">@item.Isactive</span></td>*@
-                                    <td>
-                                        <input type="checkbox" class="flat-red" @(item.IsActive ? "checked" : "") onclick="return false;">
-                                    </td>
-                                    <td>
-                                        <input type="checkbox" class="flat-red" @(item.IsReject ? "checked" : "") onclick="return false;">
-                                    </td>
-                                    <td>
-                                        <a href="#"><i id="myModal" onclick="openNote(@item.Id)" &nbsp; class="fa fa-comments-o"></i></a>
-                                    </td>
-                                </tr>
+                                @*<td><span style="text-decoration-line:@(item.Isactive ? "line-through" : "none")">@item.Isactive</span></td>*@
+                                <td>
+                                    <input type="checkbox" class="flat-red" @(item.IsActive ? "checked" : "") onclick="return false;">
+                                </td>
+                                <td>
+                                    <input type="checkbox" class="flat-red" @(item.IsReject ? "checked" : "") onclick="return false;">
+                                </td>
+                                <td>
+                                    <a href="#"><i id="myModal" onclick="openNote(@item.Id)" &nbsp; class="fa fa-comments-o"></i></a>
+                                </td>
+                                <td>
+                                    <a href="/CandidateMaster/Form/@item.Id"><i class="fa fa-edit"></i></a> &nbsp; &nbsp;
+                                    @if (roles.Contains("SuperAdmin"))
+                                    {
+                                        <a href="/CandidateMaster/Delete/@item.Id"><i class="fa fa-trash"></i></a>
+                                    }
+                                </td>
+                            </tr>
                             }
                         </tbody>
                     </table>
@@ -221,7 +226,6 @@
 
 
             $('#canFromDate').on('change', function (e) {
-                debugger
                 var candidateFromDate = $('#canFromDate').val();
                 var candidateTo = $('#canTO').val();
                 var newUrl = "\CandidateIndex?sdate=" + candidateFromDate + "&edate=" + candidateTo;
@@ -230,7 +234,6 @@
             });
 
             $('#canTO').on('change', function (e) {
-                debugger
                 var candidateFromDate = $('#canFromDate').val();
                 var candidateTo = $('#canTO').val();
                 var newUrl = "\CandidateIndex?sdate=" + candidateFromDate + "&edate=" + candidateTo;
@@ -247,7 +250,6 @@
         //});
 
         function openNote(id) {
-            debugger
             $("#notes").val("");
             $.ajax({
                 type: "GET",
@@ -278,7 +280,6 @@
         }
 
         $("#savenotes").click(function () {
-            debugger
             var notes = $("#notes").val();
             var id = $("#noteid").val();
             if (notes == '') {

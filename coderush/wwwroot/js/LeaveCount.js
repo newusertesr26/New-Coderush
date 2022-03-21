@@ -183,7 +183,6 @@
 
 
     $("#leavedrpdwn").on('change', function () {
-        debugger
         //var id = $(this).val();
         var id = $("#leavedrpdwn option:selected").val();
         var username = $("#leavedrpdwn option:selected").text();
@@ -195,7 +194,6 @@
 
 
     $('body').on('click', '#btnedit', function () {
-        debugger
         var id = $(this).data('id');
 
         $.ajax({
@@ -227,7 +225,6 @@
 
 
 //$(function () {
-//    debugger
 //    $("#levfrmdate").datepicker({
 //        minDate: new Date(),
 //        numberOfMonths: 2,

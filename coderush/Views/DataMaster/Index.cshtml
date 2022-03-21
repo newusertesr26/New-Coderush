@@ -126,7 +126,6 @@
             $('select option[value='+number+']').attr("selected", true);
             console.log(number);
             $('#Serchkey').on('change', function (e) {
-                debugger
                 var searchvalue = $('#Serchkey').val();
                 var newUrl = "\Index?Searcvalue=" + searchvalue;
                 $("#Ancar").attr("href", newUrl); // Set herf value

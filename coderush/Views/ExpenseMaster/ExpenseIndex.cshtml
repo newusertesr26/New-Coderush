@@ -158,7 +158,6 @@
             });
             
             $('#FromDate').on('change', function (e) {
-                debugger
                 var FromDate = $('#FromDate').val();
                     var To = $('#TO').val();
                     var newUrl = "\ExpenseIndex?sdate=" + FromDate + "&edate=" + To;
@@ -167,7 +166,6 @@
                 });
           
             $('#TO').on('change', function (e) {
-                debugger
                 var FromDate = $('#FromDate').val();
                 var To = $('#TO').val();
                 var newUrl = "\ExpenseIndex?sdate=" + FromDate + "&edate=" + To;
