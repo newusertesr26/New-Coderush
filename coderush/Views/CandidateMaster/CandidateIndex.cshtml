@@ -1,4 +1,4 @@
-﻿@model List<CandidateMaster>
+﻿@model List<coderush.Models.ViewModels.CandidateMastersViewModel>
 @using Microsoft.AspNetCore.Identity
 @using System.Globalization
 
@@ -97,13 +97,14 @@
                                         @item.Phone
                                     </td>
                                     <td>
-                                        @item.Technologies
+                                        @item.technologies
                                     </td>
                                     <td>
                                         @*@item.FileUpload
                                             <br />
                                              @Html.ActionLink("Download", "DownloadFile", new { fileName = item.FileUpload })*@
-                                        <a asp-controller="CandidateMaster" asp-action="DownloadFile" asp-route-filename="@item.FileUpload"><i class="fa fa-download"></i></a>
+                                        @*<a asp-controller="CandidateMaster" asp-action="DownloadFile" asp-route-filename="@item.FileUpload"><i class="fa fa-download"></i></a>*@
+                                        <a href="~/document/Candidate/@item.filename" target="_blank"><i class="fa fa-download"></i></a>
                                     </td>
                                     <td>
                                         @item.InterviewDate.Value.ToString("dd MMMM yyyy")
