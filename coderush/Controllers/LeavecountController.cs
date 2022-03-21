@@ -115,9 +115,9 @@ namespace coderush.Controllers
                                .Select(s => new LeaveCountViewModel()
                                {
                                    Id = s.Id,
-                                   Userid = s.Userid,
-                                   Fromdate = s.Fromdate,
-                                   Todate = s.Todate,
+                                   Userid =  _userManager.Users.Where(x => x.Id == id).Select(x => x.FirstName + " " + x.LastName ).FirstOrDefault(),//s.Userid, 
+                                   FromdateView = s.Fromdate.Value.ToString("MM/dd/yyyy"),
+                                   TodateView = s.Todate.Value.ToString("MM/dd/yyyy"),
                                    Filename = s.FileUpload,
                                    Count = s.Count,
                                    Description = s.Description,
@@ -137,7 +137,7 @@ namespace coderush.Controllers
                                 .Where(w => w.UserName != null)
                                .Select(s => new SelectListItem()
                                {
-                                   Text = s.UserName,
+                                   Text = s.FirstName + " " + s.LastName,
                                    Value = s.Id.ToString()
                                }).ToList();
             return Json(leavecount);

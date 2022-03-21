@@ -103,27 +103,25 @@
             method: 'Get',
             data: {},
             success: function (data) {
-                debugger
-                /*console.log(data);*/
                 $("#levtblbdy").empty();
                 if (data.list != null && data.list.length > 0) {
                     var innerHtml = '';
                     $.each(data.list, function (i, v) {
-                        var rowdata = data.list[i]
+                        var rowdata = data.list[i];
+                        console.log(rowdata);
                         innerHtml += "<tr>";
-                        debugger
                         //innerHtml += "<td><i class='fa fa-edit' style='font-size:20px' id='btnedit' data-id = " + rowdata.id + "></i></td>";
                         //innerHtml += "<td><i class='fa fa-trash' ></i></td>";
                         innerHtml += "<td><a href='/Leavecount/Form/" + rowdata.id + "'><i class='fa fa-edit'></i></a></td>";
                         innerHtml += "<td><a href='/Leavecount/Delete/" + rowdata.id + "'><i class='fa fa-trash'></i></a></td>";
-                        innerHtml += "<td scope='col' id='User ID'>" + rowdata.userid + "</td>";
+                        innerHtml += "<td scope='col' id='UserID'>" + rowdata.userid + "</td>";
                         /*innerHtml += "<td scope='col' id='User ID'>" + rowdata.firstname + rowdata.lastname + "</td>";*/
-                        innerHtml += "<td scope='col' id='From Date'>" + rowdata.fromdate + "</td>";
-                        innerHtml += "<td scope='col' id='To Date'>" + rowdata.todate + "</td>";
+                        innerHtml += "<td scope='col' id='FromDate'>" + rowdata.fromdateView + "</td>";
+                        innerHtml += "<td scope='col' id='ToDate'>" + rowdata.todateView + "</td>";
                         innerHtml += "<td scope='col' id='Count'>" + rowdata.count + "</td>";
                         innerHtml += "<td scope='col' id='Description'>" + rowdata.description + "</td>";
                         innerHtml += "<td scope='col' id='IsApprove'>" + rowdata.isapprove + "</td>";
-                        innerHtml += "<td scope='col' id='Approve Date'>" + rowdata.approveDate + "</td>";
+                        innerHtml += "<td scope='col' id='ApproveDate'>" + rowdata.approveDate + "</td>";
                         //innerHtml += '<td>@Html.ActionLink("Download", "DownloadFile", new { fileName = item.FileUpload })</td>';
                         innerHtml += "<td><a href='/Leavecount/DownloadFile/" + rowdata.filename + "'><i class='fa fa-download'></i></a></td>";
                         innerHtml += "</tr>"
