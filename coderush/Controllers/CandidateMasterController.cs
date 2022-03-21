@@ -86,24 +86,9 @@ namespace coderush.Controllers
                 if (curentmonth == "2")
                 {
                     int dt = DateTime.Now.Month;
-                    serchadata = (from candidate in _context.CandidateMaster
-                                  where candidate.IsDelete == false &&
-                                  candidate.CreatedDate.Value.Month == dt
-                                  select new CandidateMastersViewModel
-                                  {
-                                      Id = candidate.Id,
-                                      Name = candidate.Name,
-                                      Email = candidate.Email,
-                                      Phone = candidate.Phone,
-                                      technologies = _context.Datamaster.Where(x => x.Id == candidate.Technologies).Select(x => x.Text).FirstOrDefault(),
-                                      filename = candidate.FileUpload,
-                                      IsActive = candidate.IsActive,
-                                      InterviewDate = candidate.InterviewDate,
-                                      PlaceOfInterview = candidate.PlaceOfInterview,
-                                      InterviewDescription = candidate.InterviewDescription,
-                                      InterviewTime = candidate.InterviewTime,
-                                      IsReject = candidate.IsReject,
-                                  }).ToList();
+
+                    data = data.Where(x => x.IsDelete == false && x.InterviewDate.Value.Month == dt).ToList();
+                    //  return View(data);
                 }
                 else if (lastmont == "1")
                 {
@@ -111,84 +96,24 @@ namespace coderush.Controllers
                     var month = new DateTime(today.Year, today.Month, 1);
                     var first = month.AddMonths(-1);
                     montha = first.Month;
-                    //serchadata = _context.ExpenseMaster.Where(x => !x.Isdelete && x.CreatedDate.Value.Month == montha).ToList();
-                    serchadata = (from candidate in _context.CandidateMaster
-                                  where candidate.IsDelete == false
-                                  //expense.CreatedDate.Value.Month == month
-                                  select new CandidateMastersViewModel
-                                  {
-                                      Id = candidate.Id,
-                                      Name = candidate.Name,
-                                      Email = candidate.Email,
-                                      Phone = candidate.Phone,
-                                      technologies = _context.Datamaster.Where(x => x.Id == candidate.Technologies).Select(x => x.Text).FirstOrDefault(),
-                                      filename = candidate.FileUpload,
-                                      IsActive = candidate.IsActive,
-                                      InterviewDate = candidate.InterviewDate,
-                                      PlaceOfInterview = candidate.PlaceOfInterview,
-                                      InterviewDescription = candidate.InterviewDescription,
-                                      InterviewTime = candidate.InterviewTime,
-                                      IsReject = candidate.IsReject,
 
-                                  }).ToList();
+                    data = data.Where(x => x.IsDelete == false && x.InterviewDate.Value.Month == montha).ToList();
+                    // return View(data);
                 }
 
-                if (sdate == null)
-                {
-                    //serchadata = _context.ExpenseMaster.Where(x => !x.Isdelete).ToList();
-                    serchadata = (from candidate in _context.CandidateMaster
-                                  where candidate.IsDelete == false
-                                  select new CandidateMastersViewModel
-                                  {
-                                      Id = candidate.Id,
-                                      Name = candidate.Name,
-                                      Email = candidate.Email,
-                                      Phone = candidate.Phone,
-                                      technologies = _context.Datamaster.Where(x => x.Id == candidate.Technologies).Select(x => x.Text).FirstOrDefault(),
-                                      filename = candidate.FileUpload,
-                                      IsActive = candidate.IsActive,
-                                      InterviewDate = candidate.InterviewDate,
-                                      PlaceOfInterview = candidate.PlaceOfInterview,
-                                      InterviewDescription = candidate.InterviewDescription,
-                                      InterviewTime = candidate.InterviewTime,
-                                      IsReject = candidate.IsReject,
 
-                                  }).ToList();
-
-                }
-
-                
-                else
+                else if (sdate != null && edate != null)
                 {
                     ViewBag.startdate = sdate;
                     ViewBag.enddate = edate;
-                    //serchadata = _context.ExpenseMaster.Where(x => !x.Isdelete && x.CreatedDate >= Convert.ToDateTime(sdate) && x.UpdatedDate <= Convert.ToDateTime(edate)).ToList();
-                    serchadata = (from candidate in _context.CandidateMaster
-                                  where candidate.IsDelete == false &&
-                                  candidate.InterviewDate >= Convert.ToDateTime(sdate) && candidate.InterviewDate <= Convert.ToDateTime(edate)
-                                  select new CandidateMastersViewModel
-                                  {
-                                      Id = candidate.Id,
-                                      Name = candidate.Name,
-                                      Email = candidate.Email,
-                                      Phone = candidate.Phone,
-                                      technologies = _context.Datamaster.Where(x => x.Id == candidate.Technologies).Select(x => x.Text).FirstOrDefault(),
-                                      filename = candidate.FileUpload,
-                                      IsActive = candidate.IsActive,
-                                      InterviewDate = candidate.InterviewDate,
-                                      PlaceOfInterview = candidate.PlaceOfInterview,
-                                      InterviewDescription = candidate.InterviewDescription,
-                                      InterviewTime = candidate.InterviewTime,
-                                      IsReject = candidate.IsReject,
 
-                                  }).ToList();
-                    // serchadata = _context.ExpenseMaster.Where(x => !x.Isdelete && x.CreatedDate >= Convert.ToDateTime(sdate)).ToList();
-
+                    data = data.Where(x => x.IsDelete == false
+                                         && x.InterviewDate >= Convert.ToDateTime(sdate) && x.InterviewDate <= Convert.ToDateTime(edate)).ToList();
                 }
             }
             catch (Exception ex)
             {
-                throw;
+                throw ex;
             }
 
             return View(data);
