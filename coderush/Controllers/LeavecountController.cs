@@ -115,7 +115,7 @@ namespace coderush.Controllers
                                .Select(s => new LeaveCountViewModel()
                                {
                                    Id = s.Id,
-                                   Userid =  _userManager.Users.Where(x => x.Id == id).Select(x => x.FirstName + " " + x.LastName ).FirstOrDefault(),//s.Userid, 
+                                   Userid = _userManager.Users.Where(x => x.Id == id).Select(x => x.FirstName + " " + x.LastName ).FirstOrDefault(),//s.Userid, 
                                    FromdateView = s.Fromdate.Value.ToString("MM/dd/yyyy"),
                                    TodateView = s.Todate.Value.ToString("MM/dd/yyyy"),
                                    Filename = s.FileUpload,
@@ -139,10 +139,6 @@ namespace coderush.Controllers
                                {
 
                                    Text = String.Format("{0} {1} {2}", s.UserName, s.FirstName != null ?  "|| " + s.FirstName : "",  s.LastName != null ? "|| " + s.LastName : "").ToString(),
-                                   //Text = String.Format("{0}  {1} || {2}", s.UserName, s.FirstName != null ? s.FirstName : "" , s.LastName != null ? s.LastName : "").ToString(),
-                                   //Text = String.Format("{0},{1},{2}", s.UserName,s.FirstName,s.LastName).ToString(),
-                                   //Text = s.UserName + " || " + s.FirstName == null ? "" : s.FirstName + "||" + s.LastName == null ? "" : s.LastName,
-                                   //Text = s.UserName + " || " + (s.FirstName == null )+ " || " + (s.LastName == null), 
                                    Value = s.Id.ToString()
                                }).ToList();
             return Json(leavecount);
