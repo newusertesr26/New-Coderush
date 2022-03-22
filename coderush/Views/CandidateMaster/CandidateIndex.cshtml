@@ -1,5 +1,7 @@
-﻿@model List<CandidateMaster>
+﻿@model List<coderush.Models.ViewModels.CandidateMastersViewModel>
 @using Microsoft.AspNetCore.Identity
+@using System.Globalization
+
 @inject UserManager<ApplicationUser> _userManager
 
 @{ ViewData["Title"] = "Candidate";
@@ -23,113 +25,120 @@
         <!-- Default box -->
         <div class="box">
             <div class="box-header with-border">
-                <h3 class="box-title">List of Candidate item</h3>
-                <br />
-                <br />
                 <div class="row">
-                    <div class="col-md-4">
-                        <select name="type" class="form-control" style="" id="Serchkey">
-                            <option value="All">All</option>
-                            <option value="Active">Active</option>
-                            <option value="Reject">Reject</option>
 
-
-                        </select>
+                    <div class="col-lg-4">
+                        <label>From Date:</label>
+                        <input id="canFromDate" maxlength="100" type="date" class="form-control" />
                     </div>
-                    <div class="col-md-2">
-                        <a href="/Candidatemaster/CandidateIndex" class="btn btn-primary" id="Ancar">Search</a>
-                    </div>
-                    <div class="col-md-4">
+                    @*Start Date: <input type="datetime" name="sdate" />*@
+                    <div class="col-lg-4">
+                        <label>TO:</label>
+                        <input id="canTO" maxlength="100" type="date" class="form-control" />
 
                     </div>
-
-
+                    <div class="col-lg-4">
+                        <div class="serch-btn">
+                            <a href="/CandidateMaster/CandidateIndex" class="btn btn-primary" id="btnSearch">Search</a>
+                            <a href="/CandidateMaster/CandidateIndex?lastmont=1" class="btn btn-primary" id="btnLastMonth">Last Month</a>
+                            <a href="/CandidateMaster/CandidateIndex?curentmonth=2" class="btn btn-primary" id="btnCurrentMonth">Current Month</a>
+                        </div>
+                    </div>
+                </div>
+                <br/>
+                <br />
+                <h3 class="box-title">List of Candidate item</h3>
+                <div class="box-tools pull-right">
+                    <a href="/CandidateMaster/Form" class="btn btn-primary"><i class="fa fa-plus"></i></a>
                 </div>
             </div>
-            
-                <div class="box-header with-border">
-                    <h3 class="box-title">List of Candidate item</h3>
-                    <div class="box-tools pull-right">
-                        <a href="/CandidateMaster/Form" class="btn btn-primary"><i class="fa fa-plus"></i></a>
-                    </div>
-                </div>
-                <div class="box-body">
-                    <div class="table-responsive">
-                        <table id="grid" class="table table-striped" cellspacing="0" width="100%">
-                            <thead>
-                                <tr>
-                                    <th>Action</th>
-                                    <th width="20%">Name</th>
-                                    <th width="10%">Email</th>
-                                    <th width="8%">Phone</th>
-                                    <th width="10%">Technologies</th>
-                                    <th width="4%">CV</th>
-                                    <th width="10%">Interview Date</th>
-                                    <th width="10%">Place Of Interview</th>
-                                    <th width="10%">Interview Time</th>
-                                    <th width="10%">Interview Description</th>
-                                    <th width="10%">Active</th>
-                                    <th width="10%">Reject</th>
-                                    <th id="cmtopenbtn">Comment</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                @foreach (var item in Model)
-                                {
-                                    <tr>
-                                        <td>
-                                            <a href="/CandidateMaster/Form/@item.Id"><i class="fa fa-edit"></i></a> &nbsp; &nbsp;
-                                            @if (roles.Contains("SuperAdmin"))
-                                            {
-                                                <a href="/CandidateMaster/Delete/@item.Id"><i class="fa fa-trash"></i></a>
-                                            }
-                                        </td>
-                                        <td>
-                                            @item.Name
-                                        </td>
-                                        <td>
-                                            @item.Email
-                                        </td>
-                                        <td>
-                                            @item.Phone
-                                        </td>
-                                        <td>
-                                            @item.Technologies
-                                        </td>
-                                        <td>
-                                            @*@item.FileUpload
-                                            <br />
-                                             @Html.ActionLink("Download", "DownloadFile", new { fileName = item.FileUpload })*@
-                                            <a asp-controller="CandidateMaster" asp-action="DownloadFile" asp-route-filename="@item.FileUpload"><i class="fa fa-download"></i></a>
-                                        </td>
-                                        <td>
-                                            @item.InterviewDate
-                                        </td>
-                                        <td>
-                                            @item.PlaceOfInterview
-                                        </td>
-                                        <td>
-                                            @item.InterviewTime
-                                        </td>
-                                        <td>
-                                            @item.InterviewDescription
-                                        </td>
+            <div class="box-body">
+                <div class="table-responsive">
+                    <table id="grid" class="table table-striped" cellspacing="0" width="100%">
+                        <thead>
+                            <tr>
+                                <th>Sr. No</th>
+                                <th width="20%">Name</th>
+                                <th width="10%">Email</th>
+                                <th width="8%">Phone</th>
+                                <th width="10%">Technologies</th>
+                                <th width="4%">CV</th>
+                                <th width="10%">Interview Date</th>
+                                <th width="10%">Place Of Interview</th>
+                                <th width="10%">Interview Time</th>
+                                <th width="10%">Interview Description</th>
+                                <th width="10%">Active</th>
+                                <th width="10%">Reject</th>
+                                <th id="cmtopenbtn">Comment</th>
+                                <th>Action</th>
 
-                                        @*<td><span style="text-decoration-line:@(item.Isactive ? "line-through" : "none")">@item.Isactive</span></td>*@
-                                        <td>
-                                            <input type="checkbox" class="flat-red" @(item.IsActive ? "checked" : "") onclick="return false;">
-                                        </td>
-                                        <td>
-                                            <input type="checkbox" class="flat-red" @(item.IsReject ? "checked" : "") onclick="return false;">
-                                        </td>
-                                        <td>
-                                            <a href="#"><i id="myModal" onclick="openNote(@item.Id)" &nbsp; class="fa fa-comments-o"></i></a>
-                                        </td>
-                                    </tr>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var item in Model)
+                            {
+                                var dtDateTime = DateTime.Now;
+                                if (item.InterviewTime.HasValue) {
+                                    dtDateTime = dtDateTime.AddSeconds(item.InterviewTime.Value.TotalSeconds).ToLocalTime();
                                 }
-                            </tbody>
-                        </table>
-                    </div>
+                            <tr>
+                                <td>
+                                    @item.Id
+                                </td>
+                                <td>
+                                    @item.Name
+                                </td>
+                                <td>
+                                    @item.Email
+                                </td>
+                                <td>
+                                    @item.Phone
+                                </td>
+                                <td>
+                                    @item.technologies
+                                </td>
+                                <td>
+                                    @*@item.FileUpload
+            <br />
+             @Html.ActionLink("Download", "DownloadFile", new { fileName = item.FileUpload })*@
+                                    @*<a asp-controller="CandidateMaster" asp-action="DownloadFile" asp-route-filename="@item.FileUpload"><i class="fa fa-download"></i></a>*@
+                                    <a href="~/document/Candidate/@item.filename" target="_blank"><i class="fa fa-download"></i></a>
+                                </td>
+                                <td>
+                                    @item.InterviewDate.Value.ToString("dd MMMM yyyy")
+                                </td>
+                                <td>
+                                    @item.PlaceOfInterview
+                                </td>
+                                <td>
+                                    @(item.InterviewTime.HasValue? dtDateTime.ToString("hh:mm tt", CultureInfo.InvariantCulture):"")
+                                </td>
+                                <td>
+                                    @item.InterviewDescription
+                                </td>
+
+                                @*<td><span style="text-decoration-line:@(item.Isactive ? "line-through" : "none")">@item.Isactive</span></td>*@
+                                <td>
+                                    <input type="checkbox" class="flat-red" @(item.IsActive ? "checked" : "") onclick="return false;">
+                                </td>
+                                <td>
+                                    <input type="checkbox" class="flat-red" @(item.IsReject ? "checked" : "") onclick="return false;">
+                                </td>
+                                <td>
+                                    <a href="#"><i id="myModal" onclick="openNote(@item.Id)" &nbsp; class="fa fa-comments-o"></i></a>
+                                </td>
+                                <td>
+                                    <a href="/CandidateMaster/Form/@item.Id"><i class="fa fa-edit"></i></a> &nbsp; &nbsp;
+                                    @if (roles.Contains("SuperAdmin"))
+                                    {
+                                        <a href="/CandidateMaster/Delete/@item.Id"><i class="fa fa-trash"></i></a>
+                                    }
+                                </td>
+                            </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
 
                 </div>
                 <!-- /.box-body -->
@@ -223,6 +232,23 @@
 
             });
 
+            $('#canFromDate').on('change', function (e) {
+                var candidateFromDate = $('#canFromDate').val();
+                var candidateTo = $('#canTO').val();
+                var newUrl = "\CandidateIndex?sdate=" + candidateFromDate + "&edate=" + candidateTo;
+                $("#btnSearch").attr("href", newUrl); // Set herf value
+
+            });
+
+            $('#canTO').on('change', function (e) {
+                var candidateFromDate = $('#canFromDate').val();
+                var candidateTo = $('#canTO').val();
+                var newUrl = "\CandidateIndex?sdate=" + candidateFromDate + "&edate=" + candidateTo;
+                $("#btnSearch").attr("href", newUrl); // Set herf value
+
+            });
+
+
 
         });
 
@@ -231,7 +257,6 @@
         //});
 
         function openNote(id) {
-            debugger
             $("#notes").val("");
             $.ajax({
                 type: "GET",
@@ -262,7 +287,6 @@
         }
 
         $("#savenotes").click(function () {
-            debugger
             var notes = $("#notes").val();
             var id = $("#noteid").val();
             if (notes == '') {

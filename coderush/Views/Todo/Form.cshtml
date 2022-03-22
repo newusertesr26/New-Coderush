@@ -40,6 +40,16 @@
                         <span asp-validation-for="TodoItem" class="text-danger"></span>
                     </div>
                     <div class="form-group">
+                        <label asp-for="Users"></label>
+                        @*@Html.DropDownList("Selection", new SelectList(ViewBag.SelectionList, "Value", "Text"), new { @class = "form-control", @id = "ddlSelectionList" })*@
+                        <select name="Users" class="form-control" asp-items="@ViewBag.Selectusers" asp-for="Users">
+                            <option value="">-- Select --</option>
+
+                        </select>
+                        <span asp-validation-for="Users" class="text-danger"></span>
+                        @*<span class="text-danger hidespan spanSelection">Please select Type</span>*@
+                    </div>
+                    <div class="form-group">
                         <label asp-for="Duedate"></label>
                         <input type="date" asp-for="Duedate" class="form-control" />
                         <span asp-validation-for="Duedate" class="text-danger"></span>

@@ -46,10 +46,10 @@
                     </div>
                     <div class="form-group">
                         <label asp-for="PlaceOfInterview"></label>
-                        <select  asp-for="PlaceOfInterview" class="form-control" >
+                        <select asp-for="PlaceOfInterview" class="form-control">
                             <option value="0">--Select--</option>
-                            <option >AT Office</option>
-                            <option >AT Virtual</option>
+                            <option>AT Office</option>
+                            <option>AT Virtual</option>
                         </select>
                         <span asp-validation-for="PlaceOfInterview" class="text-danger"></span>
                         @*<span class="text-danger hidespan spantext">Please enter Text</span>*@
@@ -64,10 +64,10 @@
                     <div class="form-group">
                         <label asp-for="Technologies"></label>
                         @*@Html.DropDownList("Selection", new SelectList(ViewBag.SelectionList, "Value", "Text"), new { @class = "form-control", @id = "ddlSelectionList" })*@
-                        <select name="technologies" class="form-control" asp-items="@ViewBag.CandidatetechnologiesList" asp-for="Technologies">
+                        <select name="technologies" class="form-control" asp-items="@ViewBag.CandidatetechnologiesList" asp-for="technologies">
                             <option value="">-- Select --</option>
                         </select>
-                        <span asp-validation-for="Technologies" class="text-danger"></span>
+                        <span asp-validation-for="technologies" class="text-danger"></span>
                         @*<span class="text-danger hidespan spanSelection">Please select Type</span>*@
                     </div>
                     <div class="form-group ">
@@ -104,9 +104,11 @@
                             </div>
                         </div>
                     </div>
-                    <div class="form-group">
-                        <label asp-for="InterviewDescription"></label>
-                        <textarea asp-for="InterviewDescription" TextMode="MultiLine" rows="4" cols="50" type="text" value="" class="form-control"></textarea>
+                    <div class="form-group col-md-12">
+                        <div class="form-group">
+                            <label asp-for="InterviewDescription"></label>
+                            <textarea asp-for="InterviewDescription" TextMode="MultiLine" rows="4" cols="50" type="text" value="" class="form-control"></textarea>
+                        </div>
                     </div>
 
                 </div>

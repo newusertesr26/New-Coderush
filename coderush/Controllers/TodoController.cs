@@ -10,6 +10,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.Extensions.Logging;
 
 namespace coderush.Controllers
@@ -44,14 +45,38 @@ namespace coderush.Controllers
         //consume db context service, display all todo items
         public IActionResult Index()
         {
-            var todos = _context.Todo.OrderByDescending(x => x.CreatedDate).ToList();
-            return View(todos);
+            var tododata = (from Todo in _context.Todo
+                        //where Todo.IsDone == true
+                        select new TodoViewModel
+                        {
+                            TodoId = Todo.TodoId,
+                            Users = _context.Users.Where(x => x.Id == Todo.Users).Select(x => x.UserName).FirstOrDefault(),
+                            TodoItem = Todo.TodoItem,
+                            Duedate = Todo.Duedate,
+                            //FileUpload = Todo.FileUpload.ToString(),
+                            IsDone = Todo.IsDone,
+
+                        }).ToList();
+            return View(tododata);
+
+            //var todos = _context.Todo.OrderByDescending(x => x.CreatedDate).ToList();
+            //return View(todos);
         }
 
         //display todo create edit form
         [HttpGet]
         public IActionResult Form(string id)
         {
+
+            ViewBag.Selectusers = _userManager.Users
+                               .Where(w => w.UserName != null)
+                              .Select(s => new SelectListItem()
+                              {
+                                  Text = s.UserName,
+                                  Value = s.Id.ToString()
+                              }).ToList();
+            //return Json(Selectusers);
+
             //create new
             if (id == null)
             {
@@ -73,7 +98,7 @@ namespace coderush.Controllers
         //post submitted todo data. if todo.TodoId is null then create new, otherwise edit
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult SubmitForm([Bind("TodoId", "TodoItem", "Duedate", "FileUpload", "IsDone")] TodoViewModel todo)
+        public IActionResult SubmitForm([Bind("TodoId", "TodoItem", "Duedate", "FileUpload", "Users", "IsDone")] TodoViewModel todo)
         {
             try
             {
@@ -111,6 +136,7 @@ namespace coderush.Controllers
                     newTodo.Duedate = todo.Duedate;
                     newTodo.FileUpload = todo.FileUpload.FileName.ToString();
                     newTodo.CreatedDate = DateTime.Now;
+                    newTodo.Users = todo.Users;
                     newTodo.TodoItem = todo.TodoItem;
                     newTodo.IsDone = todo.IsDone;
                     _context.Todo.Add(newTodo);
@@ -125,6 +151,7 @@ namespace coderush.Controllers
                 editTodo = _context.Todo.Where(x => x.TodoId.Equals(todo.TodoId)).FirstOrDefault();
                 editTodo.TodoItem = todo.TodoItem;
                 editTodo.Duedate = todo.Duedate;
+                editTodo.Users = todo.Users;
                 editTodo.FileUpload = todo.FileUpload.FileName.ToString();
                 editTodo.IsDone = todo.IsDone;
                 _context.Update(editTodo);

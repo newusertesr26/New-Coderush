@@ -17,7 +17,9 @@ namespace coderush.ViewModels
         public int Id { get; set; }
         public string Userid { get; set; }
         public DateTime? Fromdate { get; set; }
+        public string FromdateView { get; set; }
         public DateTime? Todate { get; set; }
+        public string TodateView { get; set; }
         public IFormFile FileUpload { get; set; }
         public string Filename { get; set; }
         public string Count { get; set; }

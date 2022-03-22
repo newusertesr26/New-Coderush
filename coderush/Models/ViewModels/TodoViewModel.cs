@@ -13,6 +13,7 @@ namespace coderush.Models.ViewModels
         [Required]
         [Display(Name = "Todo Item")]
         public string TodoItem { get; set; }
+        public string Users { get; set; }
         [Required]
         [Display(Name = "Duedtae:")]
         public DateTime? Duedate { get; set; }

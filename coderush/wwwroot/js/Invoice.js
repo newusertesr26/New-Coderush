@@ -1,7 +1,6 @@
 ﻿$(document).ready(function () {
 
     //$('#btnsave').click(function () {
-    //    debugger
     //    //var Id = $("#hideid").val();
     //    var Projectid = $("#invprojid").val();
     //    var Amount = $("#invamount").val();
@@ -140,7 +139,6 @@ var BindDropDown = function () {
             }
 
             $(Project).on('change', function () {
-                debugger
                 var id = $(this).val();
                 Bindamount(id);
             })
@@ -152,7 +150,6 @@ var BindDropDown = function () {
     });
 };
 var Bindamount = function (Id) {
-    debugger
     $.ajax({
         type: "GET",
         url: "/InvoiceMaster/Bindamount?ProjectId=" + Id,
@@ -174,7 +171,6 @@ var Bindamount = function (Id) {
 
 $("#invamount").on('change', function () {
 
-    debugger
     var amt = $("#invamount").val();
     var amtold = $("#invamountold").val();
     if (amt < amtold) {
@@ -187,7 +183,6 @@ $("#invamount").on('change', function () {
 })
 
 $("#invpendingamount").on("blur", function () {
-    debugger
 
     var amunt = $(this).val();
     var filter = /^\d*(?:\.\d{1,2})?$/;

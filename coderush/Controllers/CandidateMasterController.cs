@@ -37,48 +37,122 @@ namespace coderush.Controllers
             _context = context;
             //_hostingEnvironment = hostingEnvironment;
         }
-        public IActionResult CandidateIndex(string searchvalue)
-
+        public IActionResult CandidateIndex(string sdate, string edate, string curentmonth, string lastmont)
         {
-            ViewBag.CandidatetechnologiesList = Enum.GetValues(typeof(CandidateTechnologies)).Cast<CandidateTechnologies>().Select(v => new SelectListItem
-            {
-                Text = v.ToString(),
-                Value = ((int)v).ToString(),
-            }).ToList();
-            var Candidatemaster = new List<CandidateMaster>();
-
             var typelist1 = _context.Datamaster.Where(x => x.Type == DataSelection.technologies).ToList();
+
+            //TimeSpan timespan = new TimeSpan(03, 00, 00);
+            //DateTime time = DateTime.Today.Add(timespan);
+            //string displayTime = time.ToString("hh:mm tt");
+
 
             ViewBag.CandidatetechnologiesList = typelist1.Select(v => new SelectListItem
             {
                 Text = v.Text.ToString(),
-                Value = v.Id.ToString(),
+                Value = ((int)v.Id).ToString(),
             }).ToList();
+
+            var data = (from candidate in _context.CandidateMaster
+                        where candidate.IsDelete == false
+                        select new CandidateMastersViewModel
+                        {
+                            Id = candidate.Id,
+                            Name = candidate.Name,
+                            Email = candidate.Email,
+                            Phone = candidate.Phone,
+                            technologies = _context.Datamaster.Where(x => x.Id == candidate.Technologies).Select(x => x.Text).FirstOrDefault(),
+                            filename = candidate.FileUpload,
+                            IsActive = candidate.IsActive,
+                            InterviewDate = candidate.InterviewDate,
+                            PlaceOfInterview = candidate.PlaceOfInterview,
+                            InterviewDescription = candidate.InterviewDescription,
+                            InterviewTime = candidate.InterviewTime,
+                            IsReject = candidate.IsReject,
+
+                        }).ToList();
+
+
+            //ViewBag.CandidatetechnologiesList = Enum.GetValues(typeof(CandidateTechnologies)).Cast<CandidateTechnologies>().Select(v => new SelectListItem
+            //{
+            //    Text = v.ToString(),
+            //    Value = ((int)v).ToString(),
+            //}).ToList();
+
+
+            var serchadata = new List<CandidateMastersViewModel>();
+            try
+            {
+                int montha;
+                if (curentmonth == "2")
+                {
+                    int dt = DateTime.Now.Month;
+
+                    data = data.Where(x => x.IsDelete == false && x.InterviewDate.Value.Month == dt).ToList();
+                    //  return View(data);
+                }
+                else if (lastmont == "1")
+                {
+                    var today = DateTime.Today;
+                    var month = new DateTime(today.Year, today.Month, 1);
+                    var first = month.AddMonths(-1);
+                    montha = first.Month;
+
+                    data = data.Where(x => x.IsDelete == false && x.InterviewDate.Value.Month == montha).ToList();
+                    // return View(data);
+                }
+
+
+                else if (sdate != null && edate != null)
+                {
+                    ViewBag.startdate = sdate;
+                    ViewBag.enddate = edate;
+
+                    data = data.Where(x => x.IsDelete == false
+                                         && x.InterviewDate >= Convert.ToDateTime(sdate) && x.InterviewDate <= Convert.ToDateTime(edate)).ToList();
+                }
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+
+            return View(data);
+        }
 
             //ViewBag.Role = HttpContext.Session.GetString("Role");
             //if (HttpContext.Session.GetString("Role") == "Other")
             //{
             //    return RedirectToAction("PageError", "Home");
             //}
-            if (searchvalue == null || searchvalue == "All")
+
+        //return View(_context.CandidateMaster.Where(x => !x.IsDelete).ToList());
+        [HttpGet]
+        public IActionResult Searchdata(string sdate, string edate)
+        {
+
+            var serchadata = new List<CandidateMaster>();
+            serchadata = _context.CandidateMaster.Where(x => !x.IsDelete && x.CreatedDate >= Convert.ToDateTime(sdate) && x.UpdatedDate <= Convert.ToDateTime(edate)).ToList();
+            return View(serchadata);
+        }
+
+
+        public IActionResult SearchdataByCurrentmonth()
+        {
+            ViewBag.CandidatetechnologiesList = Enum.GetValues(typeof(CandidateTechnologies)).Cast<CandidateTechnologies>().Select(v => new SelectListItem
             {
-                Candidatemaster = _context.CandidateMaster.Where(x => !x.IsDelete).ToList();
-            }
-            else if (searchvalue == "Reject")
-            {
+                Text = v.ToString(),
+                Value = ((int)v).ToString(),
 
-                Candidatemaster = _context.CandidateMaster.Where(x => !x.IsDelete && x.IsReject).ToList();
+            }).ToList();
+            //ViewBag.Role = HttpContext.Session.GetString("Role");
+            var SearchingList = _context.CandidateMaster.ToList();
+            var searching = SearchingList.Where(x => x.CreatedDate == DateTime.Today.AddMonths(-1));
 
-            }
-            else
-            {
-
-                Candidatemaster = _context.CandidateMaster.Where(x => !x.IsDelete && x.IsActive).ToList();
-
-            }
+            return View(searching);
 
 
-            return View(Candidatemaster);
+
+
         }
 
         //post submitted candidate data. if todo.CandidateId is null then create new, otherwise edit
@@ -125,18 +199,18 @@ namespace coderush.Controllers
                 //}
 
                 List<string> uploadedFiles = new List<string>();
-                
-                    string fileName = Path.GetFileName(candidateMasters.FileUpload.FileName);
-                    using (FileStream stream = new FileStream(Path.Combine(path, fileName), FileMode.Create))
-                    {
-                        candidateMasters.FileUpload.CopyTo(stream);
-                        uploadedFiles.Add(fileName);
-                    }
-              
 
-                    //}
-                    //create new
-                    if (candidateMasters.Id == 0)
+                string fileName = Path.GetFileName(candidateMasters.FileUpload.FileName);
+                using (FileStream stream = new FileStream(Path.Combine(path, fileName), FileMode.Create))
+                {
+                    candidateMasters.FileUpload.CopyTo(stream);
+                    uploadedFiles.Add(fileName);
+                }
+
+
+                //}
+                //create new
+                if (candidateMasters.Id == 0)
                 {
                     CandidateMaster newcandidateMaster = new CandidateMaster();
                     newcandidateMaster.Name = candidateMasters.Name;
@@ -147,7 +221,7 @@ namespace coderush.Controllers
                     newcandidateMaster.InterviewDate = candidateMasters.InterviewDate;
                     newcandidateMaster.PlaceOfInterview = candidateMasters.PlaceOfInterview;
                     newcandidateMaster.InterviewTime = candidateMasters.InterviewTime;
-                    newcandidateMaster.InterviewDescription = candidateMasters.InterviewDescription ;
+                    newcandidateMaster.InterviewDescription = candidateMasters.InterviewDescription;
                     newcandidateMaster.FileUpload = candidateMasters.FileUpload.FileName.ToString();
                     newcandidateMaster.IsActive = candidateMasters.IsActive;
                     newcandidateMaster.IsReject = candidateMasters.IsReject;
@@ -193,6 +267,9 @@ namespace coderush.Controllers
         [HttpGet]
         public IActionResult Form(int id)
         {
+
+
+
             //ViewBag.CandidatetechnologiesList = Enum.GetValues(typeof(Technologies)).Cast<Technologies>().Select(v => new SelectListItem
             //{
             //    Text = v.ToString(),
@@ -206,7 +283,7 @@ namespace coderush.Controllers
                 Value = v.Id.ToString(),
             }).ToList();
 
-           
+
             //create new
             if (id == 0)
             {
@@ -218,8 +295,17 @@ namespace coderush.Controllers
             CandidateMastersViewModel editnewcandidatemaster = new CandidateMastersViewModel();
             var candidatedata = _context.CandidateMaster.Where(x => x.Id.Equals(id)).FirstOrDefault();
             editnewcandidatemaster.Id = candidatedata.Id;
-
-
+            editnewcandidatemaster.Name = candidatedata.Name;           
+            editnewcandidatemaster.Email = candidatedata.Email;
+            editnewcandidatemaster.Phone = candidatedata.Phone;
+            editnewcandidatemaster.Technologies = candidatedata.Technologies;
+            editnewcandidatemaster.InterviewDate = candidatedata.InterviewDate;
+            editnewcandidatemaster.InterviewTime = candidatedata.InterviewTime;
+            editnewcandidatemaster.PlaceOfInterview = candidatedata.PlaceOfInterview;
+            editnewcandidatemaster.filename = candidatedata.FileUpload;           
+            editnewcandidatemaster.IsReject = candidatedata.IsReject;
+            editnewcandidatemaster.IsActive = candidatedata.IsActive;
+            editnewcandidatemaster.InterviewDescription = candidatedata.InterviewDescription;
             if (editnewcandidatemaster == null)
             {
                 return NotFound();
@@ -271,17 +357,17 @@ namespace coderush.Controllers
             }
         }
 
-        public FileResult DownloadFile(string fileName)
-        {
-            //Build the File Path.
-            string path = Path.Combine(this._webHostEnvironment.WebRootPath, "document/Candidate/") + fileName;
+        //public FileResult DownloadFile(string fileName)
+        //{
+        //    //Build the File Path.
+        //    string path = Path.Combine(this._webHostEnvironment.WebRootPath, "document/Candidate/") + fileName;
 
-            //Read the File data into Byte Array.
-            byte[] bytes = System.IO.File.ReadAllBytes(path);
+        //    //Read the File data into Byte Array.
+        //    byte[] bytes = System.IO.File.ReadAllBytes(path);
 
-            //Send the File to Download.
-            return File(bytes, "application/octet-stream", fileName);
-        }   
+        //    //Send the File to Download.
+        //    return File(bytes, "application/octet-stream", fileName);
+        //}
 
         [HttpGet]
         public IActionResult EditData(int id)
@@ -300,7 +386,7 @@ namespace coderush.Controllers
 
             Comments model = new Comments();
 
-           var models = _context.Comments.Where(x => x.CandidateId.Equals(id)).ToList();
+            var models = _context.Comments.Where(x => x.CandidateId.Equals(id)).ToList();
 
             return Json(models);
         }
@@ -318,12 +404,12 @@ namespace coderush.Controllers
                 var result = new { Success = "true", Message = "Data save successfully." };
                 return Json(result);
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 var result = new { Success = "False", Message = ex.Message };
                 return Json(result);
             }
-           
+
         }
     }
 }
