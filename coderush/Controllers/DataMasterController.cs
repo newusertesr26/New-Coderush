@@ -15,7 +15,7 @@ using coderush.Models.ViewModels;
 
 namespace coderush.Controllers
 {
-    [Authorize(Roles = "SuperAdmin")]
+    [Authorize(Roles = "SuperAdmin, HR")]
     public class DataMasterController : Controller
     {
         private readonly ILogger<HomeController> _logger;

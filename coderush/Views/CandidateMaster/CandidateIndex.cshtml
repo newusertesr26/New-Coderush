@@ -169,13 +169,13 @@
                     </table>
                 </div>
 
+                </div>
+                <!-- /.box-body -->
+
+
             </div>
-            <!-- /.box-body -->
 
-
-        </div>
-
-        <!-- /.box -->
+            <!-- /.box -->
     </section>
     <!-- /.content -->
 </div>
@@ -271,6 +271,13 @@
 
             });
 
+            $('#Serchkey').on('change', function (e) {
+                debugger
+                var searchvalue = $('#Serchkey').val();
+                var newUrl = "\CandidateIndex?searchvalue=" + searchvalue;
+                $("#Ancar").attr("href", newUrl); // Set herf value
+
+            });
 
             $('#canFromDate').on('change', function (e) {
                 var candidateFromDate = $('#canFromDate').val();
@@ -370,8 +377,10 @@
                 }
             });
 
-        })
+        });
 
+  
+ 
     </script>
 
 }

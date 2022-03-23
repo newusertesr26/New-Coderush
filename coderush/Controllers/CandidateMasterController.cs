@@ -128,11 +128,11 @@ namespace coderush.Controllers
             return View(data);
         }
 
-        //ViewBag.Role = HttpContext.Session.GetString("Role");
-        //if (HttpContext.Session.GetString("Role") == "Other")
-        //{
-        //    return RedirectToAction("PageError", "Home");
-        //}
+            //ViewBag.Role = HttpContext.Session.GetString("Role");
+            //if (HttpContext.Session.GetString("Role") == "Other")
+            //{
+            //    return RedirectToAction("PageError", "Home");
+            //}
 
         //return View(_context.CandidateMaster.Where(x => !x.IsDelete).ToList());
         [HttpGet]
