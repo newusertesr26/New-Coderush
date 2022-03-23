@@ -51,25 +51,34 @@ namespace coderush.Controllers
                 Text = v.Text.ToString(),
                 Value = ((int)v.Id).ToString(),
             }).ToList();
+            var data = new List<CandidateMastersViewModel>();
 
-            var data = (from candidate in _context.CandidateMaster
-                        where candidate.IsDelete == false
-                        select new CandidateMastersViewModel
-                        {
-                            Id = candidate.Id,
-                            Name = candidate.Name,
-                            Email = candidate.Email,
-                            Phone = candidate.Phone,
-                            technologies = _context.Datamaster.Where(x => x.Id == candidate.Technologies).Select(x => x.Text).FirstOrDefault(),
-                            filename = candidate.FileUpload,
-                            IsActive = candidate.IsActive,
-                            InterviewDate = candidate.InterviewDate,
-                            PlaceOfInterview = candidate.PlaceOfInterview,
-                            InterviewDescription = candidate.InterviewDescription,
-                            InterviewTime = candidate.InterviewTime,
-                            IsReject = candidate.IsReject,
+            DateTime? nulldate = null;
 
-                        }).ToList();
+            data = (from candidate in _context.CandidateMaster
+                    //from Comments in _context.Comments
+                    where candidate.IsDelete == false
+                    let commentdate = _context.Comments.OrderByDescending(x=>x.Id).Where(w => w.CandidateId == candidate.Id).Select(s => s.NextFollowUpdate).FirstOrDefault()
+                    select new CandidateMastersViewModel
+                    {
+                        Id = candidate.Id,
+                        Name = candidate.Name,
+                        Email = candidate.Email,
+                        Phone = candidate.Phone,
+                        technologies = _context.Datamaster.Where(x => x.Id == candidate.Technologies).Select(x => x.Text).FirstOrDefault(),
+                        filename = candidate.FileUpload,
+                        IsActive = candidate.IsActive,
+                        InterviewDate = candidate.InterviewDate,
+                        PlaceOfInterview = candidate.PlaceOfInterview,
+                        InterviewDescription = candidate.InterviewDescription,
+                        InterviewTime = candidate.InterviewTime,
+                        IsReject = candidate.IsReject,
+                        Status = candidate.Status,
+                        dateforNext = (commentdate != null ?commentdate :nulldate)
+                        //dateforNext = Comments.NextFollowUpdate,
+
+
+                    }).ToList();
 
 
             //ViewBag.CandidatetechnologiesList = Enum.GetValues(typeof(CandidateTechnologies)).Cast<CandidateTechnologies>().Select(v => new SelectListItem
@@ -79,7 +88,7 @@ namespace coderush.Controllers
             //}).ToList();
 
 
-            var serchadata = new List<CandidateMastersViewModel>();
+           // var serchadata = new List<CandidateMastersViewModel>();
             try
             {
                 int montha;
@@ -158,7 +167,7 @@ namespace coderush.Controllers
         //post submitted candidate data. if todo.CandidateId is null then create new, otherwise edit
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult SubmitForm([Bind("Id", "Name", "Email", "Phone", "Technologies", "FileUpload", "InterviewDate", "PlaceOfInterview", "InterviewTime", "InterviewDescription", "IsActive", "IsReject")] CandidateMastersViewModel candidateMasters)
+        public IActionResult SubmitForm([Bind("Id", "Name", "Email", "Phone", "Technologies", "FileUpload", "InterviewDate", "PlaceOfInterview", "InterviewTime", "InterviewDescription", "IsActive", "IsReject", "Status")] CandidateMastersViewModel candidateMasters)
         {
             try
             {
@@ -169,25 +178,7 @@ namespace coderush.Controllers
                 }
 
                 var user = _userManager.GetUserAsync(User).Result;
-                //{
-                //    var file = Request.Form.Files;
-                //    //for (int i = 0; i < file.Count; i++)
-                //    //{
-                //    var uploadefile = file[0];
-                //    var filename = Path.GetFileName(uploadefile.ToString());
-                //    var file1 = file[0];
-                //    var filepath = Path.Combine(_webHostEnvironment.WebRootPath, "document/Candidate", filename);
-                //    string savePath = Path.Combine(_webHostEnvironment.WebRootPath, "document/Candidate", filename);
-
-                //    using (var inputStream = new FileStream(savePath, FileMode.Create))
-                //    {
-                //        //read file to stream
-                //        file1.CopyTo(inputStream);
-                //        //stream to byte array
-                //    }
-
-                //    //candidateMasters.FileUpload = filepath;
-                //}
+             
 
                 string wwwPath = this._webHostEnvironment.WebRootPath;
                 string contentPath = this._webHostEnvironment.ContentRootPath;
@@ -225,6 +216,8 @@ namespace coderush.Controllers
                     newcandidateMaster.FileUpload = candidateMasters.FileUpload.FileName.ToString();
                     newcandidateMaster.IsActive = candidateMasters.IsActive;
                     newcandidateMaster.IsReject = candidateMasters.IsReject;
+                    newcandidateMaster.Status = candidateMasters.Status;
+                  //  newcandidateMaster.Schedule = candidateMasters.Schedule;
                     newcandidateMaster.CreatedBy = user.Id;
                     _context.CandidateMaster.Add(newcandidateMaster);
                     _context.SaveChanges();
@@ -249,6 +242,8 @@ namespace coderush.Controllers
                 editCandidatemaster.UpdatedDate = DateTime.Now;
                 editCandidatemaster.IsActive = candidateMasters.IsActive;
                 editCandidatemaster.IsReject = candidateMasters.IsReject;
+                editCandidatemaster.Status = candidateMasters.Status;
+               // editCandidatemaster.Schedule = candidateMasters.Schedule;
                 _context.CandidateMaster.Update(editCandidatemaster);
                 _context.SaveChanges();
 
@@ -302,10 +297,13 @@ namespace coderush.Controllers
             editnewcandidatemaster.InterviewDate = candidatedata.InterviewDate;
             editnewcandidatemaster.InterviewTime = candidatedata.InterviewTime;
             editnewcandidatemaster.PlaceOfInterview = candidatedata.PlaceOfInterview;
-            editnewcandidatemaster.filename = candidatedata.FileUpload;           
+            editnewcandidatemaster.filename = candidatedata.FileUpload;
             editnewcandidatemaster.IsReject = candidatedata.IsReject;
             editnewcandidatemaster.IsActive = candidatedata.IsActive;
+            editnewcandidatemaster.Status = candidatedata.Status;
             editnewcandidatemaster.InterviewDescription = candidatedata.InterviewDescription;
+           // editnewcandidatemaster.Schedule = candidatedata.Schedule;
+
             if (editnewcandidatemaster == null)
             {
                 return NotFound();
@@ -390,15 +388,17 @@ namespace coderush.Controllers
 
             return Json(models);
         }
-
-        public ActionResult SaveNotes(int id, string notes)
+        [HttpPost]
+        public ActionResult SaveNotes(Comments data)
         {
 
             try
             {
                 Comments models = new Comments();
-                models.CandidateId = id;
-                models.Note = notes;
+                models.CandidateId = data.Id;
+                models.Note = data.Note;
+                models.NextFollowUpdate = data.NextFollowUpdate;
+                models.Status = data.Status;
                 _context.Comments.Add(models);
                 _context.SaveChanges();
                 var result = new { Success = "true", Message = "Data save successfully." };

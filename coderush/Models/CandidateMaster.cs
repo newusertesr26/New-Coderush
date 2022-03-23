@@ -57,7 +57,10 @@ namespace coderush.Models
         public DateTime? CreatedDate { get; set; }
         public string UpdatedBy { get; set; }
         public DateTime? UpdatedDate { get; set; }
+      
+        public int? Status { get; set; }
 
+       // public string Schedule { get; set; }
     }
 
     //public class CandidateMasterDetails

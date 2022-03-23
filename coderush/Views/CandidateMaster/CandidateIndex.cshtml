@@ -1,4 +1,5 @@
 ﻿@model List<coderush.Models.ViewModels.CandidateMastersViewModel>
+@*@model coderush.Models.Comments*@
 @using Microsoft.AspNetCore.Identity
 @using System.Globalization
 
@@ -39,13 +40,13 @@
                     </div>
                     <div class="col-lg-4">
                         <div class="serch-btn">
-                            <a href="/CandidateMaster/CandidateIndex" class="btn btn-primary" id="btnSearch">Search</a>
-                            <a href="/CandidateMaster/CandidateIndex?lastmont=1" class="btn btn-primary" id="btnLastMonth">Last Month</a>
-                            <a href="/CandidateMaster/CandidateIndex?curentmonth=2" class="btn btn-primary" id="btnCurrentMonth">Current Month</a>
+                            <a href="/CandidateMaster/CandidateIndex" class="btn btn-primary"  style="margin-top: 25px"id="btnSearch">Search</a>
+                            <a href="/CandidateMaster/CandidateIndex?lastmont=1" class="btn btn-primary" style="margin-top: 25px" id="btnLastMonth">Last Month</a>
+                            <a href="/CandidateMaster/CandidateIndex?curentmonth=2" class="btn btn-primary"  style="margin-top: 25px" id="btnCurrentMonth">Current Month</a>
                         </div>
                     </div>
                 </div>
-                <br/>
+                <br />
                 <br />
                 <h3 class="box-title">List of Candidate item</h3>
                 <div class="box-tools pull-right">
@@ -67,8 +68,8 @@
                                 <th width="10%">Place Of Interview</th>
                                 <th width="10%">Interview Time</th>
                                 <th width="10%">Interview Description</th>
-                                <th width="10%">Active</th>
-                                <th width="10%">Reject</th>
+                                <th width="10%">Next Follow Update</th>
+                                <th width="10%">Status</th>
                                 <th id="cmtopenbtn">Comment</th>
                                 <th>Action</th>
 
@@ -78,63 +79,91 @@
                             @foreach (var item in Model)
                             {
                                 var dtDateTime = DateTime.Now;
-                                if (item.InterviewTime.HasValue) {
+                                if (item.InterviewTime.HasValue)
+                                {
                                     dtDateTime = dtDateTime.AddSeconds(item.InterviewTime.Value.TotalSeconds).ToLocalTime();
                                 }
-                            <tr>
-                                <td>
-                                    @item.Id
-                                </td>
-                                <td>
-                                    @item.Name
-                                </td>
-                                <td>
-                                    @item.Email
-                                </td>
-                                <td>
-                                    @item.Phone
-                                </td>
-                                <td>
-                                    @item.technologies
-                                </td>
-                                <td>
-                                    @*@item.FileUpload
-            <br />
-             @Html.ActionLink("Download", "DownloadFile", new { fileName = item.FileUpload })*@
-                                    @*<a asp-controller="CandidateMaster" asp-action="DownloadFile" asp-route-filename="@item.FileUpload"><i class="fa fa-download"></i></a>*@
-                                    <a href="~/document/Candidate/@item.filename" target="_blank"><i class="fa fa-download"></i></a>
-                                </td>
-                                <td>
-                                    @item.InterviewDate.Value.ToString("dd MMMM yyyy")
-                                </td>
-                                <td>
-                                    @item.PlaceOfInterview
-                                </td>
-                                <td>
-                                    @(item.InterviewTime.HasValue? dtDateTime.ToString("hh:mm tt", CultureInfo.InvariantCulture):"")
-                                </td>
-                                <td>
-                                    @item.InterviewDescription
-                                </td>
+                                <tr>
+                                    <td>
+                                        @item.Id
+                                    </td>
+                                    <td>
+                                        @item.Name
+                                    </td>
+                                    <td>
+                                        @item.Email
+                                    </td>
+                                    <td>
+                                        @item.Phone
+                                    </td>
+                                    <td>
+                                        @item.technologies
+                                    </td>
+                                    <td>
+                                        @*@item.FileUpload
+                                            <br />
+                                             @Html.ActionLink("Download", "DownloadFile", new { fileName = item.FileUpload })*@
+                                        @*<a asp-controller="CandidateMaster" asp-action="DownloadFile" asp-route-filename="@item.FileUpload"><i class="fa fa-download"></i></a>*@
+                                        <a href="~/document/Candidate/@item.filename" target="_blank"><i class="fa fa-download"></i></a>
+                                    </td>
+                                    <td>
+                                        @item.InterviewDate.Value.ToString("dd MMMM yyyy")
+                                    </td>
+                                    <td>
+                                        @item.PlaceOfInterview
+                                    </td>
+                                    <td>
+                                        @(item.InterviewTime.HasValue? dtDateTime.ToString("hh:mm tt", CultureInfo.InvariantCulture):"")
+                                    </td>
+                                    <td>
+                                        @item.InterviewDescription
+                                    </td>
+                                    <td>
+                                        @*@item.dateforNext*@
+                                        @{ 
+                                            if (item.dateforNext != null)
+                                            {
+                                              @item.dateforNext.Value.ToString("dd MMMM yyyy");
+                                            }
+                                            else
+                                            {
+                                                <label></label>
+                                            }
+                                        }
+                                       
+                                    </td>
+                                    <td>
 
-                                @*<td><span style="text-decoration-line:@(item.Isactive ? "line-through" : "none")">@item.Isactive</span></td>*@
-                                <td>
-                                    <input type="checkbox" class="flat-red" @(item.IsActive ? "checked" : "") onclick="return false;">
-                                </td>
-                                <td>
-                                    <input type="checkbox" class="flat-red" @(item.IsReject ? "checked" : "") onclick="return false;">
-                                </td>
-                                <td>
-                                    <a href="#"><i id="myModal" onclick="openNote(@item.Id)" &nbsp; class="fa fa-comments-o"></i></a>
-                                </td>
-                                <td>
-                                    <a href="/CandidateMaster/Form/@item.Id"><i class="fa fa-edit"></i></a> &nbsp; &nbsp;
-                                    @if (roles.Contains("SuperAdmin"))
-                                    {
-                                        <a href="/CandidateMaster/Delete/@item.Id"><i class="fa fa-trash"></i></a>
-                                    }
-                                </td>
-                            </tr>
+                                        @{
+                                            if (item.Status == 1)
+                                            {
+                                                <p>Schedule Interview</p>
+                                            }
+                                            else if (item.Status == 2)
+                                            {
+                                                <p>Inprogress Interview</p>
+                                            }
+                                            else if (item.Status == 3)
+                                            {
+                                                <p>Done</p>
+                                            }
+
+                                        }
+                                    </td>
+
+
+                                    @*<td><span style="text-decoration-line:@(item.Isactive ? "line-through" : "none")">@item.Isactive</span></td>*@
+                                    <td>
+                                        <a href="#"><i id="myModal" onclick="openNote(@item.Id)" &nbsp; class="fa fa-comments-o"></i></a>
+                                    </td>
+                                    <td>
+                                        <a href="/CandidateMaster/Form/@item.Id"><i class="fa fa-edit"></i></a> &nbsp; &nbsp;
+                                        @if (roles.Contains("SuperAdmin"))
+                                        {
+                                            <a href="/CandidateMaster/Delete/@item.Id"><i class="fa fa-trash"></i></a>
+                                        }
+                                    </td>
+                                </tr>
                             }
                         </tbody>
                     </table>
@@ -168,14 +197,14 @@
                     <table id="grid" class="table table-striped" cellspacing="0" width="100%">
                         <thead>
                             <tr>
-                                <th width="10%"></th>
+                                <th></th>
                             </tr>
                         </thead>
                         <tbody id="notebody">
                         </tbody>
                     </table>
                 </div>
-                <form asp-action="Create">
+                <form>
                     <input name="IsValid" type="hidden" id="noteid" />
                     <div class="form-group">
                         <label>Notes:</label>
@@ -183,11 +212,29 @@
                         @*<span asp-validation-for="PositionName" class="text-danger"></span>*@
                         @*<span class="notereq">Note is Required</span>*@
                     </div>
+                    <div class="form-group">
+                        <label> Next Follow Update</label>
+                        <input type="date" id="nextfollow" class="form-control" />
+                    </div>
+                    @*<div class="form-group">
+                            <label>Reject :</label>
+                            <input type="checkbox" id="reject" class="flat-red icheckbox_flat-green checked check" />
+                        </div>*@
+                    <div class="form-group col-md-3">
+                        <label>Status:</label>
+                        <select id="ddlStatus" class="form-control">
+                            <option value="0"> --Select--</option>
+                            <option value="1"> Schedule Interview</option>
+                            <option value="2"> Inprogress Interview</option>
+                            <option value="3"> Done</option>
+                        </select>
+
+                    </div>
                 </form>
             </div>
             <div class="modal-footer">
                 @*<button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>*@
-                <button type="button" class="btn btn-primary" id="savenotes" data-save="modal">Save</button>
+                <button type="button" class="btn btn-primary" id="saveNote" data-save="modal">Save</button>
             </div>
         </div>
     </div>
@@ -209,7 +256,7 @@
 
     @*<script type="text/javascript" src="https://code.jquery.com/jquery-1.11.3.min.js"></script>*@
     <script type="text/javascript" src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
-
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js"></script>
     <!-- page script -->
     <script type="text/javascript">
         $(document).ready(function () {
@@ -251,6 +298,8 @@
 
         function openNote(id) {
             $("#notes").val("");
+            $("#nextfollow").val("");
+            $("#ddlStatus").val("");
             $.ajax({
                 type: "GET",
                 url: "/CandidateMaster/Notes",
@@ -261,10 +310,12 @@
                         $("#notes").val("");
                         $("#noteid").val(id);
                         var innerHtml = '';
+                        debugger
                         $.each(response, function (i, v) {
                             var rowdata = response[i]
                             innerHtml += "<tr>";
                             innerHtml += "<td> " + rowdata.note + " </td>";
+                            innerHtml += "<td> " + moment(rowdata.nextFollowUpdate).format("L") + " </td>";
                             innerHtml += "</tr>"
                         });
                         $("#notebody").html(innerHtml);
@@ -278,28 +329,40 @@
             });
 
         }
+        debugger
 
-        $("#savenotes").click(function () {
+        $("#saveNote").click(function () {
             var notes = $("#notes").val();
             var id = $("#noteid").val();
+            var nextfollowupdate = $("#nextfollow").val();
+            var ddlStatusc = $("#ddlStatus").val();
+
+            //  var reject = $("#reject");
+
+
             if (notes == '') {
                 alert("Note is Required");
                 return false;
             }
-            //if (notes == null || notes == undefined || notes == "") {
-            //    $(".notereq").show();
-            //    return false;
-            //}
 
+            var requestdata = {
+                "Id": id,
+                "Note": notes,
+                "NextFollowUpdate": nextfollowupdate,
+                "Status": ddlStatusc,
+            }
+
+            debugger
             $.ajax({
                 type: "POST",
                 url: "/CandidateMaster/SaveNotes",
-                data: { "id": id, "notes": notes },
+                data: requestdata,
                 success: function (response) {
                     console.log(response);
                     if (response.success == "true") {
                         alert(response.message);
                         $("#addComments").modal("hide");
+                        window.location.href ="/CandidateMaster/CandidateIndex"
                     }
                 },
                 error: function (response) {

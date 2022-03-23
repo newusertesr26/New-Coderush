@@ -92,18 +92,22 @@
                         @*<span asp-validation-for="FileUpload" class="text-danger"></span>*@
                         @*<span class="text-danger hidespan spantext">Please enter Text</span>*@
                     </div>
-                    <div class="form-group " id="checkple">
-                        <div class="form-group col-md-3">
-                            <div class="form-group">
-                                <label asp-for="IsActive"></label>
-                                <input asp-for="IsActive" type="checkbox" id="IsActive" class="flat-red icheckbox_flat-green checked check" />
-                            </div>
-                            <div class="form-group">
-                                <label asp-for="IsReject"></label>
-                                <input asp-for="IsReject" type="checkbox" id="IsReject" class="flat-red icheckbox_flat-green checked check" />
-                            </div>
-                        </div>
+
+                    <div class="form-group col-md-3">
+                        <label>Status:</label>
+                        <select id="dropdown" asp-for="Status" class="form-control">
+                            <option value="0"> --Select--</option>
+                            <option value="1"> Schedule Interview</option>
+                            <option value="2"> Inprogress Interview</option>
+                            <option value="3"> Done</option>
+                        </select>
+
                     </div>
+                    @*<div class="form-group col-md-3">
+                        <label>Status:</label>
+                        <input type="checkbox" id="status" asp-for="Status" class=""/>
+
+                    </div>*@
                     <div class="form-group col-md-12">
                         <div class="form-group">
                             <label asp-for="InterviewDescription"></label>
