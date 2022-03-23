@@ -48,6 +48,7 @@ namespace coderush.Models.ViewModels
         public string InterviewDescription { get; set; }
         [Display(Name = "Reject:")]
         public bool IsReject { get; set; }
+        public string Color { get; set; }
         public bool IsDelete { get; set; }
         public string CreatedBy { get; set; }
         public DateTime? CreatedDate { get; set; }

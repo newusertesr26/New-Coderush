@@ -37,8 +37,9 @@ namespace coderush.Controllers
             _context = context;
             //_hostingEnvironment = hostingEnvironment;
         }
-        public IActionResult CandidateIndex(string sdate, string edate, string curentmonth, string lastmont)
+        public IActionResult CandidateIndex(string sdate, string edate, string curentmonth, string lastmont, string technologies)
         {
+            var user = _userManager.GetUserAsync(User).Result;
             var typelist1 = _context.Datamaster.Where(x => x.Type == DataSelection.technologies).ToList();
 
             ViewBag.CandidatetechnologiesList = typelist1.Select(v => new SelectListItem
@@ -49,6 +50,7 @@ namespace coderush.Controllers
 
             var data = (from candidate in _context.CandidateMaster
                         where candidate.IsDelete == false
+                        orderby candidate.Id descending
                         select new CandidateMastersViewModel
                         {
                             Id = candidate.Id,
@@ -56,6 +58,7 @@ namespace coderush.Controllers
                             Email = candidate.Email,
                             Phone = candidate.Phone,
                             technologies = _context.Datamaster.Where(x => x.Id == candidate.Technologies).Select(x => x.Text).FirstOrDefault(),
+                            Technologies = candidate.Technologies,
                             filename = candidate.FileUpload,
                             IsActive = candidate.IsActive,
                             InterviewDate = candidate.InterviewDate,
@@ -63,6 +66,8 @@ namespace coderush.Controllers
                             InterviewDescription = candidate.InterviewDescription,
                             InterviewTime = candidate.InterviewTime,
                             IsReject = candidate.IsReject,
+                            CreatedBy = _userManager.Users.Where(x => x.Id == candidate.CreatedBy).Select(x => x.FirstName + " " + x.LastName).FirstOrDefault(), //user.Id.ToString(),
+                            CreatedDate = candidate.CreatedDate,
 
                         }).ToList();
 
@@ -96,7 +101,36 @@ namespace coderush.Controllers
                     // return View(data);
                 }
 
+                if (technologies != null)
+                {
+                    data = data.Where(x => x.IsDelete == false
+                                         && x.Technologies == Convert.ToInt32(technologies)).ToList();
+                }
 
+                if (sdate == null)
+                {
+                    var getfist = _context.CandidateMaster.Where(x => !x.IsDelete).OrderByDescending(x => x.Id).FirstOrDefault();
+                    var last7Day = getfist.InterviewDate.Value.AddDays(-8);
+                    var serch = _context.CandidateMaster.Where(x => !x.IsDelete).Select(candidate => new CandidateMastersViewModel
+                    {
+                        Id = candidate.Id,
+                        Name = candidate.Name,
+                        Email = candidate.Email,
+                        Phone = candidate.Phone,
+                        technologies = _context.Datamaster.Where(x => x.Id == candidate.Technologies).Select(x => x.Text).FirstOrDefault(),
+                        filename = candidate.FileUpload,
+                        IsActive = candidate.IsActive,
+                        InterviewDate = candidate.InterviewDate,
+                        PlaceOfInterview = candidate.PlaceOfInterview,
+                        InterviewDescription = candidate.InterviewDescription,
+                        InterviewTime = candidate.InterviewTime,
+                        IsReject = candidate.IsReject,
+                        CreatedBy = user.Id.ToString(),
+                        CreatedDate = candidate.CreatedDate,
+                        Color = last7Day > candidate.InterviewDate ? "" : "#ffe0bb",
+                    }).ToList();
+                    return View(serch);
+                }
                 else if (sdate != null && edate != null)
                 {
                     ViewBag.startdate = sdate;
@@ -220,7 +254,7 @@ namespace coderush.Controllers
                     newcandidateMaster.FileUpload = candidateMasters.FileUpload.FileName.ToString();
                     newcandidateMaster.IsActive = candidateMasters.IsActive;
                     newcandidateMaster.IsReject = candidateMasters.IsReject;
-                    newcandidateMaster.CreatedBy = user.Id;
+                    newcandidateMaster.CreatedBy = user.Id.ToString();
                     _context.CandidateMaster.Add(newcandidateMaster);
                     _context.SaveChanges();
 

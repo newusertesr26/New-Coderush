@@ -29,36 +29,40 @@
                     <table id="grid" class="table table-striped" cellspacing="0" width="100%">
                         <thead>
                             <tr>
-                                <th width="5%">Edit</th>
-                                <th width="5%">Delete</th>
+                                <th>Sr No.</th>
                                 <th width="20%">PageName</th>
                                 <th width="10%">RoleName</th>
                                 <th width="10%">Is Active</th>
+                                <th width="5%">Edit</th>
+                                <th width="5%">Delete</th>
                             </tr>
                         </thead>
                         <tbody>
                             @foreach (var item in Model)
                             {
-                <tr>
-                    <td>
-                        <a href="/RoleDetails/Form/@item.PageId"><i class="fa fa-edit"></i></a>
-                    </td>
-                    <td>
-                        <a href="/RoleDetails/Delete/@item.PageId"><i class="fa fa-trash"></i></a>
-                    </td>
-                    <td>
-                        @item.Pagename
-                    </td>
-                    <td>
-                        @item.Rolename
-                    </td>
+                            <tr>
+                                <td>
+                                    @item.PageId
+                                </td>
 
-                    @*<td><span style="text-decoration-line:@(item.Isactive ? "line-through" : "none")">@item.Isactive</span></td>*@
-                    <td>
-                        <input type="checkbox" class="flat-red" @(item.Isactive ? "checked" : "") onclick="return false;">
-                    </td>
+                                <td>
+                                    @item.Pagename
+                                </td>
+                                <td>
+                                    @item.Rolename
+                                </td>
 
-                </tr>}
+                                @*<td><span style="text-decoration-line:@(item.Isactive ? "line-through" : "none")">@item.Isactive</span></td>*@
+                                <td>
+                                    <input type="checkbox" class="flat-red" @(item.Isactive ? "checked" : "") onclick="return false;">
+                                </td>
+                                <td>
+                                    <a href="/RoleDetails/Form/@item.PageId"><i class="fa fa-edit"></i></a>
+                                </td>
+                                <td>
+                                    <a href="/RoleDetails/Delete/@item.PageId"><i class="fa fa-trash"></i></a>
+                                </td>
+                            </tr>}
                         </tbody>
                     </table>
                 </div>

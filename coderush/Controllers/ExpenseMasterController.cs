@@ -42,8 +42,11 @@ namespace coderush.Controllers
         }
         public IActionResult ExpenseIndex(string sdate, string edate, string curentmonth, string lastmont)
         {
+
+            var user = _userManager.GetUserAsync(User).Result;
             var data = (from expense in _context.ExpenseMaster
                         where expense.Isdelete == false
+                        orderby expense.Id descending
                         select new ExpenseMasterViewModel
                         {
                             Id = expense.Id,
@@ -54,7 +57,8 @@ namespace coderush.Controllers
                             Description = expense.Description,
                             filename = expense.FileUpload,
                             isactive = expense.isactive,
-                            CreatedDate = expense.CreatedDate
+                            CreatedDate = expense.CreatedDate,
+                            CreatedBy = _userManager.Users.Where(x => x.Id == expense.CreatedBy).Select(x => x.FirstName + " " + x.LastName).FirstOrDefault(),
                         }).ToList();
 
             //return View(data);
@@ -217,7 +221,7 @@ namespace coderush.Controllers
                     newexpenseMaster.Amount = expenseMasters.Amount;
                     newexpenseMaster.ExpenseDate = expenseMasters.ExpenseDate;
                     newexpenseMaster.isactive = expenseMasters.isactive;
-                    newexpenseMaster.CreatedBy = user.Id;
+                    newexpenseMaster.CreatedBy = user.Id.ToString();
                     _context.ExpenseMaster.Add(newexpenseMaster);
                     _context.SaveChanges();
 

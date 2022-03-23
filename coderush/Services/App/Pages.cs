@@ -87,12 +87,12 @@ namespace coderush.Services.App
             public const string NavigationName = "Home";
         }
 
-        public static class Membership
+        public static class EmployeeMaster
         {
-            public const string ControllerName = "Membership";
-            public const string RoleName = "Membership";
-            public const string UrlDefault = "/Membership/Index";
-            public const string NavigationName = "Membership";
+            public const string ControllerName = "EmployeeMaster";
+            public const string RoleName = "EmployeeMaster";
+            public const string UrlDefault = "/EmployeeMaster/Index";
+            public const string NavigationName = "EmployeeMaster";
         }
 
         public static class Role

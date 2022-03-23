@@ -24,7 +24,6 @@
         <div class="box">
             <div class="box-header with-border">
                 <div class="row">
-
                     <div class="col-lg-4">
                         <label>From Date:</label>
                         <input id="canFromDate" maxlength="100" type="date" class="form-control" />
@@ -33,7 +32,6 @@
                     <div class="col-lg-4">
                         <label>TO:</label>
                         <input id="canTO" maxlength="100" type="date" class="form-control" />
-
                     </div>
                     <div class="col-lg-4">
                         <div class="serch-btn">
@@ -44,7 +42,11 @@
                     </div>
                     <br />
                     <br />
-
+                    <div class="col-md-4">
+                        <select name="type" class="form-control" style="" id="btnddl" asp-items="@ViewBag.CandidatetechnologiesList">
+                            <option value="">-- ALL --</option>
+                        </select>
+                    </div>
                 </div>
                 <h3 class="box-title">List of Candidate item</h3>
                 <div class="box-tools pull-right">
@@ -56,7 +58,7 @@
                     <table id="grid" class="table table-striped" cellspacing="0" width="100%">
                         <thead>
                             <tr>
-                                <th>Action</th>
+                                <th width="5%">Sr No.</th>
                                 <th width="20%">Name</th>
                                 <th width="10%">Email</th>
                                 <th width="8%">Phone</th>
@@ -66,21 +68,20 @@
                                 <th width="10%">Place Of Interview</th>
                                 <th width="10%">Interview Time</th>
                                 <th width="10%">Interview Description</th>
+                                <th width="10%">Created By</th>
+                                <th width="10%">Created Date</th>
                                 <th width="10%">Active</th>
                                 <th width="10%">Reject</th>
                                 <th id="cmtopenbtn">Comment</th>
+                                <th>Action</th>
                             </tr>
                         </thead>
                         <tbody>
                             @foreach (var item in Model)
                             {
-                                <tr>
+                                <tr style="background-color:@item.Color">
                                     <td>
-                                        <a href="/CandidateMaster/Form/@item.Id"><i class="fa fa-edit"></i></a> &nbsp; &nbsp;
-                                        @if (roles.Contains("SuperAdmin"))
-                                        {
-                                            <a href="/CandidateMaster/Delete/@item.Id"><i class="fa fa-trash"></i></a>
-                                        }
+                                        @item.Id
                                     </td>
                                     <td>
                                         @item.Name
@@ -96,8 +97,8 @@
                                     </td>
                                     <td>
                                         @*@item.FileUpload
-                                            <br />
-                                             @Html.ActionLink("Download", "DownloadFile", new { fileName = item.FileUpload })*@
+                                        <br />
+                                        @Html.ActionLink("Download", "DownloadFile", new { fileName = item.FileUpload })*@
                                         @*<a asp-controller="CandidateMaster" asp-action="DownloadFile" asp-route-filename="@item.FileUpload"><i class="fa fa-download"></i></a>*@
                                         <a href="~/document/Candidate/@item.filename" target="_blank"><i class="fa fa-download"></i></a>
                                     </td>
@@ -113,8 +114,15 @@
                                     <td>
                                         @item.InterviewDescription
                                     </td>
+                                    <td>
+                                        @item.CreatedBy
+                                    </td>
+                                    <td>
+                                        @item.CreatedDate
+                                    </td>
 
                                     @*<td><span style="text-decoration-line:@(item.Isactive ? "line-through" : "none")">@item.Isactive</span></td>*@
+
                                     <td>
                                         <input type="checkbox" class="flat-red" @(item.IsActive ? "checked" : "") onclick="return false;">
                                     </td>
@@ -124,18 +132,21 @@
                                     <td>
                                         <a href="#"><i id="myModal" onclick="openNote(@item.Id)" &nbsp; class="fa fa-comments-o"></i></a>
                                     </td>
+                                    <td>
+                                        <a href="/CandidateMaster/Form/@item.Id"><i class="fa fa-edit"></i></a> &nbsp; &nbsp;
+                                        @if (roles.Contains("SuperAdmin"))
+                                        {
+                                            <a href="/CandidateMaster/Delete/@item.Id"><i class="fa fa-trash"></i></a>
+                                        }
+                                    </td>
                                 </tr>
                             }
                         </tbody>
                     </table>
                 </div>
-
             </div>
             <!-- /.box-body -->
-
-
         </div>
-
         <!-- /.box -->
     </section>
     <!-- /.content -->
@@ -233,6 +244,25 @@
 
             });
 
+            $("#btnddl").on('change', function () {
+                debugger
+                var selecttechnologies = $("#btnddl option:selected").val();
+
+                $.ajax({
+                    type: "GET",
+                    url: "/CandidateMaster/CandidateIndex",
+                    data: { "technologies": selecttechnologies },
+                    success: function (response) {
+                        console.log(response);
+                    },
+                    error: function (response) {
+                        alert(response.responseText);
+                    }
+                });
+
+                //var newUrl = "\CandidateIndex?technologies=" + selecttechnologies;
+                //$("#btnSearch").attr("href", newUrl); // Set herf value
+            });
 
 
         });
