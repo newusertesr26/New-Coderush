@@ -130,7 +130,7 @@ namespace coderush.Controllers
                         InterviewDescription = candidate.InterviewDescription,
                         InterviewTime = candidate.InterviewTime,
                         IsReject = candidate.IsReject,
-                        CreatedBy = user.Id.ToString(),
+                        CreatedBy = _userManager.Users.Where(x => x.Id == candidate.CreatedBy).Select(x => x.FirstName + " " + x.LastName).FirstOrDefault(),
                         CreatedDate = candidate.CreatedDate,
                         Color = last7Day > candidate.InterviewDate ? "" : "#ffe0bb",
                     }).ToList();
@@ -153,22 +153,13 @@ namespace coderush.Controllers
             return View(data);
         }
 
-            //ViewBag.Role = HttpContext.Session.GetString("Role");
-            //if (HttpContext.Session.GetString("Role") == "Other")
-            //{
-            //    return RedirectToAction("PageError", "Home");
-            //}
-
-        //return View(_context.CandidateMaster.Where(x => !x.IsDelete).ToList());
         [HttpGet]
         public IActionResult Searchdata(string sdate, string edate)
         {
-
             var serchadata = new List<CandidateMaster>();
             serchadata = _context.CandidateMaster.Where(x => !x.IsDelete && x.CreatedDate >= Convert.ToDateTime(sdate) && x.UpdatedDate <= Convert.ToDateTime(edate)).ToList();
             return View(serchadata);
         }
-
 
         public IActionResult SearchdataByCurrentmonth()
         {
@@ -183,9 +174,6 @@ namespace coderush.Controllers
             var searching = SearchingList.Where(x => x.CreatedDate == DateTime.Today.AddMonths(-1));
 
             return View(searching);
-
-
-
 
         }
 
@@ -203,34 +191,11 @@ namespace coderush.Controllers
                 }
 
                 var user = _userManager.GetUserAsync(User).Result;
-                //{
-                //    var file = Request.Form.Files;
-                //    //for (int i = 0; i < file.Count; i++)
-                //    //{
-                //    var uploadefile = file[0];
-                //    var filename = Path.GetFileName(uploadefile.ToString());
-                //    var file1 = file[0];
-                //    var filepath = Path.Combine(_webHostEnvironment.WebRootPath, "document/Candidate", filename);
-                //    string savePath = Path.Combine(_webHostEnvironment.WebRootPath, "document/Candidate", filename);
-
-                //    using (var inputStream = new FileStream(savePath, FileMode.Create))
-                //    {
-                //        //read file to stream
-                //        file1.CopyTo(inputStream);
-                //        //stream to byte array
-                //    }
-
-                //    //candidateMasters.FileUpload = filepath;
-                //}
 
                 string wwwPath = this._webHostEnvironment.WebRootPath;
                 string contentPath = this._webHostEnvironment.ContentRootPath;
                 var filename = candidateMasters.FileUpload.FileName;
                 string path = Path.Combine(this._webHostEnvironment.WebRootPath, "document/Candidate");
-                //if (!Directory.Exists(path))
-                //{
-                //    Directory.CreateDirectory(path);
-                //}
 
                 List<string> uploadedFiles = new List<string>();
 
@@ -301,8 +266,6 @@ namespace coderush.Controllers
         [HttpGet]
         public IActionResult Form(int id)
         {
-
-
 
             //ViewBag.CandidatetechnologiesList = Enum.GetValues(typeof(Technologies)).Cast<Technologies>().Select(v => new SelectListItem
             //{
@@ -391,17 +354,6 @@ namespace coderush.Controllers
             }
         }
 
-        //public FileResult DownloadFile(string fileName)
-        //{
-        //    //Build the File Path.
-        //    string path = Path.Combine(this._webHostEnvironment.WebRootPath, "document/Candidate/") + fileName;
-
-        //    //Read the File data into Byte Array.
-        //    byte[] bytes = System.IO.File.ReadAllBytes(path);
-
-        //    //Send the File to Download.
-        //    return File(bytes, "application/octet-stream", fileName);
-        //}
 
         [HttpGet]
         public IActionResult EditData(int id)
@@ -411,7 +363,7 @@ namespace coderush.Controllers
         }
 
 
-        public ActionResult Notes(int id)
+        public ActionResult Notes(int id)                           
         {
             if (id == 0)
             {
