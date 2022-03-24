@@ -66,15 +66,6 @@
                         <span asp-validation-for="technologies" class="text-danger"></span>
                         @*<span class="text-danger hidespan spanSelection">Please select Type</span>*@
                     </div>
-
-                    <div class="form-group">
-                        <label asp-for="Phone"></label>
-                        <input id="candidatephone" asp-for="Phone" class="form-control" />
-                        <span asp-validation-for="Phone" class="text-danger"></span>
-                        @*<span class="text-danger hidespan spantext">Please enter Text</span>*@
-                    </div>
-
-
                     <div class="form-group ">
                         <div class="form-group col-md-6">
                             <label asp-for="InterviewDate"></label>
@@ -89,15 +80,21 @@
                             @*<span class="text-danger hidespan spantext">Please enter Text</span>*@
                         </div>
                     </div>
-
                     <div class="form-group">
-                        <label asp-for="FileUpload"></label>
-                        <input type="file" asp-for="FileUpload" id="FileUpload" class="form-control" />
-                        <span id="file_error"></span>
-                        @*<span asp-validation-for="FileUpload" class="text-danger"></span>*@
-                        @*<span class="text-danger hidespan spantext">Please enter Text</span>*@
+                        <div class="form-group col-md-6">
+                            <label asp-for="Phone"></label>
+                            <input id="candidatephone" asp-for="Phone" class="form-control" />
+                            <span asp-validation-for="Phone" class="text-danger"></span>
+                            @*<span class="text-danger hidespan spantext">Please enter Text</span>*@
+                        </div>
+                        <div class="form-group col-md-6">
+                            <label asp-for="FileUpload"></label>
+                            <input type="file" asp-for="FileUpload" id="FileUpload" class="form-control" />
+                            <span id="file_error"></span>
+                            @*<span asp-validation-for="FileUpload" class="text-danger"></span>*@
+                            @*<span class="text-danger hidespan spantext">Please enter Text</span>*@
+                        </div>
                     </div>
-
                     <div class="form-group col-md-3">
                         <label asp-for="Status"></label>
                         <select id="dropdown" asp-for="Status" class="form-control">
@@ -109,10 +106,10 @@
 
                     </div>
                     @*<div class="form-group col-md-3">
-                        <label>Status:</label>
-                        <input type="checkbox" id="status" asp-for="Status" class=""/>
+            <label>Status:</label>
+            <input type="checkbox" id="status" asp-for="Status" class=""/>
 
-                    </div>*@
+        </div>*@
                     <div class="form-group col-md-12">
                         <div class="form-group">
                             <label asp-for="InterviewDescription"></label>
@@ -121,13 +118,13 @@
                     </div>
 
                 </div>
-                <!-- /.box-body -->
-                <div class="box-footer">
-                    <a href="/CandidateMaster/CandidateIndex" class="btn btn-default">Back</a>
-                    <button type="submit" class="btn btn-primary" id="btnsave">Save</button>
+                    <!-- /.box-body -->
+                    <div class="box-footer">
+                        <a href="/CandidateMaster/CandidateIndex" class="btn btn-default">Back</a>
+                        <button type="submit" class="btn btn-primary" id="btnsave">Save</button>
+                    </div>
+                    <!-- /.box-footer-->
                 </div>
-                <!-- /.box-footer-->
-            </div>
         </form>
 
         <!-- /.box -->

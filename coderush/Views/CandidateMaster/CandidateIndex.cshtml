@@ -77,13 +77,12 @@
                                 <th width="8%">Phone</th>
                                 <th width="10%">Technologies</th>
                                 <th width="4%">CV</th>
-                                <th width="10%">Interview Date</th>
+                                <th width="10%">Interview Date/Time</th>
                                 <th width="10%">Place Of Interview</th>
-                                <th width="10%">Interview Time</th>
                                 <th width="10%">Interview Description</th>
                                 <th width="10%">Created By</th>
                                 <th width="10%">Created Date</th>
-                                <th width="10%">Next Follow Update</th>
+                                <th width="10%">Next FollowUp date</th>
                                 <th width="10%">Status</th>
                                 <th id="cmtopenbtn">Comment</th>
                                 <th>Action</th>
@@ -123,12 +122,12 @@
                                 </td>
                                 <td>
                                     @item.InterviewDate.Value.ToString("dd MMMM yyyy")
+                                    &nbsp; &nbsp;
+                                    &nbsp;
+                                    @(item.InterviewTime.HasValue? dtDateTime.ToString("hh:mm tt", CultureInfo.InvariantCulture):"")
                                 </td>
                                 <td>
                                     @item.PlaceOfInterview
-                                </td>
-                                <td>
-                                    @(item.InterviewTime.HasValue? dtDateTime.ToString("hh:mm tt", CultureInfo.InvariantCulture):"")
                                 </td>
                                 <td>
                                     @item.InterviewDescription
@@ -140,7 +139,7 @@
                                     @item.CreatedDate
                                 </td>
                                 <td>
-                                    
+
                                     @{
                                         if (item.dateforNext != null)
                                         {
@@ -167,6 +166,10 @@
                                         else if (item.Status == 3)
                                         {
                                             <p>Done</p>
+                                        }
+                                        else if (item.Status == 0)
+                                        {
+                                <p>--Select--</p>
                                         }
 
                                     }
@@ -230,7 +233,7 @@
                         @*<span class="notereq">Note is Required</span>*@
                     </div>
                     <div class="form-group">
-                        <label> Next Follow Update</label>
+                        <label> Next FollowUp date</label>
                         <input type="date" id="nextfollow" @*value="@DateTime.Today.ToString("dd/mm/yyyy")"*@ class="form-control" />
                     </div>
                     @*<div class="form-group">
@@ -357,7 +360,6 @@
         function openNote(id) {
             $("#notes").val("");
             $("#nextfollow").val("");
-            $("#ddlStatus").val("");
             $.ajax({
                 type: "GET",
                 url: "/CandidateMaster/Notes",

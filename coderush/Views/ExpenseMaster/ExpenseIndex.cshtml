@@ -283,11 +283,6 @@
                     success: function (response) {
                         console.log(response);
                         if (response != null) {
-                            //$("#Amount").val("");
-                            //$("#noteid").val(id);
-                            //$("#Managername").val(id);
-                            //$("#Creditdate").val(id);
-
                             var innerHtml = '';
                             $.each(response, function (i, v) {
                                 var rowdata = response[i]
@@ -299,8 +294,6 @@
                                 innerHtml += "</tr>"
                             });
                             $("#notebody").html(innerHtml);
-                            
-                            //$("#myModal").modal("show");
                         }
                     },
                     error: function (response) {
