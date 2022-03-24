@@ -37,7 +37,7 @@ namespace coderush.Controllers
             _context = context;
             //_hostingEnvironment = hostingEnvironment;
         }
-        public IActionResult CandidateIndex(string sdate, string edate, string curentmonth, string lastmont, string technologies)
+        public IActionResult CandidateIndex(string sdate, string edate, string curentmonth, string lastmont/*, string technologies*/)
         {
             var user = _userManager.GetUserAsync(User).Result;
             var typelist1 = _context.Datamaster.Where(x => x.Type == DataSelection.technologies).ToList();
@@ -114,11 +114,11 @@ namespace coderush.Controllers
                     // return View(data);
                 }
 
-                if (technologies != null)
-                {
-                    data = data.Where(x => x.IsDelete == false
-                                         && x.Technologies == Convert.ToInt32(technologies)).ToList();
-                }
+                //if (technologies != null)
+                //{
+                //    data = data.Where(x => x.IsDelete == false
+                //                         && x.Technologies == Convert.ToInt32(technologies)).ToList();
+                //}
 
                 if (sdate == null)
                 {
@@ -199,7 +199,6 @@ namespace coderush.Controllers
                 }
 
                 var user = _userManager.GetUserAsync(User).Result;
-             
 
                 string wwwPath = this._webHostEnvironment.WebRootPath;
                 string contentPath = this._webHostEnvironment.ContentRootPath;
