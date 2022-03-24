@@ -57,10 +57,10 @@ namespace coderush.Controllers
             DateTime? nulldate = null;
 
             data = (from candidate in _context.CandidateMaster
-                    //from Comments in _context.Comments
-                    where candidate.IsDelete == false
-                    let commentdate = _context.Comments.OrderByDescending(x=>x.Id).Where(w => w.CandidateId == candidate.Id).Select(s => s.NextFollowUpdate).FirstOrDefault()
-                    orderby candidate.Id descending
+                        //from Comments in _context.Comments
+                    where !candidate.IsDelete
+                    let commentdate = _context.Comments.OrderByDescending(x => x.Id).Where(w => w.CandidateId == candidate.Id).Select(s => s.NextFollowUpdate).FirstOrDefault()
+                   
                     select new CandidateMastersViewModel
                     {
                         Id = candidate.Id,
@@ -76,7 +76,7 @@ namespace coderush.Controllers
                         InterviewTime = candidate.InterviewTime,
                         IsReject = candidate.IsReject,
                         Status = candidate.Status,
-                        dateforNext = (commentdate != null ?commentdate :nulldate),
+                        dateforNext = (commentdate != null ? commentdate : nulldate),
                         CreatedBy = _userManager.Users.Where(x => x.Id == candidate.CreatedBy).Select(x => x.FirstName + " " + x.LastName).FirstOrDefault(), //user.Id.ToString(),
                         CreatedDate = candidate.CreatedDate,
                         //dateforNext = Comments.NextFollowUpdate,
@@ -92,7 +92,7 @@ namespace coderush.Controllers
             //}).ToList();
 
 
-           // var serchadata = new List<CandidateMastersViewModel>();
+            // var serchadata = new List<CandidateMastersViewModel>();
             try
             {
                 int montha;
@@ -122,27 +122,42 @@ namespace coderush.Controllers
 
                 if (sdate == null)
                 {
-                    var getfist = _context.CandidateMaster.Where(x => !x.IsDelete).OrderByDescending(x => x.Id).FirstOrDefault();
-                    var last7Day = getfist.InterviewDate.Value.AddDays(-8);
-                    var serch = _context.CandidateMaster.Where(x => !x.IsDelete).Select(candidate => new CandidateMastersViewModel
-                    {
-                        Id = candidate.Id,
-                        Name = candidate.Name,
-                        Email = candidate.Email,
-                        Phone = candidate.Phone,
-                        technologies = _context.Datamaster.Where(x => x.Id == candidate.Technologies).Select(x => x.Text).FirstOrDefault(),
-                        filename = candidate.FileUpload,
-                        IsActive = candidate.IsActive,
-                        InterviewDate = candidate.InterviewDate,
-                        PlaceOfInterview = candidate.PlaceOfInterview,
-                        InterviewDescription = candidate.InterviewDescription,
-                        InterviewTime = candidate.InterviewTime,
-                        IsReject = candidate.IsReject,
-                        CreatedBy = user.Id.ToString(),
-                        CreatedDate = candidate.CreatedDate,
-                        Color = last7Day > candidate.InterviewDate ? "" : "#ffe0bb",
-                    }).ToList();
-                    return View(serch);
+
+                    //var getfist = _context.CandidateMaster.Where(x => !x.IsDelete).OrderByDescending(x => x.Id).FirstOrDefault();
+                    // var last7Day = getfist.InterviewDate.Value.AddDays(-8);
+                    //var commentdate = _context.Comments.OrderByDescending(x => x.Id).Where(w => w.Id == w.CandidateId).Select(s => s.NextFollowUpdate).FirstOrDefault();
+                    //var serch = _context.CandidateMaster.Where(x => !x.IsDelete).Select(candidate => new CandidateMastersViewModel
+
+                    var search = (from candidate in _context.CandidateMaster
+                                  where !candidate.IsDelete
+                                  let commentdate = _context.Comments.OrderByDescending(x => x.Id).Where(w => w.CandidateId == candidate.Id).Select(s => s.NextFollowUpdate).FirstOrDefault()
+                                  let last7Day = DateTime.Now.AddDays(-8)
+                                   select new CandidateMastersViewModel
+
+                                  {
+                                      Id = candidate.Id,
+                                      Name = candidate.Name,
+                                      Email = candidate.Email,
+                                      Phone = candidate.Phone,
+                                      technologies = _context.Datamaster.Where(x => x.Id == candidate.Technologies).Select(x => x.Text).FirstOrDefault(),
+                                      filename = candidate.FileUpload,
+                                      IsActive = candidate.IsActive,
+                                      InterviewDate = candidate.InterviewDate,
+                                      PlaceOfInterview = candidate.PlaceOfInterview,
+                                      InterviewDescription = candidate.InterviewDescription,
+                                      InterviewTime = candidate.InterviewTime,
+                                      IsReject = candidate.IsReject,
+                                      Status = candidate.Status,
+                                      dateforNext = (commentdate != null ? commentdate : nulldate),
+                                      CreatedBy = _userManager.Users.Where(x => x.Id == candidate.CreatedBy).Select(x => x.FirstName + " " + x.LastName).FirstOrDefault(),
+                                      CreatedDate = candidate.CreatedDate,
+                                      Color = last7Day > candidate.InterviewDate ? "" : "#ffe0bb",
+                                  }).ToList();
+
+                    data = search;
+
+                   // return View(search);
+
                 }
                 else if (sdate != null && edate != null)
                 {
@@ -161,11 +176,11 @@ namespace coderush.Controllers
             return View(data);
         }
 
-            //ViewBag.Role = HttpContext.Session.GetString("Role");
-            //if (HttpContext.Session.GetString("Role") == "Other")
-            //{
-            //    return RedirectToAction("PageError", "Home");
-            //}
+        //ViewBag.Role = HttpContext.Session.GetString("Role");
+        //if (HttpContext.Session.GetString("Role") == "Other")
+        //{
+        //    return RedirectToAction("PageError", "Home");
+        //}
 
         //return View(_context.CandidateMaster.Where(x => !x.IsDelete).ToList());
         [HttpGet]
@@ -200,7 +215,7 @@ namespace coderush.Controllers
         //post submitted candidate data. if todo.CandidateId is null then create new, otherwise edit
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult SubmitForm([Bind("Id", "Name", "Email", "Phone", "Technologies", "FileUpload", "InterviewDate", "PlaceOfInterview", "InterviewTime", "InterviewDescription", "IsActive", "IsReject", "Status")] CandidateMastersViewModel candidateMasters)
+        public IActionResult SubmitForm([Bind("Id", "Name", "Email", "Phone", "Technologies", "FileUpload", "InterviewDate", "PlaceOfInterview", "InterviewTime", "dateforNext", "InterviewDescription", "IsActive", "IsReject", "Status")] CandidateMastersViewModel candidateMasters)
         {
             try
             {
@@ -211,7 +226,7 @@ namespace coderush.Controllers
                 }
 
                 var user = _userManager.GetUserAsync(User).Result;
-             
+
 
                 string wwwPath = this._webHostEnvironment.WebRootPath;
                 string contentPath = this._webHostEnvironment.ContentRootPath;
@@ -250,7 +265,7 @@ namespace coderush.Controllers
                     newcandidateMaster.IsActive = candidateMasters.IsActive;
                     newcandidateMaster.IsReject = candidateMasters.IsReject;
                     newcandidateMaster.Status = candidateMasters.Status;
-                  //  newcandidateMaster.Schedule = candidateMasters.Schedule;
+                    //  newcandidateMaster.Schedule = candidateMasters.Schedule;
                     newcandidateMaster.CreatedBy = user.Id;
                     _context.CandidateMaster.Add(newcandidateMaster);
                     _context.SaveChanges();
@@ -276,7 +291,7 @@ namespace coderush.Controllers
                 editCandidatemaster.UpdatedBy = user.Id;
                 editCandidatemaster.IsReject = candidateMasters.IsReject;
                 editCandidatemaster.Status = candidateMasters.Status;
-               // editCandidatemaster.Schedule = candidateMasters.Schedule;
+                // editCandidatemaster.Schedule = candidateMasters.Schedule;
                 _context.CandidateMaster.Update(editCandidatemaster);
                 _context.SaveChanges();
 
@@ -323,7 +338,7 @@ namespace coderush.Controllers
             CandidateMastersViewModel editnewcandidatemaster = new CandidateMastersViewModel();
             var candidatedata = _context.CandidateMaster.Where(x => x.Id.Equals(id)).FirstOrDefault();
             editnewcandidatemaster.Id = candidatedata.Id;
-            editnewcandidatemaster.Name = candidatedata.Name;           
+            editnewcandidatemaster.Name = candidatedata.Name;
             editnewcandidatemaster.Email = candidatedata.Email;
             editnewcandidatemaster.Phone = candidatedata.Phone;
             editnewcandidatemaster.Technologies = candidatedata.Technologies;
@@ -335,7 +350,7 @@ namespace coderush.Controllers
             editnewcandidatemaster.IsActive = candidatedata.IsActive;
             editnewcandidatemaster.Status = candidatedata.Status;
             editnewcandidatemaster.InterviewDescription = candidatedata.InterviewDescription;
-           // editnewcandidatemaster.Schedule = candidatedata.Schedule;
+            // editnewcandidatemaster.Schedule = candidatedata.Schedule;
 
             if (editnewcandidatemaster == null)
             {
