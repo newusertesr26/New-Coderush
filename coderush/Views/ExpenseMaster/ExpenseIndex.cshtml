@@ -1,6 +1,11 @@
-﻿@using coderush.Models.ViewModels
+﻿@using Microsoft.AspNetCore.Identity
+@using coderush.Models.ViewModels
 @model List<ExpenseMasterViewModel>
-@{ ViewData["Title"] = "Expense"; }
+@inject UserManager<ApplicationUser> _userManager
+@{ ViewData["Title"] = "Expense"; 
+    var user = await _userManager.GetUserAsync(User);
+    var roles = await _userManager.GetRolesAsync(user);
+}
 
 
 <script src="jquery-3.5.1.min.js"></script>
@@ -45,16 +50,78 @@
                             <a href="/ExpenseMaster/ExpenseIndex" class="btn btn-primary" id="btnSearch">Search</a>
                             <a href="/ExpenseMaster/ExpenseIndex?lastmont=1" class="btn btn-primary" id="btnLastMonth">Last Month</a>
                             <a href="/ExpenseMaster/ExpenseIndex?curentmonth=2" class="btn btn-primary" id="btnCurrentMonth">Current Month</a>
+                            @*<a href="#"><i id="myModal" onclick="Creadit" &nbsp; class="fa fa-comments-o"></i></a>*@
+                            @*<br />
+                                <br />
+                                <a href="/ExpenseMaster/ExpenseIndex" onclick="openNote" class="btn btn-primary" id="myModal">Creadit</a>*@
+                            @*<button type="button" class="btn btn-primary" data-toggle="modal" data-target="#myModal">Credit </button>*@
                         </div>
                     </div>
 
                 </div>
             </div>
+
+
+            <div class="container">
+
+                <!-- Modal -->
+                <div class="modal fade" id="myModal" role="dialog">
+                    <div class="modal-dialog">
+
+                        <!-- Modal content-->
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                                <h4 class="modal-title">Credit Details</h4>
+                            </div>
+                            <div class="modal-body">
+                                <div class="table-responsive">
+                                    <form asp-action="Create">
+                                        <input name="IsValid" type="hidden" id="noteid" />
+                                        <div class="form-group">
+                                            <label>Amount :</label>
+                                            @*<textarea type="text" TextMode="MultiLine" rows="1" cols="10" class="form-control" id="notes" style="width: 572px;height: 165px;"></textarea>*@
+                                            <input type="text" id="Amount" name="Amount" class="form-control"><br><br>
+                                            <label>Manager Name  :</label>
+                                            <input type="text" id="Managername" name="Manager Name" class="form-control"><br><br>
+                                            <label>Credit Date :</label>
+                                            <input type="date" id="Creditdate" name="Creditdate" class="form-control">
+                                        </div>
+                                    </form>
+                                    <div class="modal-footer">
+                                        @*<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>*@
+                                        <button type="button" class="btn btn-success" id="savenotes" data-dismiss="modal">Save</button>
+                                    </div>
+                                    <table id="gridle" class="table table-striped" cellspacing="0" width="100%">
+                                        <thead>
+                                            <tr>
+                                                <th width="10%">Amount</th>
+                                                <th width="10%">Manager Name</th>
+                                                <th width="10%">Credit Date</th>
+
+                                            </tr>
+                                        </thead>
+                                        <tbody id="notebody">
+                                        </tbody>
+                                    </table>
+                                </div>
+                                
+                            </div>
+
+                           
+                        </div>
+
+                    </div>
+                </div>
+
+            </div>
+
             <!-- Default box -->
             <div class="box-header with-border">
                 <h3 class="box-title">List of Expense item</h3>
                 <div class="box-tools pull-right">
                     <a href="/ExpenseMaster/Form" class="btn btn-primary"><i class="fa fa-plus"></i></a>
+                    <button type="button" class="btn btn-primary" id="mybutton">Credit</button> @*data-target="#myModal" data-toggle="modal"*@
                 </div>
             </div>
             <div class="box-body">
@@ -62,15 +129,21 @@
                     <table id="grid" class="table table-striped" cellspacing="0" width="100%">
                         <thead>
                             <tr>
-                                <th width="5%">Edit</th>
-                                <th width="5%">Delete</th>
+                                <th>Sr No.</th>
                                 <th width="20%">ExpName</th>
                                 <th width="10%">Exptype</th>
                                 <th width="10%">Amount</th>
                                 <th width="10%">Expense Date</th>
                                 <th width="10%">Description</th>
+                                <th width="10%">Created by</th>
+                                <th width="10%">Created Date</th>
                                 <th width="10%">FileUpload</th>
-                                <th width="10%">Is Active</th>
+                                @if (roles.Contains("SuperAdmin"))
+                                {
+                                    <th width="10%">Is Active</th>
+                                }
+                                <th width="5%">Edit</th>
+                                <th width="5%">Delete</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -78,11 +151,9 @@
                             {
                             <tr>
                                 <td>
-                                    <a href="/ExpenseMaster/Form/@item.Id"><i class="fa fa-edit"></i></a>
+                                    @item.Id
                                 </td>
-                                <td>
-                                    <a href="/ExpenseMaster/Delete/@item.Id"><i class="fa fa-trash"></i></a>
-                                </td>
+
                                 <td>
                                     @item.ExpName
                                 </td>
@@ -99,20 +170,32 @@
                                     @item.Description
                                 </td>
                                 <td>
+                                    @item.CreatedBy
+                                </td>
+                                <td>
+                                    @item.CreatedDate.Value.ToString("dd MMMM yyyy")
+                                </td>
+                                <td>
                                     @if (item.filename != null && item.filename != "")
                                     {
                                         @*@item.FileUpload
-            <br />
-            @Html.ActionLink("Download", "DownloadFile", new { fileName = item.FileUpload })*@
+                <br />
+                @Html.ActionLink("Download", "DownloadFile", new { fileName = item.FileUpload })*@
                                         <a href="~/document/Expense/@item.filename" target="_blank"><i class="fa fa-download"></i></a>
                                     }
-                                    </td>
+                                </td>
                                 @*<td><span style="text-decoration-line:@(item.Isactive ? "line-through" : "none")">@item.Isactive</span></td>*@
                                 <td>
                                     <input type="checkbox" class="flat-red" @(item.isactive ? "checked" : "") onclick="return false;">
                                 </td>
-
-                            </tr>}
+                                <td>
+                                    <a href="/ExpenseMaster/Form/@item.Id"><i class="fa fa-edit"></i></a>
+                                </td>
+                                <td>
+                                    <a href="/ExpenseMaster/Delete/@item.Id"><i class="fa fa-trash"></i></a>
+                                </td>
+                            </tr>
+}
                         </tbody>
                     </table>
                 </div>
@@ -136,17 +219,17 @@
 
 
 @section Scripts{
-
-
     <!-- DataTables -->
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    @*<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>*@
     <script src="~/adminlte/components/datatables.net/js/jquery.dataTables.min.js"></script>
     <script src="~/adminlte/components/datatables.net-bs/js/dataTables.bootstrap.min.js"></script>
     @*<script src="jquery-3.5.1.min.js"></script>*@
     <!-- page script -->
-<script type="text/javascript">
+    <script type="text/javascript">
 
         $(document).ready(function () {
+
+
 
             $('#grid').DataTable({
                 lengthChange: false,
@@ -156,15 +239,15 @@
                 scrollX: false,
                 pageLength: 25,
             });
-            
+
             $('#FromDate').on('change', function (e) {
                 var FromDate = $('#FromDate').val();
-                    var To = $('#TO').val();
-                    var newUrl = "\ExpenseIndex?sdate=" + FromDate + "&edate=" + To;
-                    $("#btnSearch").attr("href", newUrl); // Set herf value
+                var To = $('#TO').val();
+                var newUrl = "\ExpenseIndex?sdate=" + FromDate + "&edate=" + To;
+                $("#btnSearch").attr("href", newUrl); // Set herf value
 
-                });
-          
+            });
+
             $('#TO').on('change', function (e) {
                 var FromDate = $('#FromDate').val();
                 var To = $('#TO').val();
@@ -173,15 +256,110 @@
 
             });
 
+            $("#mybutton").click(function () {
+                // show Modal
+                $('#myModal').modal('show');
+                Notes();
+                
+                $(".dataTables_paginate").css("display","none");
+            });
+            $('#gridle').DataTable({
+                lengthChange: false,
+                info: false,
+                searching: true,
+                dom: 'lrtip',
+                scrollX: false,
+                pageLength: 25,
+            });
+
+            function Notes() {
+                $("#Amount").val("");
+                $("#nextfollow").val("");
+                $("#ddlStatus").val("");
+                $.ajax({
+                    type: "GET",
+                    url: "/ExpenseMaster/Notes",
+                    //data: { "id": id },
+                    success: function (response) {
+                        console.log(response);
+                        if (response != null) {
+                            //$("#Amount").val("");
+                            //$("#noteid").val(id);
+                            //$("#Managername").val(id);
+                            //$("#Creditdate").val(id);
+
+                            var innerHtml = '';
+                            $.each(response, function (i, v) {
+                                var rowdata = response[i]
+                                innerHtml += "<tr>";
+                                innerHtml += "<td> " + rowdata.amount + " </td>";
+                                innerHtml += "<td> " + rowdata. managername + " </td>";
+                                innerHtml += "<td> " + rowdata.createddate + " </td>";
+                                /*    innerHtml += "<td> " + moment(rowdata.nextFollowUpdate).format("L") + " </td>";*/
+                                innerHtml += "</tr>"
+                            });
+                            $("#notebody").html(innerHtml);
+                            
+                            //$("#myModal").modal("show");
+                        }
+                    },
+                    error: function (response) {
+                        alert(response.responseText);
+                    }
+                });
+            }
+
+
+            $("#savenotes").click(function () {
+                debugger
+                var Amount = $("#Amount").val();
+                var Id = $("#noteid").val();
+                var Createddate = $("#Creditdate").val();
+                var Managername = $("#Managername").val();
+
+
+
+                if (Amount == '') {
+                    alert("Amount is Required");
+                    return false;
+                }
+                if (Managername == '') {
+                    alert("Managername is Required");
+                    return false;
+                }
+                if (Createddate == '') {
+                    alert("Createddate is Required");
+                    return false;
+                }
+
+
+                $.ajax({
+                    type: "POST",
+                    url: "/ExpenseMaster/SaveNotes",
+                    data: { "Id": Id, "Amount": Amount, "Creditdate": Createddate, "Managername": Managername },
+                    success: function (response) {
+                        debugger
+                        console.log(response);
+                        if (response.success == "true") {
+                            
+                            alert(response.message);
+                            //$("#myModal").modal("hide");
+                            Notes();
+                            //location.reload(true);
+
+                        }
+                        location.reload(true);
+                    },
+                    error: function (response) {
+                        alert(response.message);
+                    }
+                });
+
+            });
         });
 
 
-
-
-
-
-
-</script>
+    </script>
 
 
 }

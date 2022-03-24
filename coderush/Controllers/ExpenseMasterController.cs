@@ -1,4 +1,5 @@
-﻿using coderush.Data;
+﻿
+using coderush.Data;
 using coderush.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -15,6 +16,7 @@ using Microsoft.AspNetCore.Authorization;
 using coderush.Models.ViewModels;
 using Microsoft.AspNetCore.Hosting;
 using System.IO;
+using CodesDotHRMS.Models;
 
 namespace coderush.Controllers
 {
@@ -42,8 +44,11 @@ namespace coderush.Controllers
         }
         public IActionResult ExpenseIndex(string sdate, string edate, string curentmonth, string lastmont)
         {
+
+            var user = _userManager.GetUserAsync(User).Result;
             var data = (from expense in _context.ExpenseMaster
                         where expense.Isdelete == false
+                        orderby expense.Id descending
                         select new ExpenseMasterViewModel
                         {
                             Id = expense.Id,
@@ -54,7 +59,8 @@ namespace coderush.Controllers
                             Description = expense.Description,
                             filename = expense.FileUpload,
                             isactive = expense.isactive,
-                            CreatedDate = expense.CreatedDate
+                            CreatedDate = expense.CreatedDate,
+                            CreatedBy = _userManager.Users.Where(x => x.Id == expense.CreatedBy).Select(x => x.FirstName + " " + x.LastName).FirstOrDefault(),
                         }).ToList();
 
             //return View(data);
@@ -184,7 +190,7 @@ namespace coderush.Controllers
                 if (expenseMasters.FileUpload != null)
                 {
 
-                   string wwwPath = this._webHostEnvironment.WebRootPath;
+                    string wwwPath = this._webHostEnvironment.WebRootPath;
                     string contentPath = this._webHostEnvironment.ContentRootPath;
                     var filename = expenseMasters.FileUpload.FileName;
                     string path = Path.Combine(this._webHostEnvironment.WebRootPath, "document/Expense");
@@ -222,7 +228,7 @@ namespace coderush.Controllers
                     newexpenseMaster.Amount = expenseMasters.Amount;
                     newexpenseMaster.ExpenseDate = expenseMasters.ExpenseDate;
                     newexpenseMaster.isactive = expenseMasters.isactive;
-                    newexpenseMaster.CreatedBy = user.Id;
+                    newexpenseMaster.CreatedBy = user.Id.ToString();
                     _context.ExpenseMaster.Add(newexpenseMaster);
                     _context.SaveChanges();
 
@@ -353,6 +359,55 @@ namespace coderush.Controllers
         {
             var Data = _context.ExpenseMaster.Where(x => x.Id == id).FirstOrDefault();
             return Json(Data);
+        }
+
+        //public ActionResult Notes(int id)
+        //{
+        //    if (id == 0)
+        //    {
+        //        return null;
+        //    }
+
+        //    Creadit model = new Creadit();
+
+        //    var models = _context.Creadit.Where(x => x.CandidateId.Equals(id)).ToList();
+
+        //    return Json(models);
+        //}
+        public ActionResult Notes()
+        {
+            //if (id == 0)
+            //{
+            //    return null;
+            //}
+
+            Credit model = new Credit();
+
+            var models = _context.Credit.ToList();
+
+            return Json(models);
+        }
+        public ActionResult SaveNotes(int Id, int Amount, string Managername, DateTime Createddate)
+        {
+
+            try
+            {
+                Credit models = new Credit();
+
+                models.Amount = Amount;
+                models.Managername = Managername;
+                models.Createddate = DateTime.Now;
+                _context.Credit.Add(models);
+                _context.SaveChanges();
+                var result = new { Success = "true", Message = "Data save successfully." };
+                return Json(result);
+            }
+            catch (Exception ex)
+            {
+                var result = new { Success = "False", Message = ex.Message };
+                return Json(result);
+            }
+
         }
 
         //[HttpPost]
