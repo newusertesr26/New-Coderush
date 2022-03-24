@@ -37,7 +37,7 @@ namespace coderush.Controllers
             _context = context;
             //_hostingEnvironment = hostingEnvironment;
         }
-        public IActionResult CandidateIndex(string sdate, string edate, string curentmonth, string lastmont)
+        public IActionResult CandidateIndex(string sdate, string edate, string  curentmonth, string lastmont)
         {
             var typelist1 = _context.Datamaster.Where(x => x.Type == DataSelection.technologies).ToList();
 
@@ -92,14 +92,14 @@ namespace coderush.Controllers
             try
             {
                 int montha;
-                if (curentmonth == "2")
+                if (curentmonth == "3")
                 {
                     int dt = DateTime.Now.Month;
 
                     data = data.Where(x => x.IsDelete == false && x.InterviewDate.Value.Month == dt).ToList();
                     //  return View(data);
                 }
-                else if (lastmont == "1")
+                else if (lastmont == "2")
                 {
                     var today = DateTime.Today;
                     var month = new DateTime(today.Year, today.Month, 1);
@@ -111,7 +111,7 @@ namespace coderush.Controllers
                 }
 
 
-                else if (sdate != null && edate != null)
+                else if (sdate != null  && edate != null)
                 {
                     ViewBag.startdate = sdate;
                     ViewBag.enddate = edate;
@@ -238,9 +238,9 @@ namespace coderush.Controllers
                 editCandidatemaster.InterviewTime = candidateMasters.InterviewTime;
                 editCandidatemaster.InterviewDescription = candidateMasters.InterviewDescription;
                 editCandidatemaster.FileUpload = candidateMasters.FileUpload.ToString();
-                editCandidatemaster.UpdatedBy = user.Id;
                 editCandidatemaster.UpdatedDate = DateTime.Now;
                 editCandidatemaster.IsActive = candidateMasters.IsActive;
+                editCandidatemaster.UpdatedBy = user.Id;
                 editCandidatemaster.IsReject = candidateMasters.IsReject;
                 editCandidatemaster.Status = candidateMasters.Status;
                // editCandidatemaster.Schedule = candidateMasters.Schedule;
