@@ -27,7 +27,7 @@ namespace coderush.Models
         public string Phone { get; set; }
         [Display(Name = "Technologies:")]
         [Required]
-        public CandidateTechnologies Technologies { get; set; }
+        public int Technologies { get; set; }
         [Display(Name = "CVUpload:")]
         [Required]
         public string FileUpload { get; set; }
