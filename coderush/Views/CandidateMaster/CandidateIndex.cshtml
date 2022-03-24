@@ -28,23 +28,31 @@
             <div class="box-header with-border">
                 <div class="row">
 
-                    <div class="col-lg-4">
+                    <div class="col-lg-3">
                         <label>From Date:</label>
-                        <input id="canFromDate" maxlength="100" type="date" class="form-control" />
+                        <input id="canFromDate"  type="date" class="form-control" />
                     </div>
                     @*Start Date: <input type="datetime" name="sdate" />*@
-                    <div class="col-lg-4">
+                    <div class="col-lg-3">
                         <label>TO:</label>
-                        <input id="canTO" maxlength="100" type="date" class="form-control" />
+                        <input id="canTO"  type="date" class="form-control" />
 
                     </div>
-                    <div class="col-lg-4">
-                        <div class="serch-btn">
-                            <a href="/CandidateMaster/CandidateIndex" class="btn btn-primary"  style="margin-top: 25px"id="btnSearch">Search</a>
-                            <a href="/CandidateMaster/CandidateIndex?lastmont=1" class="btn btn-primary" style="margin-top: 25px" id="btnLastMonth">Last Month</a>
-                            <a href="/CandidateMaster/CandidateIndex?curentmonth=2" class="btn btn-primary"  style="margin-top: 25px" id="btnCurrentMonth">Current Month</a>
-                        </div>
+                    <div class="col-lg-3">
+                        <select id="dropdown" class="form-control" style="margin-top:25px">
+                            <option value="0"> --Select-- </option>
+                            @*<option value="1"> Search </option>*@
+                            <option value="2"> Last Month </option>
+                            <option value="3"> Current Month </option>
+                        </select>
                     </div>
+                        <div class="col-lg-3">
+                            <a href="/CandidateMaster/CandidateIndex" class="btn btn-primary" style="margin-top: 25px" id="btnSearch">Search</a>
+
+                        </div>
+                        @*<a href="/CandidateMaster/CandidateIndex?lastmont=1" class="btn btn-primary" style="margin-top: 25px" id="btnLastMonth">Last Month</a>
+                        <a href="/CandidateMaster/CandidateIndex?curentmonth=2" class="btn btn-primary" style="margin-top: 25px" id="btnCurrentMonth">Current Month</a>*@
+                    
                 </div>
                 <br />
                 <br />
@@ -214,7 +222,7 @@
                     </div>
                     <div class="form-group">
                         <label> Next Follow Update</label>
-                        <input type="date" id="nextfollow" class="form-control" />
+                        <input type="date" id="nextfollow" @*value="@DateTime.Today.ToString("dd/mm/yyyy")"*@ class="form-control" />
                     </div>
                     @*<div class="form-group">
                             <label>Reject :</label>
@@ -268,33 +276,56 @@
                 dom: 'lrtip',
                 scrollX: false,
                 pageLength: 25,
-
             });
 
+                $('#canFromDate').on('change', function (e) {
+                    var candidateFromDate = $('#canFromDate').val();
+                    var candidateTo = $('#canTO').val();
+                    var newUrl = "\CandidateIndex?sdate=" + candidateFromDate + "&edate=" + candidateTo;
+                    $("#btnSearch").attr("href", newUrl); // Set herf value
 
-            $('#canFromDate').on('change', function (e) {
-                var candidateFromDate = $('#canFromDate').val();
-                var candidateTo = $('#canTO').val();
-                var newUrl = "\CandidateIndex?sdate=" + candidateFromDate + "&edate=" + candidateTo;
-                $("#btnSearch").attr("href", newUrl); // Set herf value
+                });
+
+                $('#canTO').on('change', function (e) {
+                    var candidateFromDate = $('#canFromDate').val();
+                    var candidateTo = $('#canTO').val();
+                    var newUrl = "\CandidateIndex?sdate=" + candidateFromDate + "&edate=" + candidateTo;
+                    $("#btnSearch").attr("href", newUrl); // Set herf value
+
+                });
+            
+
+           
+           
+            $("#dropdown").on('change', function () {
+                debugger
+                var ddvalue = $("#dropdown").val();
+                
+                //if (ddvalue == 1) {
+                //    debugger
+                //        var candidatefromdate = $("#canfromdate").val();
+                //        var candidateto = $("#canto").val();
+                //     //  var newurl = "\candidateindex?sdate=" + candidatefromdate + "&edate=" + candidateto;
+                //       window.location.href = "\candidateindex?sdate=" + candidatefromdate + "&edate=" + candidateto;
+                //       // $("#btnsearch").attr("href", newurl); // set herf value
+
+                //}
+
+                 if (ddvalue == 2) {
+                    window.location.href =  "\candidateindex?lastmont=" + ddvalue;
+                   
+                }
+                else {
+                    window.location.href = "\candidateindex?curentmonth=" + ddvalue;
+                    
+                }
 
             });
-
-            $('#canTO').on('change', function (e) {
-                var candidateFromDate = $('#canFromDate').val();
-                var candidateTo = $('#canTO').val();
-                var newUrl = "\CandidateIndex?sdate=" + candidateFromDate + "&edate=" + candidateTo;
-                $("#btnSearch").attr("href", newUrl); // Set herf value
-
-            });
-
-
+          
 
         });
 
-        //$(window).load(function () {
-        //    $('#myModal').modal('show');
-        //});
+   
 
         function openNote(id) {
             $("#notes").val("");
@@ -338,12 +369,21 @@
             var ddlStatusc = $("#ddlStatus").val();
 
             //  var reject = $("#reject");
-
-
             if (notes == '') {
                 alert("Note is Required");
                 return false;
             }
+
+            //var date = $("#nextfollow").val();
+            //var d = new Date(Date.now()).toLocaleString().split(',')[0];
+
+            //if (date < d) {
+            //    alert("Next Follow Update date is greater or equal today date");
+            //    $("#nextfollow").val("");
+            //    return false;
+            //}
+
+            
 
             var requestdata = {
                 "Id": id,
