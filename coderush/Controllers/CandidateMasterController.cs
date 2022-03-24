@@ -52,29 +52,37 @@ namespace coderush.Controllers
                 Text = v.Text.ToString(),
                 Value = ((int)v.Id).ToString(),
             }).ToList();
+            var data = new List<CandidateMastersViewModel>();
 
-            var data = (from candidate in _context.CandidateMaster
-                        where candidate.IsDelete == false
-                        orderby candidate.Id descending
-                        select new CandidateMastersViewModel
-                        {
-                            Id = candidate.Id,
-                            Name = candidate.Name,
-                            Email = candidate.Email,
-                            Phone = candidate.Phone,
-                            technologies = _context.Datamaster.Where(x => x.Id == candidate.Technologies).Select(x => x.Text).FirstOrDefault(),
-                            Technologies = candidate.Technologies,
-                            filename = candidate.FileUpload,
-                            IsActive = candidate.IsActive,
-                            InterviewDate = candidate.InterviewDate,
-                            PlaceOfInterview = candidate.PlaceOfInterview,
-                            InterviewDescription = candidate.InterviewDescription,
-                            InterviewTime = candidate.InterviewTime,
-                            IsReject = candidate.IsReject,
-                            CreatedBy = _userManager.Users.Where(x => x.Id == candidate.CreatedBy).Select(x => x.FirstName + " " + x.LastName).FirstOrDefault(), //user.Id.ToString(),
-                            CreatedDate = candidate.CreatedDate,
+            DateTime? nulldate = null;
 
-                        }).ToList();
+            data = (from candidate in _context.CandidateMaster
+                    //from Comments in _context.Comments
+                    where candidate.IsDelete == false
+                    let commentdate = _context.Comments.OrderByDescending(x=>x.Id).Where(w => w.CandidateId == candidate.Id).Select(s => s.NextFollowUpdate).FirstOrDefault()
+                    orderby candidate.Id descending
+                    select new CandidateMastersViewModel
+                    {
+                        Id = candidate.Id,
+                        Name = candidate.Name,
+                        Email = candidate.Email,
+                        Phone = candidate.Phone,
+                        technologies = _context.Datamaster.Where(x => x.Id == candidate.Technologies).Select(x => x.Text).FirstOrDefault(),
+                        filename = candidate.FileUpload,
+                        IsActive = candidate.IsActive,
+                        InterviewDate = candidate.InterviewDate,
+                        PlaceOfInterview = candidate.PlaceOfInterview,
+                        InterviewDescription = candidate.InterviewDescription,
+                        InterviewTime = candidate.InterviewTime,
+                        IsReject = candidate.IsReject,
+                        Status = candidate.Status,
+                        dateforNext = (commentdate != null ?commentdate :nulldate),
+                        CreatedBy = _userManager.Users.Where(x => x.Id == candidate.CreatedBy).Select(x => x.FirstName + " " + x.LastName).FirstOrDefault(), //user.Id.ToString(),
+                        CreatedDate = candidate.CreatedDate,
+                        //dateforNext = Comments.NextFollowUpdate,
+
+
+                    }).ToList();
 
 
             //ViewBag.CandidatetechnologiesList = Enum.GetValues(typeof(CandidateTechnologies)).Cast<CandidateTechnologies>().Select(v => new SelectListItem
@@ -84,18 +92,18 @@ namespace coderush.Controllers
             //}).ToList();
 
 
-            var serchadata = new List<CandidateMastersViewModel>();
+           // var serchadata = new List<CandidateMastersViewModel>();
             try
             {
                 int montha;
-                if (curentmonth == "2")
+                if (curentmonth == "3")
                 {
                     int dt = DateTime.Now.Month;
 
                     data = data.Where(x => x.IsDelete == false && x.InterviewDate.Value.Month == dt).ToList();
                     //  return View(data);
                 }
-                else if (lastmont == "1")
+                else if (lastmont == "2")
                 {
                     var today = DateTime.Today;
                     var month = new DateTime(today.Year, today.Month, 1);
@@ -180,7 +188,7 @@ namespace coderush.Controllers
         //post submitted candidate data. if todo.CandidateId is null then create new, otherwise edit
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult SubmitForm([Bind("Id", "Name", "Email", "Phone", "Technologies", "FileUpload", "InterviewDate", "PlaceOfInterview", "InterviewTime", "InterviewDescription", "IsActive", "IsReject")] CandidateMastersViewModel candidateMasters)
+        public IActionResult SubmitForm([Bind("Id", "Name", "Email", "Phone", "Technologies", "FileUpload", "InterviewDate", "PlaceOfInterview", "InterviewTime", "InterviewDescription", "IsActive", "IsReject", "Status")] CandidateMastersViewModel candidateMasters)
         {
             try
             {
@@ -191,6 +199,7 @@ namespace coderush.Controllers
                 }
 
                 var user = _userManager.GetUserAsync(User).Result;
+             
 
                 string wwwPath = this._webHostEnvironment.WebRootPath;
                 string contentPath = this._webHostEnvironment.ContentRootPath;
@@ -224,7 +233,9 @@ namespace coderush.Controllers
                     newcandidateMaster.FileUpload = candidateMasters.FileUpload.FileName.ToString();
                     newcandidateMaster.IsActive = candidateMasters.IsActive;
                     newcandidateMaster.IsReject = candidateMasters.IsReject;
-                    newcandidateMaster.CreatedBy = user.Id.ToString();
+                    newcandidateMaster.Status = candidateMasters.Status;
+                  //  newcandidateMaster.Schedule = candidateMasters.Schedule;
+                    newcandidateMaster.CreatedBy = user.Id;
                     _context.CandidateMaster.Add(newcandidateMaster);
                     _context.SaveChanges();
 
@@ -244,10 +255,12 @@ namespace coderush.Controllers
                 editCandidatemaster.InterviewTime = candidateMasters.InterviewTime;
                 editCandidatemaster.InterviewDescription = candidateMasters.InterviewDescription;
                 editCandidatemaster.FileUpload = candidateMasters.FileUpload.ToString();
-                editCandidatemaster.UpdatedBy = user.Id;
                 editCandidatemaster.UpdatedDate = DateTime.Now;
                 editCandidatemaster.IsActive = candidateMasters.IsActive;
+                editCandidatemaster.UpdatedBy = user.Id;
                 editCandidatemaster.IsReject = candidateMasters.IsReject;
+                editCandidatemaster.Status = candidateMasters.Status;
+               // editCandidatemaster.Schedule = candidateMasters.Schedule;
                 _context.CandidateMaster.Update(editCandidatemaster);
                 _context.SaveChanges();
 
@@ -299,10 +312,13 @@ namespace coderush.Controllers
             editnewcandidatemaster.InterviewDate = candidatedata.InterviewDate;
             editnewcandidatemaster.InterviewTime = candidatedata.InterviewTime;
             editnewcandidatemaster.PlaceOfInterview = candidatedata.PlaceOfInterview;
-            editnewcandidatemaster.filename = candidatedata.FileUpload;           
+            editnewcandidatemaster.filename = candidatedata.FileUpload;
             editnewcandidatemaster.IsReject = candidatedata.IsReject;
             editnewcandidatemaster.IsActive = candidatedata.IsActive;
+            editnewcandidatemaster.Status = candidatedata.Status;
             editnewcandidatemaster.InterviewDescription = candidatedata.InterviewDescription;
+           // editnewcandidatemaster.Schedule = candidatedata.Schedule;
+
             if (editnewcandidatemaster == null)
             {
                 return NotFound();
@@ -376,15 +392,17 @@ namespace coderush.Controllers
 
             return Json(models);
         }
-
-        public ActionResult SaveNotes(int id, string notes)
+        [HttpPost]
+        public ActionResult SaveNotes(Comments data)
         {
 
             try
             {
                 Comments models = new Comments();
-                models.CandidateId = id;
-                models.Note = notes;
+                models.CandidateId = data.Id;
+                models.Note = data.Note;
+                models.NextFollowUpdate = data.NextFollowUpdate;
+                models.Status = data.Status;
                 _context.Comments.Add(models);
                 _context.SaveChanges();
                 var result = new { Success = "true", Message = "Data save successfully." };
