@@ -293,8 +293,8 @@
                                 var rowdata = response[i]
                                 innerHtml += "<tr>";
                                 innerHtml += "<td> " + rowdata.amount + " </td>";
-                                innerHtml += "<td> " + rowdata. managername + " </td>";
-                                innerHtml += "<td> " + rowdata.createddate + " </td>";
+                                innerHtml += "<td> " + rowdata.managername + " </td>";
+                                innerHtml += "<td> " + moment(rowdata.createddate).format('LL') + " </td>";
                                 /*    innerHtml += "<td> " + moment(rowdata.nextFollowUpdate).format("L") + " </td>";*/
                                 innerHtml += "</tr>"
                             });
