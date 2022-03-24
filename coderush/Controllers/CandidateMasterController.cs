@@ -184,6 +184,7 @@ namespace coderush.Controllers
                     data = data.Where(x => x.IsDelete == false
                                          && x.InterviewDate >= Convert.ToDateTime(sdate) && x.InterviewDate <= Convert.ToDateTime(edate)).ToList();
                 }
+                data.OrderBy(x => x.CreatedDate).ToList();
             }
             catch (Exception ex)
             {
