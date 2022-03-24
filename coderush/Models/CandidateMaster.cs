@@ -27,7 +27,7 @@ namespace coderush.Models
         public string Phone { get; set; }
         [Display(Name = "Technologies:")]
         [Required]
-        public int Technologies { get; set; }
+        public CandidateTechnologies Technologies { get; set; }
         [Display(Name = "CVUpload:")]
         [Required]
         public string FileUpload { get; set; }
@@ -41,11 +41,6 @@ namespace coderush.Models
         public string PlaceOfInterview { get; set; }
         [Display(Name = "Interview Time:")]
         [Required]
-
-        //[DataType(DataType.Time)]
-        //[DisplayFormat(DataFormatString = "{0:hh\\:mm\\:tt}", ApplyFormatInEditMode = true)]
-        
-        //[DisplayFormat(DataFormatString = "{ hh:mm tt}")]
         public TimeSpan? InterviewTime { get; set; }
         [Display(Name = "Description:")]
         [Required]
@@ -63,17 +58,17 @@ namespace coderush.Models
        // public string Schedule { get; set; }
     }
 
-    //public class CandidateMasterDetails
-    //{
-    //    public List<CandidateMasterViewModel> CandidateMasterlist { get; set; }
-    //}
-    //public class CandidateMasterViewModel
-    //{
-    //    public int Id { get; set; }
-    //    public string Name { get; set; }
-    //    public string Email { get; set; }
-    //    public string Phone { get; set; }
-    //    public CandidateTechnologies Technologies { get; set; }
-    //}
+    public class CandidateMasterDetails
+    {
+        public List<CandidateMasterViewModel> CandidateMasterlist { get; set; }
+    }
+    public class CandidateMasterViewModel
+    {
+        public int Id { get; set; }
+        public string Name { get; set; }
+        public string Email { get; set; }
+        public string Phone { get; set; }
+        public CandidateTechnologies Technologies { get; set; }
+    }
 
 }

@@ -186,12 +186,10 @@ namespace coderush.Controllers
         [HttpGet]
         public IActionResult Searchdata(string sdate, string edate)
         {
-
             var serchadata = new List<CandidateMaster>();
             serchadata = _context.CandidateMaster.Where(x => !x.IsDelete && x.CreatedDate >= Convert.ToDateTime(sdate) && x.UpdatedDate <= Convert.ToDateTime(edate)).ToList();
             return View(serchadata);
         }
-
 
         public IActionResult SearchdataByCurrentmonth()
         {
@@ -206,9 +204,6 @@ namespace coderush.Controllers
             var searching = SearchingList.Where(x => x.CreatedDate == DateTime.Today.AddMonths(-1));
 
             return View(searching);
-
-
-
 
         }
 
@@ -232,10 +227,6 @@ namespace coderush.Controllers
                 string contentPath = this._webHostEnvironment.ContentRootPath;
                 var filename = candidateMasters.FileUpload.FileName;
                 string path = Path.Combine(this._webHostEnvironment.WebRootPath, "document/Candidate");
-                //if (!Directory.Exists(path))
-                //{
-                //    Directory.CreateDirectory(path);
-                //}
 
                 List<string> uploadedFiles = new List<string>();
 
@@ -310,8 +301,6 @@ namespace coderush.Controllers
         [HttpGet]
         public IActionResult Form(int id)
         {
-
-
 
             //ViewBag.CandidatetechnologiesList = Enum.GetValues(typeof(Technologies)).Cast<Technologies>().Select(v => new SelectListItem
             //{
@@ -403,17 +392,6 @@ namespace coderush.Controllers
             }
         }
 
-        //public FileResult DownloadFile(string fileName)
-        //{
-        //    //Build the File Path.
-        //    string path = Path.Combine(this._webHostEnvironment.WebRootPath, "document/Candidate/") + fileName;
-
-        //    //Read the File data into Byte Array.
-        //    byte[] bytes = System.IO.File.ReadAllBytes(path);
-
-        //    //Send the File to Download.
-        //    return File(bytes, "application/octet-stream", fileName);
-        //}
 
         [HttpGet]
         public IActionResult EditData(int id)
@@ -423,7 +401,7 @@ namespace coderush.Controllers
         }
 
 
-        public ActionResult Notes(int id)
+        public ActionResult Notes(int id)                           
         {
             if (id == 0)
             {
