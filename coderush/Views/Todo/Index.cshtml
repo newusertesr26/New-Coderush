@@ -36,38 +36,41 @@
                     <table id="grid" class="table table-striped" cellspacing="0" width="100%">
                         <thead>
                             <tr>
-                                
-                            <th width="50%">Users</th>
-                                <th width="30%">Duedate</th>
-                                <th width="40%">FileUpload</th>
-                                <th width="30%">Done</th>
-                                <th width="10%">Action</th>
+                                <th>Action</th>
+                                <th width="50%">Todo Task</th>
+                                <th width="15%">User Name</th>
+                                <th>Duedate</th>
+                                <th>FileUpload</th>
+                                <th>Done</th>
                             </tr>
                         </thead>
                         <tbody>
                             @foreach (var item in Model)
                             {
-                            <tr>
-                                <td>
-                                    <a href="/Todo/Form/@item.TodoId"><i class="fa fa-edit"></i></a>
 
-                                    @if (roles.Contains("SuperAdmin"))
-                                    {
+                                <tr>
+                                    <td>
+                                        <a href="/Todo/Form/@item.TodoId"><i class="fa fa-edit"></i></a>
+                                        &nbsp; &nbsp; &nbsp; &nbsp;
+                                        @if (roles.Contains("SuperAdmin"))
+                                        {
+                                            <a href="/Todo/Delete/@item.TodoId"><i class="fa fa-trash"></i></a>
+                                        }
+                                    </td>
 
-                                        <a href="/Todo/Delete/@item.TodoId"><i class="fa fa-trash"></i></a>
-
-                                    }
-                                </td>
-                                <td><span style="text-decoration-line:@(item.IsDone ? "line-through" : "none")">@item.TodoItem</span></td>
-                                <td>
-                                    @item.Users
-                                </td>
-                                <td>
-                                    @item.Duedate.Value.ToString("dd MMMM yyyy")
-                                </td>
-                                <td>
-                                    <a asp-controller="Todo" asp-action="DownloadFile" asp-route-filename="@item.FileUpload"><i class="fa fa-download"></i></a>
-                                </td>
+                                    <td><span style="text-decoration-line:@(item.IsDone ? "line-through" : "none")">@item.TodoItem</span></td>
+                                    <td>
+                                        @item.Users
+                                    </td>
+                                    <td>
+                                        @item.Duedate.Value.ToString("dd MMMM yyyy")
+                                    </td>
+                                    <td>
+                                        @if (item.FileName != null)
+                                        { 
+                                            <a href="~/document/Todo/@item.FileName" target="_blank"><i class="fa fa-download"></i></a>
+                                        }
+                                    </td>
 
                                 <td>
                                     <input type="checkbox" class="flat-red" @(item.IsDone ? "checked" : "") onclick="return false;">

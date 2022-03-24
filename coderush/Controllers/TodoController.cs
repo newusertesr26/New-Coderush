@@ -53,10 +53,11 @@ namespace coderush.Controllers
                             Users = _context.Users.Where(x => x.Id == Todo.Users).Select(x => x.UserName).FirstOrDefault(),
                             TodoItem = Todo.TodoItem,
                             Duedate = Todo.Duedate,
-                            //FileUpload = Todo.FileUpload.ToString(),
+                            CreatedDate = Todo.CreatedDate,
+                            FileName =  Todo.FileUpload == null ? "" : Todo.FileUpload,
                             IsDone = Todo.IsDone,
 
-                        }).ToList();
+                        }).OrderByDescending(x=>x.CreatedDate).ToList();
             return View(tododata);
 
             //var todos = _context.Todo.OrderByDescending(x => x.CreatedDate).ToList();
@@ -112,32 +113,38 @@ namespace coderush.Controllers
 
                 string wwwPath = this._webHostEnvironment.WebRootPath;
                 string contentPath = this._webHostEnvironment.ContentRootPath;
-                var filename = todo.FileUpload.FileName;
-                string path = Path.Combine(this._webHostEnvironment.WebRootPath, "document/Todo");
-                //if (!Directory.Exists(path))
-                //{
-                //    Directory.CreateDirectory(path);
-                //}
+                var filename = "";
+                if (todo.FileUpload != null)
+                { 
+                 filename = todo.FileUpload.FileName;
+                    string path = Path.Combine(this._webHostEnvironment.WebRootPath, "document/Todo");
+                    //if (!Directory.Exists(path))
+                    //{
+                    //    Directory.CreateDirectory(path);
+                    //}
+                    List<string> uploadedFiles = new List<string>();
 
-                List<string> uploadedFiles = new List<string>();
-
-                string fileName = Path.GetFileName(todo.FileUpload.FileName);
-                using (FileStream stream = new FileStream(Path.Combine(path, fileName), FileMode.Create))
-                {
-                    todo.FileUpload.CopyTo(stream);
-                    uploadedFiles.Add(fileName);
+                    string fileName = Path.GetFileName(todo.FileUpload.FileName);
+                    using (FileStream stream = new FileStream(Path.Combine(path, fileName), FileMode.Create))
+                    {
+                        todo.FileUpload.CopyTo(stream);
+                        uploadedFiles.Add(fileName);
+                    }
                 }
-
                 //create new
                 if (todo.TodoId == null)
                 {
                     Todo newTodo = new Todo();
                     newTodo.TodoId = Guid.NewGuid().ToString();
                     newTodo.Duedate = todo.Duedate;
-                    newTodo.FileUpload = todo.FileUpload.FileName.ToString();
+                    if (todo.FileUpload != null)
+                        newTodo.FileUpload = todo.FileUpload.FileName.ToString();
+                    else
+                        newTodo.FileUpload = null;
                     newTodo.CreatedDate = DateTime.Now;
                     newTodo.Users = todo.Users;
                     newTodo.TodoItem = todo.TodoItem;
+                    newTodo.Duedate= todo.Duedate;
                     newTodo.IsDone = todo.IsDone;
                     _context.Todo.Add(newTodo);
                     _context.SaveChanges();
@@ -152,7 +159,11 @@ namespace coderush.Controllers
                 editTodo.TodoItem = todo.TodoItem;
                 editTodo.Duedate = todo.Duedate;
                 editTodo.Users = todo.Users;
-                editTodo.FileUpload = todo.FileUpload.FileName.ToString();
+                if (editTodo.FileUpload != null)
+                    editTodo.FileUpload = todo.FileUpload.FileName.ToString();
+                else
+                    editTodo.FileUpload = null;
+
                 editTodo.IsDone = todo.IsDone;
                 _context.Update(editTodo);
                 _context.SaveChanges();
@@ -166,19 +177,6 @@ namespace coderush.Controllers
                 TempData[StaticString.StatusMessage] = "Error: " + ex.Message;
                 return RedirectToAction(nameof(Form), new { id = todo.TodoId ?? "" });
             }
-        }
-
-
-        public FileResult DownloadFile(string fileName)
-        {
-            //Build the File Path.
-            string path = Path.Combine(this._webHostEnvironment.WebRootPath, "document/Todo/") + fileName;
-
-            //Read the File data into Byte Array.
-            byte[] bytes = System.IO.File.ReadAllBytes(path);
-
-            //Send the File to Download.
-            return File(bytes, "application/octet-stream", fileName);
         }
 
         //display todo item for deletion
