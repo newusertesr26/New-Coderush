@@ -134,9 +134,9 @@
             }
             @if (roles.Contains("SuperAdmin") || roles.Contains("HR"))
             {
-                <li class="@Html.IsSelected(controller: Pages.Membership.ControllerName)">
-                    <a href="@Pages.Membership.UrlDefault">
-                        <i class="fa fa-th"></i> <span>@Pages.Membership.NavigationName</span>
+                <li class="@Html.IsSelected(controller: Pages.EmployeeMaster.ControllerName)">
+                    <a href="@Pages.EmployeeMaster.UrlDefault">
+                        <i class="fa fa-th"></i> <span>@Pages.EmployeeMaster.NavigationName</span>
                         <span class="pull-right-container">
                             <small class="label pull-right bg-green">List</small>
                         </span>
