@@ -1,4 +1,5 @@
-﻿using coderush.Data;
+﻿
+using coderush.Data;
 using coderush.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -15,6 +16,7 @@ using Microsoft.AspNetCore.Authorization;
 using coderush.Models.ViewModels;
 using Microsoft.AspNetCore.Hosting;
 using System.IO;
+using CodesDotHRMS.Models;
 
 namespace coderush.Controllers
 {
@@ -159,7 +161,7 @@ namespace coderush.Controllers
                 if (expenseMasters.FileUpload != null)
                 {
 
-                   string wwwPath = this._webHostEnvironment.WebRootPath;
+                    string wwwPath = this._webHostEnvironment.WebRootPath;
                     string contentPath = this._webHostEnvironment.ContentRootPath;
                     var filename = expenseMasters.FileUpload.FileName;
                     string path = Path.Combine(this._webHostEnvironment.WebRootPath, "document/Expense");
@@ -185,8 +187,9 @@ namespace coderush.Controllers
                     newexpenseMaster.Description = expenseMasters.Description;
                     newexpenseMaster.CreatedDate = DateTime.Now;
                     newexpenseMaster.ExpName = expenseMasters.ExpName;
-                    if (newexpenseMaster.FileUpload != null) { 
-                    newexpenseMaster.FileUpload = expenseMasters.FileUpload.FileName.ToString();
+                    if (newexpenseMaster.FileUpload != null)
+                    {
+                        newexpenseMaster.FileUpload = expenseMasters.FileUpload.FileName.ToString();
                     }
                     newexpenseMaster.Exptype = expenseMasters.Exptype;
                     newexpenseMaster.Amount = expenseMasters.Amount;
@@ -322,6 +325,55 @@ namespace coderush.Controllers
         {
             var Data = _context.ExpenseMaster.Where(x => x.Id == id).FirstOrDefault();
             return Json(Data);
+        }
+
+        //public ActionResult Notes(int id)
+        //{
+        //    if (id == 0)
+        //    {
+        //        return null;
+        //    }
+
+        //    Creadit model = new Creadit();
+
+        //    var models = _context.Creadit.Where(x => x.CandidateId.Equals(id)).ToList();
+
+        //    return Json(models);
+        //}
+        public ActionResult Notes()
+        {
+            //if (id == 0)
+            //{
+            //    return null;
+            //}
+
+            Credit model = new Credit();
+
+            var models = _context.Credit.ToList();
+
+            return Json(models);
+        }
+        public ActionResult SaveNotes(int Id, int Amount, string Managername, DateTime Createddate)
+        {
+
+            try
+            {
+                Credit models = new Credit();
+
+                models.Amount = Amount;
+                models.Managername = Managername;
+                models.Createddate = DateTime.Now;
+                _context.Credit.Add(models);
+                _context.SaveChanges();
+                var result = new { Success = "true", Message = "Data save successfully." };
+                return Json(result);
+            }
+            catch (Exception ex)
+            {
+                var result = new { Success = "False", Message = ex.Message };
+                return Json(result);
+            }
+
         }
 
         //[HttpPost]
