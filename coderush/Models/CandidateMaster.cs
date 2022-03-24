@@ -52,7 +52,10 @@ namespace coderush.Models
         public DateTime? CreatedDate { get; set; }
         public string UpdatedBy { get; set; }
         public DateTime? UpdatedDate { get; set; }
+      
+        public int? Status { get; set; }
 
+       // public string Schedule { get; set; }
     }
 
     public class CandidateMasterDetails
@@ -65,11 +68,7 @@ namespace coderush.Models
         public string Name { get; set; }
         public string Email { get; set; }
         public string Phone { get; set; }
-
-        public DateTime sdate { get; set; }
-        public DateTime edate { get; set; }
         public CandidateTechnologies Technologies { get; set; }
-        public List<CandidateMaster> List { get; set; }
     }
 
 }

@@ -27,10 +27,11 @@ namespace coderush.Models.ViewModels
         [Display(Name = "Technologies:")]
 
         public int Technologies { get; set; }
+        public string technologies { get; set; }
         [Display(Name = "CVUpload:")]
         [Required]
         public IFormFile FileUpload { get; set; }
-        public string filename{ get; set; }
+        public string filename { get; set; }
         [Display(Name = "Active:")]
         public bool IsActive { get; set; }
         [Display(Name = "Interview Date:")]
@@ -47,10 +48,19 @@ namespace coderush.Models.ViewModels
         public string InterviewDescription { get; set; }
         [Display(Name = "Reject:")]
         public bool IsReject { get; set; }
+        public string Color { get; set; }
         public bool IsDelete { get; set; }
         public string CreatedBy { get; set; }
         public DateTime? CreatedDate { get; set; }
+       
+        public DateTime? dateforNext { get; set; }
         public string UpdatedBy { get; set; }
         public DateTime? UpdatedDate { get; set; }
+        //  public Comments comment { get; set; }
+
+        public int? Status { get; set; }
+     //   public Comments comment { get; set; }
+
+        //  public string Schedule { get; set; }
     }
 }

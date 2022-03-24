@@ -30,13 +30,13 @@ namespace coderush.Services.App
             public const string UrlDefault = "/DataMaster/Index";
             public const string NavigationName = "Data";
         }
-        public static class LeadMaster
-        {
-            public const string ControllerName = "LeadMaster";
-            public const string RoleName = "LeadMaster";
-            public const string UrlDefault = "/LeadMaster/LeadIndex";
-            public const string NavigationName = "Lead";
-        }
+        //public static class LeadMaster
+        //{
+        //    public const string ControllerName = "LeadMaster";
+        //    public const string RoleName = "LeadMaster";
+        //    public const string UrlDefault = "/LeadMaster/LeadIndex";
+        //    public const string NavigationName = "Lead";
+        //}
         public static class ExpenseMaster
         {
             public const string ControllerName = "ExpenseMaster";
@@ -51,20 +51,20 @@ namespace coderush.Services.App
             public const string UrlDefault = "/CandidateMaster/CandidateIndex";
             public const string NavigationName = "Candidate";
         }
-        public static class ProjectMaster
-        {
-            public const string ControllerName = "ProjectMaster";
-            public const string RoleName = "ProjectMaster";
-            public const string UrlDefault = "/ProjectMaster/ProjectIndex";
-            public const string NavigationName = "Project";
-        }
-        public static class InvoiceMaster
-        {
-            public const string ControllerName = "InvoiceMaster";
-            public const string RoleName = "InvoiceMaster";
-            public const string UrlDefault = "/InvoiceMaster/InvoiceIndex";
-            public const string NavigationName = "Invoice";
-        }
+        //public static class ProjectMaster
+        //{
+        //    public const string ControllerName = "ProjectMaster";
+        //    public const string RoleName = "ProjectMaster";
+        //    public const string UrlDefault = "/ProjectMaster/ProjectIndex";
+        //    public const string NavigationName = "Project";
+        //}
+        //public static class InvoiceMaster
+        //{
+        //    public const string ControllerName = "InvoiceMaster";
+        //    public const string RoleName = "InvoiceMaster";
+        //    public const string UrlDefault = "/InvoiceMaster/InvoiceIndex";
+        //    public const string NavigationName = "Invoice";
+        //}
         public static class Leavecount
         {
             public const string ControllerName = "Leavecount";
@@ -87,12 +87,12 @@ namespace coderush.Services.App
             public const string NavigationName = "Home";
         }
 
-        public static class Membership
+        public static class EmployeeMaster
         {
-            public const string ControllerName = "Membership";
-            public const string RoleName = "Membership";
-            public const string UrlDefault = "/Membership/Index";
-            public const string NavigationName = "Membership";
+            public const string ControllerName = "EmployeeMaster";
+            public const string RoleName = "EmployeeMaster";
+            public const string UrlDefault = "/EmployeeMaster/Index";
+            public const string NavigationName = "EmployeeMaster";
         }
 
         public static class Role

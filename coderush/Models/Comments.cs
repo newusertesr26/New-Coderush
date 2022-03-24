@@ -13,12 +13,8 @@ namespace coderush.Models
         [Required]
         public string Note { get; set; }
         public int CandidateId { get; set; }
-
-        [Display(Name = "Date:")]
-        public string Date { get; set; }
-        public bool IsRejected { get; set; }
-
-
-
+        //[DataType(DataType.Date)]
+        public DateTime? NextFollowUpdate { get; set; }
+        public int? Status { get; set; }
     }
 }

@@ -17,7 +17,7 @@ namespace coderush.Models
         public string ExpName { get; set; }
         [Required]
         [Display(Name = "Type")]
-        public Expensestype Exptype { get; set; }
+        public int Exptype { get; set; }
         [Display(Name = "Amount:")]
         [Required]
         [RegularExpression("^[0-9]*$", ErrorMessage = "Amount must be numeric")]
@@ -40,17 +40,6 @@ namespace coderush.Models
 
     }
 
-    public class ExpensesMasterDetails
-    {
-        public List<ExpensesMasterDetailsViewModel> ExpensesMasterlist { get; set; }
-    }
-    public class ExpensesMasterDetailsViewModel
-    {
-        public int Id { get; set; }
-        public string ExpName { get; set; }
-        public string Exptype { get; set; }
-        public string Amount { get; set; }
-        public string Description { get; set; }
-    }
+   
 
 }

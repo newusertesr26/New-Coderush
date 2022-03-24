@@ -18,7 +18,8 @@ namespace coderush.Models.ViewModels
         public string ExpName { get; set; }
         [Required]
         [Display(Name = "Type")]
-        public Expensestype Exptype { get; set; }
+        public int Exptype { get; set; }
+        public string exptype { get; set; }
         [Display(Name = "Amount:")]
         [Required]
         [RegularExpression("^[0-9]*$", ErrorMessage = "Amount must be numeric")]
@@ -34,6 +35,7 @@ namespace coderush.Models.ViewModels
         public string Description { get; set; }
         [Display(Name = "CVUpload:")]
         public IFormFile FileUpload { get; set; }
+        public string filename { get; set; }
         [Display(Name = "isactive:")]
         public bool isactive { get; set; }
         public bool Isdelete { get; set; }
