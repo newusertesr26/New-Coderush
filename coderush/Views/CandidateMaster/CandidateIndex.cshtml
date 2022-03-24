@@ -71,7 +71,7 @@
                     <table id="grid" class="table table-striped" cellspacing="0" width="100%">
                         <thead>
                             <tr>
-                                <th>Action</th>
+                                <th>Sr No.</th>
                                 <th width="20%">Name</th>
                                 <th width="10%">Email</th>
                                 <th width="8%">Phone</th>
@@ -98,87 +98,93 @@
                                     dtDateTime = dtDateTime.AddSeconds(item.InterviewTime.Value.TotalSeconds).ToLocalTime();
                                 }
                                 
-                                <tr style="background-color:@item.Color">
-                                    <td>
-                                        @item.Id
-                                    </td>
-                                    <td>
-                                        @item.Name
-                                    </td>
-                                    <td>
-                                        @item.Email
-                                    </td>
-                                    <td>
-                                        @item.Phone
-                                    </td>
-                                    <td>
-                                        @item.technologies
-                                    </td>
-                                    <td>
-                                        @*@item.FileUpload
-                                            <br />
-                                             @Html.ActionLink("Download", "DownloadFile", new { fileName = item.FileUpload })*@
-                                        @*<a asp-controller="CandidateMaster" asp-action="DownloadFile" asp-route-filename="@item.FileUpload"><i class="fa fa-download"></i></a>*@
-                                        <a href="~/document/Candidate/@item.filename" target="_blank"><i class="fa fa-download"></i></a>
-                                    </td>
-                                    <td>
-                                        @item.InterviewDate.Value.ToString("dd MMMM yyyy")
-                                    </td>
-                                    <td>
-                                        @item.PlaceOfInterview
-                                    </td>
-                                    <td>
-                                        @(item.InterviewTime.HasValue? dtDateTime.ToString("hh:mm tt", CultureInfo.InvariantCulture):"")
-                                    </td>
-                                    <td>
-                                        @item.InterviewDescription
-                                    </td>
-                                    <td>
-                                        @*@item.dateforNext*@
-                                        @{ 
-                                            if (item.dateforNext != null)
-                                            {
-                                              @item.dateforNext.Value.ToString("dd MMMM yyyy");
-                                            }
-                                            else
-                                            {
-                                                <label></label>
-                                            }
-                                        }
-                                       
-                                    </td>
-                                    <td>
-
-                                        @{
-                                            if (item.Status == 1)
-                                            {
-                                                <p>Schedule Interview</p>
-                                            }
-                                            else if (item.Status == 2)
-                                            {
-                                                <p>Inprogress Interview</p>
-                                            }
-                                            else if (item.Status == 3)
-                                            {
-                                                <p>Done</p>
-                                            }
-
-                                        }
-                                    </td>
-
-
-                                    @*<td><span style="text-decoration-line:@(item.Isactive ? "line-through" : "none")">@item.Isactive</span></td>*@
-                                    <td>
-                                        <a href="#"><i id="myModal" onclick="openNote(@item.Id)" &nbsp; class="fa fa-comments-o"></i></a>
-                                    </td>
-                                    <td>
-                                        <a href="/CandidateMaster/Form/@item.Id"><i class="fa fa-edit"></i></a> &nbsp; &nbsp;
-                                        @if (roles.Contains("SuperAdmin"))
+                            <tr style="background-color:@item.Color">
+                                <td>
+                                    @item.Id
+                                </td>
+                                <td>
+                                    @item.Name
+                                </td>
+                                <td>
+                                    @item.Email
+                                </td>
+                                <td>
+                                    @item.Phone
+                                </td>
+                                <td>
+                                    @item.technologies
+                                </td>
+                                <td>
+                                    @*@item.FileUpload
+            <br />
+             @Html.ActionLink("Download", "DownloadFile", new { fileName = item.FileUpload })*@
+                                    @*<a asp-controller="CandidateMaster" asp-action="DownloadFile" asp-route-filename="@item.FileUpload"><i class="fa fa-download"></i></a>*@
+                                    <a href="~/document/Candidate/@item.filename" target="_blank"><i class="fa fa-download"></i></a>
+                                </td>
+                                <td>
+                                    @item.InterviewDate.Value.ToString("dd MMMM yyyy")
+                                </td>
+                                <td>
+                                    @item.PlaceOfInterview
+                                </td>
+                                <td>
+                                    @(item.InterviewTime.HasValue? dtDateTime.ToString("hh:mm tt", CultureInfo.InvariantCulture):"")
+                                </td>
+                                <td>
+                                    @item.InterviewDescription
+                                </td>
+                                <td>
+                                    @item.CreatedBy
+                                </td>
+                                <td>
+                                    @item.CreatedDate
+                                </td>
+                                <td>
+                                    
+                                    @{
+                                        if (item.dateforNext != null)
                                         {
-                                            <a href="/CandidateMaster/Delete/@item.Id"><i class="fa fa-trash"></i></a>
+                                            @item.dateforNext.Value.ToString("dd MMMM yyyy");
                                         }
-                                    </td>
-                                </tr>
+                                        else
+                                        {
+                                            <label></label>
+                                        }
+                                    }
+
+                                </td>
+                                <td>
+                                    @*@item.Status*@
+                                    @{
+                                        if (item.Status == 1)
+                                        {
+                                            <p>Schedule Interview</p>
+                                        }
+                                        else if (item.Status == 2)
+                                        {
+                                            <p>Inprogress Interview</p>
+                                        }
+                                        else if (item.Status == 3)
+                                        {
+                                            <p>Done</p>
+                                        }
+
+                                    }
+                                </td>
+
+
+                                @*<td><span style="text-decoration-line:@(item.Isactive ? "line-through" : "none")">@item.Isactive</span></td>*@
+                                <td>
+                                    <a href="#"><i id="myModal" onclick="openNote(@item.Id)" &nbsp; class="fa fa-comments-o"></i></a>
+                                </td>
+                                <td>
+                                    <a href="/CandidateMaster/Form/@item.Id"><i class="fa fa-edit"></i></a> &nbsp; &nbsp;
+                                    @if (roles.Contains("SuperAdmin"))
+                                    {
+                                        <a href="/CandidateMaster/Delete/@item.Id"><i class="fa fa-trash"></i></a>
+                                    }
+                                </td>
+                            </tr>
                             }
                         </tbody>
                     </table>
@@ -424,7 +430,7 @@
                     if (response.success == "true") {
                         alert(response.message);
                         $("#addComments").modal("hide");
-                        window.location.href ="/CandidateMaster/CandidateIndex"
+                        window.location.href = "/CandidateMaster/CandidateIndex";
                     }
                 },
                 error: function (response) {

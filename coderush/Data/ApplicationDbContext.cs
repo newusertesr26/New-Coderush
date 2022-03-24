@@ -1,4 +1,5 @@
 ﻿using coderush.Models;
+using CodesDotHRMS.Models;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
@@ -25,6 +26,8 @@ namespace coderush.Data
         public DbSet<RoleDetails> RoleDetails { get; set; }
         public DbSet<LeaveHistory> LeaveHistory { get; set; }
         public DbSet<Comments> Comments { get; set; }
+        public DbSet<Credit> Credit { get; set; }
+        //public DbSet<Creadit> Creadit { get; set; }
         public DbSet<Contact> Contact { get; set; }
         public DbSet<Hire> Hire { get; set; }
 
