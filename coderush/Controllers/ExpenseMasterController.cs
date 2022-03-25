@@ -383,7 +383,6 @@ namespace coderush.Controllers
             Credit model = new Credit();
 
             var models = _context.Credit.ToList();
-
             return Json(models);
         }
         public ActionResult SaveNotes(int Id, int Amount, string Managername, DateTime Createddate)
@@ -395,7 +394,7 @@ namespace coderush.Controllers
 
                 models.Amount = Amount;
                 models.Managername = Managername;
-                models.Createddate = DateTime.Now;
+                models.Createddate = DateTime.Now.Date;
                 _context.Credit.Add(models);
                 _context.SaveChanges();
                 var result = new { Success = "true", Message = "Data save successfully." };

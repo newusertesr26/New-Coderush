@@ -22,5 +22,7 @@ namespace coderush.Models.ViewModels
         [Display(Name = "Is Done?")]
         public bool IsDone { get; set; }
         public DateTime? CreatedDate { get; set; }
+        public string FileName{ get; set; }
+
     }
 }
