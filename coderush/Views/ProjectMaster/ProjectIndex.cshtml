@@ -2,6 +2,16 @@
 @{ ViewData["Title"] = "Project"; }
 
 
+
+<style>
+    .shortspan {
+        display: inline-block;
+        width: 50px;
+        white-space: nowrap;
+        overflow: hidden !important;
+        text-overflow: ellipsis;
+    }
+</style>
 <!-- Content Wrapper. Contains page content -->
 <div class="content-wrapper">
     <!-- Content Header (Page header) -->
@@ -58,7 +68,7 @@
                                     @item.Technologies
                                 </td>
                                 <td>
-                                    @item.Description
+                                    <p class="tooltips shortspan" data-placement="bottom" title="@item.Description"> @item.Description</p>
                                 </td>
                                 <td>
                                     @item.ManagerName
@@ -126,6 +136,10 @@
                 dom: 'lrtip',
                 scrollX: false,
                 pageLength: 25,
+            });
+
+            $(".tooltips").tooltip({
+                $(".tooltips").css("max-width: 100% !important")
             });
         });
 

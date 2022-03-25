@@ -5,12 +5,12 @@ using System.Threading.Tasks;
 
 namespace coderush.DataEnum
 {
-        public enum DataSelection
-        {
-            Expenses = 1,
-            LEAVE = 2,
-            technologies = 3
-        }
+    public enum DataSelection
+    {
+        Expenses = 1,
+        LEAVE = 2,
+        technologies = 3
+    }
     public enum CandidateTechnologies
     {
         Asp_net = 1,
@@ -38,5 +38,5 @@ namespace coderush.DataEnum
         React = 3,
         Shopify = 4
     }
-  
+
 }
