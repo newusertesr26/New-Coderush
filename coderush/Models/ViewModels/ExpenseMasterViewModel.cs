@@ -28,7 +28,6 @@ namespace coderush.Models.ViewModels
         [Required]
         [Display(Name = "Expense Date:")]
         public DateTime? ExpenseDate { get; set; }
-
         [Display(Name = "Description:")]
         [Required]
         [StringLength(60, MinimumLength = 3)]

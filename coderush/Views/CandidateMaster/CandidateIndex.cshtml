@@ -9,6 +9,16 @@
     var user = await _userManager.GetUserAsync(User);
     var roles = await _userManager.GetRolesAsync(user);
 }
+
+<style>
+    .shortspan {
+        display: inline-block;
+        width: 50px;
+        white-space: nowrap;
+        overflow: hidden !important;
+        text-overflow: ellipsis;
+    }
+</style>
 <!-- Content Wrapper. Contains page content -->
 <div class="content-wrapper">
     <!-- Content Header (Page header) -->
@@ -30,12 +40,12 @@
 
                     <div class="col-lg-3">
                         <label>From Date:</label>
-                        <input id="canFromDate"  type="date" class="form-control" />
+                        <input id="canFromDate" type="date" class="form-control" />
                     </div>
                     @*Start Date: <input type="datetime" name="sdate" />*@
                     <div class="col-lg-3">
                         <label>TO:</label>
-                        <input id="canTO"  type="date" class="form-control" />
+                        <input id="canTO" type="date" class="form-control" />
 
                     </div>
                     <div class="col-lg-3">
@@ -46,17 +56,17 @@
                             <option value="3"> Current Month </option>
                         </select>
                     </div>
-                        <div class="col-lg-3">
-                            <a href="/CandidateMaster/CandidateIndex" class="btn btn-primary" style="margin-top: 25px" id="btnSearch">Search</a>
+                    <div class="col-lg-3">
+                        <a href="/CandidateMaster/CandidateIndex" class="btn btn-primary" style="margin-top: 25px" id="btnSearch">Search</a>
 
-                        </div>
-                        @*<a href="/CandidateMaster/CandidateIndex?lastmont=1" class="btn btn-primary" style="margin-top: 25px" id="btnLastMonth">Last Month</a>
+                    </div>
+                    @*<a href="/CandidateMaster/CandidateIndex?lastmont=1" class="btn btn-primary" style="margin-top: 25px" id="btnLastMonth">Last Month</a>
                         <a href="/CandidateMaster/CandidateIndex?curentmonth=2" class="btn btn-primary" style="margin-top: 25px" id="btnCurrentMonth">Current Month</a>*@
-                    
+
                 </div>
                 <br />
                 <br />
-                 @*<div class="col-md-4">
+                @*<div class="col-md-4">
                         <select name="type" class="form-control" style="" id="btnddl" asp-items="@ViewBag.CandidatetechnologiesList">
                             <option value="">-- ALL --</option>
                         </select>
@@ -96,98 +106,98 @@
                                 {
                                     dtDateTime = dtDateTime.AddSeconds(item.InterviewTime.Value.TotalSeconds).ToLocalTime();
                                 }
-                                
-                            <tr style="background-color:@item.Color">
-                                <td>
-                                    @item.Id
-                                </td>
-                                <td>
-                                    @item.Name
-                                </td>
-                                <td>
-                                    @item.Email
-                                </td>
-                                <td>
-                                    @item.Phone
-                                </td>
-                                <td>
-                                    @item.technologies
-                                </td>
-                                <td>
-                                    @*@item.FileUpload
-            <br />
-             @Html.ActionLink("Download", "DownloadFile", new { fileName = item.FileUpload })*@
-                                    @*<a asp-controller="CandidateMaster" asp-action="DownloadFile" asp-route-filename="@item.FileUpload"><i class="fa fa-download"></i></a>*@
-                                    <a href="~/document/Candidate/@item.filename" target="_blank"><i class="fa fa-download"></i></a>
-                                </td>
-                                <td>
-                                    @item.InterviewDate.Value.ToString("dd MMMM yyyy")
-                                    &nbsp; &nbsp;
-                                    &nbsp;
-                                    @(item.InterviewTime.HasValue? dtDateTime.ToString("hh:mm tt", CultureInfo.InvariantCulture):"")
-                                </td>
-                                <td>
-                                    @item.PlaceOfInterview
-                                </td>
-                                <td>
-                                    @item.InterviewDescription
-                                </td>
-                                <td>
-                                    @item.CreatedBy
-                                </td>
-                                <td>
-                                    @item.CreatedDate
-                                </td>
-                                <td>
 
-                                    @{
-                                        if (item.dateforNext != null)
-                                        {
-                                            @item.dateforNext.Value.ToString("dd MMMM yyyy");
-                                        }
-                                        else
-                                        {
-                                            <label></label>
-                                        }
-                                    }
+                                <tr style="background-color:@item.Color">
+                                    <td>
+                                        @item.Id
+                                    </td>
+                                    <td>
+                                        @item.Name
+                                    </td>
+                                    <td>
+                                        @item.Email
+                                    </td>
+                                    <td>
+                                        @item.Phone
+                                    </td>
+                                    <td>
+                                        @item.technologies
+                                    </td>
+                                    <td>
+                                        @*@item.FileUpload
+                                            <br />
+                                             @Html.ActionLink("Download", "DownloadFile", new { fileName = item.FileUpload })*@
+                                        @*<a asp-controller="CandidateMaster" asp-action="DownloadFile" asp-route-filename="@item.FileUpload"><i class="fa fa-download"></i></a>*@
+                                        <a href="~/document/Candidate/@item.filename" target="_blank"><i class="fa fa-download"></i></a>
+                                    </td>
+                                    <td>
+                                        @item.InterviewDate.Value.ToString("dd MMMM yyyy")
+                                        &nbsp; &nbsp;
+                                        &nbsp;
+                                        @(item.InterviewTime.HasValue? dtDateTime.ToString("hh:mm tt", CultureInfo.InvariantCulture):"")
+                                    </td>
+                                    <td>
+                                        @item.PlaceOfInterview
+                                    </td>
+                                    <td>
+                                        <p class="tooltips shortspan" data-placement="bottom" title="@item.InterviewDescription"> @item.InterviewDescription</p>
+                                    </td>
+                                    <td>
+                                        @item.CreatedBy
+                                    </td>
+                                    <td>
+                                        @item.CreatedDate
+                                    </td>
+                                    <td>
 
-                                </td>
-                                <td>
-                                    @*@item.Status*@
-                                    @{
-                                        if (item.Status == 1)
-                                        {
-                                            <p>Schedule Interview</p>
-                                        }
-                                        else if (item.Status == 2)
-                                        {
-                                            <p>Inprogress Interview</p>
-                                        }
-                                        else if (item.Status == 3)
-                                        {
-                                            <p>Done</p>
-                                        }
-                                        else if (item.Status == 0)
-                                        {
-                                <p>--Select--</p>
+                                        @{
+                                            if (item.dateforNext != null)
+                                            {
+                                                @item.dateforNext.Value.ToString("dd MMMM yyyy");
+                                            }
+                                            else
+                                            {
+                                                <label></label>
+                                            }
                                         }
 
-                                    }
-                                </td>
+                                    </td>
+                                    <td>
+                                        @*@item.Status*@
+                                        @{
+                                            if (item.Status == 1)
+                                            {
+                                                <p>Schedule Interview</p>
+                                            }
+                                            else if (item.Status == 2)
+                                            {
+                                                <p>Inprogress Interview</p>
+                                            }
+                                            else if (item.Status == 3)
+                                            {
+                                                <p>Done</p>
+                                            }
+                                            else if (item.Status == 0)
+                                            {
+                                                <p>--Select--</p>
+                                            }
+
+                                        }
+                                    </td>
 
 
-                                @*<td><span style="text-decoration-line:@(item.Isactive ? "line-through" : "none")">@item.Isactive</span></td>*@
-                                <td>
-                                    <a href="#"><i id="myModal" onclick="openNote(@item.Id)" &nbsp; class="fa fa-comments-o"></i></a>
-                                </td>
-                                <td>
-                                    <a href="/CandidateMaster/Form/@item.Id"><i class="fa fa-edit"></i></a> &nbsp; &nbsp;
-                                    @if (roles.Contains("SuperAdmin"))
-                                    {
-                                        <a href="/CandidateMaster/Delete/@item.Id"><i class="fa fa-trash"></i></a>
-                                    }
-                                </td>
-                            </tr>
+                                    @*<td><span style="text-decoration-line:@(item.Isactive ? "line-through" : "none")">@item.Isactive</span></td>*@
+                                    <td>
+                                        <a href="#"><i id="myModal" onclick="openNote(@item.Id)" &nbsp; class="fa fa-comments-o"></i></a>
+                                    </td>
+                                    <td>
+                                        <a href="/CandidateMaster/Form/@item.Id"><i class="fa fa-edit"></i></a> &nbsp; &nbsp;
+                                        @if (roles.Contains("SuperAdmin"))
+                                        {
+                                            <a href="/CandidateMaster/Delete/@item.Id"><i class="fa fa-trash"></i></a>
+                                        }
+                                    </td>
+                                </tr>
                             }
                         </tbody>
                     </table>
@@ -289,19 +299,23 @@
                 pageLength: 25,
             });
 
-                $('#canFromDate').on('change', function (e) {
-                    var candidateFromDate = $('#canFromDate').val();
-                    var candidateTo = $('#canTO').val();
-                    var newUrl = "\CandidateIndex?sdate=" + candidateFromDate + "&edate=" + candidateTo;
-                    $("#btnSearch").attr("href", newUrl); // Set herf value
+            $(".tooltips").tooltip({
+                $(".tooltips").css("max-width: 100% !important")
+            });
 
-                });
+            $('#canFromDate').on('change', function (e) {
+                var candidateFromDate = $('#canFromDate').val();
+                var candidateTo = $('#canTO').val();
+                var newUrl = "\CandidateIndex?sdate=" + candidateFromDate + "&edate=" + candidateTo;
+                $("#btnSearch").attr("href", newUrl); // Set herf value
 
-                $('#canTO').on('change', function (e) {
-                    var candidateFromDate = $('#canFromDate').val();
-                    var candidateTo = $('#canTO').val();
-                    var newUrl = "\CandidateIndex?sdate=" + candidateFromDate + "&edate=" + candidateTo;
-                    $("#btnSearch").attr("href", newUrl); // Set herf value
+            });
+
+            $('#canTO').on('change', function (e) {
+                var candidateFromDate = $('#canFromDate').val();
+                var candidateTo = $('#canTO').val();
+                var newUrl = "\CandidateIndex?sdate=" + candidateFromDate + "&edate=" + candidateTo;
+                $("#btnSearch").attr("href", newUrl); // Set herf value
 
             });
 
@@ -325,12 +339,12 @@
                 //$("#btnSearch").attr("href", newUrl); // Set herf value
             });
 
-           
-           
+
+
             $("#dropdown").on('change', function () {
                 debugger
                 var ddvalue = $("#dropdown").val();
-                
+
                 //if (ddvalue == 1) {
                 //    debugger
                 //        var candidatefromdate = $("#canfromdate").val();
@@ -341,21 +355,21 @@
 
                 //}
 
-                 if (ddvalue == 2) {
-                    window.location.href =  "\candidateindex?lastmont=" + ddvalue;
-                   
+                if (ddvalue == 2) {
+                    window.location.href = "\candidateindex?lastmont=" + ddvalue;
+
                 }
                 else {
                     window.location.href = "\candidateindex?curentmonth=" + ddvalue;
-                    
+
                 }
 
             });
-          
+
 
         });
 
-   
+
 
         function openNote(id) {
             $("#notes").val("");
@@ -412,7 +426,7 @@
             //    return false;
             //}
 
-            
+
 
             var requestdata = {
                 "Id": id,
@@ -441,8 +455,8 @@
 
         });
 
-  
- 
+
+
     </script>
 
 }

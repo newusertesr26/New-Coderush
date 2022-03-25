@@ -1,7 +1,15 @@
 ﻿@model List<DataMaster>
 @{ ViewData["Title"] = "Data"; }
 
-
+<style>
+    .shortspan {
+        display: inline-block;
+        width: 50px;
+        white-space: nowrap;
+        overflow: hidden !important;
+        text-overflow: ellipsis;
+    }
+</style>
 <!-- Content Wrapper. Contains page content -->
 <div class="content-wrapper">
     <!-- Content Header (Page header) -->
@@ -68,7 +76,7 @@
                                             @item.Text
                                         </td>
                                         <td>
-                                            @item.Description
+                                            <p class="tooltips shortspan" data-placement="bottom" title="@item.Description"> @item.Description</p>
                                         </td>
                                         <td>
                                             @item.Type
@@ -126,6 +134,10 @@
                 dom: 'lrtip',
                 scrollX: false,
                 pageLength: 25,
+            });
+
+            $(".tooltips").tooltip({
+                $(".tooltips").css("max-width: 100% !important")
             });
 
             var number = parseInt(@ViewBag.key);
