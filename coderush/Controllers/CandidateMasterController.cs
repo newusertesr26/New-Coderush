@@ -87,6 +87,7 @@ namespace coderush.Controllers
              where !candidate.IsDelete
              let commentdate = _context.Comments.OrderByDescending(x => x.Id).Where(w => w.CandidateId == candidate.Id).Select(s => s.NextFollowUpdate).FirstOrDefault()
              let last7Day = DateTime.Now.AddDays(-8)
+             orderby candidate.Id descending
              select new CandidateMastersViewModel
 
              {
