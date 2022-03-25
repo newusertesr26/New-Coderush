@@ -31,7 +31,7 @@ namespace coderush.Models.ViewModels
 
         [Display(Name = "Description:")]
         [Required]
-        [StringLength(60, MinimumLength = 3)]
+        //[StringLength(60, MinimumLength = 3)]
         public string Description { get; set; }
         [Display(Name = "CVUpload:")]
         public IFormFile FileUpload { get; set; }
