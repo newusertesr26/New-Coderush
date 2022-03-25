@@ -15,7 +15,15 @@
         overflow: hidden !important;
         text-overflow: ellipsis;
     }
-     
+  
+
+    .tooltip-inner {
+        max-width: 500px;
+        display: inline-block;
+        word-break: break-all;
+        overflow-wrap: break-word;
+    }
+
 </style>
 
 <script src="jquery-3.5.1.min.js"></script>
@@ -177,7 +185,7 @@
                                         @item.ExpenseDate.Value.ToString("dd MMMM yyyy")
                                     </td>
                                     <td>
-                                        <p class="tooltips shortspan"  data-placement="bottom" title="@item.Description"> @item.Description</p>
+                                        <p class="tooltips shortspan"  data-placement="top" title="@item.Description"> @item.Description</p>
                                     </td>
                                     <td>
                                         @item.CreatedBy
@@ -251,11 +259,12 @@
                 scrollX: false,
                 pageLength: 25,
             });
+            $(".tooltips").tooltip();
+                
+            //$(".tooltips").tooltip({
+            //  "max- width: 400px"
 
-            $(".tooltips").tooltip({
-              "max- width: 400px"
-               // $("#tool").css("max-width: 100% !important");
-            });
+            //});
             //$("#tooltip").mouseover();
             //$("#tooltip").hover(function () {
             //    $("#tooltiptext").display();

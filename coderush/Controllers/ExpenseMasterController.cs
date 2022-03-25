@@ -1,5 +1,4 @@
-﻿
-using coderush.Data;
+﻿using coderush.Data;
 using coderush.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -16,7 +15,6 @@ using Microsoft.AspNetCore.Authorization;
 using coderush.Models.ViewModels;
 using Microsoft.AspNetCore.Hosting;
 using System.IO;
-using CodesDotHRMS.Models;
 
 namespace coderush.Controllers
 {
@@ -109,7 +107,8 @@ namespace coderush.Controllers
                     ViewBag.enddate = edate;
                     //serchadata = _context.ExpenseMaster.Where(x => !x.Isdelete && x.CreatedDate >= Convert.ToDateTime(sdate) && x.UpdatedDate <= Convert.ToDateTime(edate)).ToList();
                    // serchadata = _context.ExpenseMaster.Where(x => !x.Isdelete && x.CreatedDate >= Convert.ToDateTime(sdate)).ToList();
-                  
+                    return View(serchadata);
+
                     data = data.Where(x => x.Isdelete == false
                                          && x.ExpenseDate >= Convert.ToDateTime(sdate) && x.ExpenseDate <= Convert.ToDateTime(edate)).ToList();
                 }
@@ -189,7 +188,7 @@ namespace coderush.Controllers
                 if (expenseMasters.FileUpload != null)
                 {
 
-                    string wwwPath = this._webHostEnvironment.WebRootPath;
+                   string wwwPath = this._webHostEnvironment.WebRootPath;
                     string contentPath = this._webHostEnvironment.ContentRootPath;
                     var filename = expenseMasters.FileUpload.FileName;
                     string path = Path.Combine(this._webHostEnvironment.WebRootPath, "document/Expense");
@@ -276,6 +275,7 @@ namespace coderush.Controllers
                 Value = ((int)v.Id).ToString(),
             }).ToList();
 
+            var user = _userManager.GetUserAsync(User).Result;
             //create new
             if (id == 0)
             {
@@ -287,6 +287,18 @@ namespace coderush.Controllers
             ExpenseMasterViewModel editnewexpensemaster = new ExpenseMasterViewModel();
             var expensemaster = _context.ExpenseMaster.Where(x => x.Id.Equals(id)).FirstOrDefault();
             editnewexpensemaster.Id = expensemaster.Id;
+            editnewexpensemaster.ExpName = expensemaster.ExpName;
+            editnewexpensemaster.Exptype = expensemaster.Exptype;
+            editnewexpensemaster.Amount = expensemaster.Amount;
+            editnewexpensemaster.ExpenseDate = expensemaster.ExpenseDate;
+            //if (editexpensemaster.FileUpload != null)
+            //{
+            //    editexpensemaster.FileUpload = expenseMasters.FileUpload.FileName.ToString();
+            //}
+            editnewexpensemaster.Description = expensemaster.Description;
+            editnewexpensemaster.UpdatedBy = user.Id;
+            editnewexpensemaster.UpdatedDate = DateTime.Now;
+            editnewexpensemaster.isactive = expensemaster.isactive;
 
 
             if (editnewexpensemaster == null)
@@ -358,54 +370,6 @@ namespace coderush.Controllers
         {
             var Data = _context.ExpenseMaster.Where(x => x.Id == id).FirstOrDefault();
             return Json(Data);
-        }
-
-        //public ActionResult Notes(int id)
-        //{
-        //    if (id == 0)
-        //    {
-        //        return null;
-        //    }
-
-        //    Creadit model = new Creadit();
-
-        //    var models = _context.Creadit.Where(x => x.CandidateId.Equals(id)).ToList();
-
-        //    return Json(models);
-        //}
-        public ActionResult Notes()
-        {
-            //if (id == 0)
-            //{
-            //    return null;
-            //}
-
-            Credit model = new Credit();
-
-            var models = _context.Credit.ToList();
-            return Json(models);
-        }
-        public ActionResult SaveNotes(int Id, int Amount, string Managername, DateTime Createddate)
-        {
-
-            try
-            {
-                Credit models = new Credit();
-
-                models.Amount = Amount;
-                models.Managername = Managername;
-                models.Createddate = DateTime.Now.Date;
-                _context.Credit.Add(models);
-                _context.SaveChanges();
-                var result = new { Success = "true", Message = "Data save successfully." };
-                return Json(result);
-            }
-            catch (Exception ex)
-            {
-                var result = new { Success = "False", Message = ex.Message };
-                return Json(result);
-            }
-
         }
 
         //[HttpPost]
