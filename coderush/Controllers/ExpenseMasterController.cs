@@ -396,7 +396,7 @@ namespace coderush.Controllers
 
                 models.Amount = Amount;
                 models.Managername = Managername;
-                models.Createddate = DateTime.Now;
+                models.Creditdate = DateTime.Now;
                 _context.Credit.Add(models);
                 _context.SaveChanges();
                 var result = new { Success = "true", Message = "Data save successfully." };

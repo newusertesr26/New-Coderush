@@ -15,6 +15,6 @@ namespace CodesDotHRMS.Models
         public string Managername { get; set; }
 
         [Display(Name = "Date:")]
-        public DateTime? Createddate { get; set; }
+        public DateTime? Creditdate { get; set; }
     }
 }

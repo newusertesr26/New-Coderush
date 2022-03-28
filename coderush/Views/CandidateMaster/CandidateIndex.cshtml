@@ -8,7 +8,12 @@
 @{ ViewData["Title"] = "Candidate";
     var user = await _userManager.GetUserAsync(User);
     var roles = await _userManager.GetRolesAsync(user);
+
 }
+@*@{
+    var currentDate = System.DateTime.Now;
+    var COLOR = "";
+}*@
 <!-- Content Wrapper. Contains page content -->
 <div class="content-wrapper">
     <!-- Content Header (Page header) -->
@@ -30,12 +35,12 @@
 
                     <div class="col-lg-3">
                         <label>From Date:</label>
-                        <input id="canFromDate"  type="date" class="form-control" />
+                        <input id="canFromDate" type="date" class="form-control" />
                     </div>
                     @*Start Date: <input type="datetime" name="sdate" />*@
                     <div class="col-lg-3">
                         <label>TO:</label>
-                        <input id="canTO"  type="date" class="form-control" />
+                        <input id="canTO" type="date" class="form-control" />
 
                     </div>
                     <div class="col-lg-3">
@@ -46,17 +51,17 @@
                             <option value="3"> Current Month </option>
                         </select>
                     </div>
-                        <div class="col-lg-3">
-                            <a href="/CandidateMaster/CandidateIndex" class="btn btn-primary" style="margin-top: 25px" id="btnSearch">Search</a>
+                    <div class="col-lg-3">
+                        <a href="/CandidateMaster/CandidateIndex" class="btn btn-primary" style="margin-top: 25px" id="btnSearch">Search</a>
 
-                        </div>
-                        @*<a href="/CandidateMaster/CandidateIndex?lastmont=1" class="btn btn-primary" style="margin-top: 25px" id="btnLastMonth">Last Month</a>
+                    </div>
+                    @*<a href="/CandidateMaster/CandidateIndex?lastmont=1" class="btn btn-primary" style="margin-top: 25px" id="btnLastMonth">Last Month</a>
                         <a href="/CandidateMaster/CandidateIndex?curentmonth=2" class="btn btn-primary" style="margin-top: 25px" id="btnCurrentMonth">Current Month</a>*@
-                    
+
                 </div>
                 <br />
                 <br />
-                 @*<div class="col-md-4">
+                @*<div class="col-md-4">
                         <select name="type" class="form-control" style="" id="btnddl" asp-items="@ViewBag.CandidatetechnologiesList">
                             <option value="">-- ALL --</option>
                         </select>
@@ -90,6 +95,7 @@
                             </tr>
                         </thead>
                         <tbody>
+
                             @foreach (var item in Model)
                             {
                                 var dtDateTime = DateTime.Now;
@@ -97,7 +103,16 @@
                                 {
                                     dtDateTime = dtDateTime.AddSeconds(item.InterviewTime.Value.TotalSeconds).ToLocalTime();
                                 }
-                                
+
+                                @*@if (DateTime.Today.AddDays(-8) < currentDate)
+                                {
+                                    COLOR = "";
+                                }
+                                else
+                                {
+                                    COLOR = "";
+                                }
+                                COUNT++;*@
                             <tr style="background-color:@item.Color">
                                 <td>
                                     @item.Id
@@ -140,7 +155,7 @@
                                     @item.CreatedDate
                                 </td>
                                 <td>
-                                    
+
                                     @{
                                         if (item.dateforNext != null)
                                         {
@@ -263,7 +278,6 @@
     <link rel="stylesheet" href="~/adminlte/components/datatables.net-bs/css/dataTables.bootstrap.min.css">
 }
 
-
 @section Scripts{
 
 
@@ -287,26 +301,27 @@
                 pageLength: 25,
             });
 
-                $('#canFromDate').on('change', function (e) {
-                    var candidateFromDate = $('#canFromDate').val();
-                    var candidateTo = $('#canTO').val();
-                    var newUrl = "\CandidateIndex?sdate=" + candidateFromDate + "&edate=" + candidateTo;
-                    $("#btnSearch").attr("href", newUrl); // Set herf value
+            $('#canFromDate').on('change', function (e) {
+                var candidateFromDate = $('#canFromDate').val();
+                var candidateTo = $('#canTO').val();
+                var newUrl = "\CandidateIndex?sdate=" + candidateFromDate + "&edate=" + candidateTo;
+                $("#btnSearch").attr("href", newUrl); // Set herf value
 
-                });
+            });
 
-                $('#canTO').on('change', function (e) {
-                    var candidateFromDate = $('#canFromDate').val();
-                    var candidateTo = $('#canTO').val();
-                    var newUrl = "\CandidateIndex?sdate=" + candidateFromDate + "&edate=" + candidateTo;
-                    $("#btnSearch").attr("href", newUrl); // Set herf value
+            $('#canTO').on('change', function (e) {
+                var candidateFromDate = $('#canFromDate').val();
+                var candidateTo = $('#canTO').val();
+                var newUrl = "\CandidateIndex?sdate=" + candidateFromDate + "&edate=" + candidateTo;
+                $("#btnSearch").attr("href", newUrl); // Set herf value
 
             });
 
             $("#btnddl").on('change', function () {
                 debugger
                 var selecttechnologies = $("#btnddl option:selected").val();
-
+                var myDate = new Date();
+                myDate.setDate(myDate.getDate() + 8); //set new date 7 days from now
                 $.ajax({
                     type: "GET",
                     url: "/CandidateMaster/CandidateIndex",
@@ -323,12 +338,10 @@
                 //$("#btnSearch").attr("href", newUrl); // Set herf value
             });
 
-           
-           
             $("#dropdown").on('change', function () {
                 debugger
                 var ddvalue = $("#dropdown").val();
-                
+
                 //if (ddvalue == 1) {
                 //    debugger
                 //        var candidatefromdate = $("#canfromdate").val();
@@ -339,21 +352,16 @@
 
                 //}
 
-                 if (ddvalue == 2) {
-                    window.location.href =  "\candidateindex?lastmont=" + ddvalue;
-                   
+                if (ddvalue == 2) {
+                    window.location.href = "\candidateindex?lastmont=" + ddvalue;
+
                 }
                 else {
                     window.location.href = "\candidateindex?curentmonth=" + ddvalue;
-                    
                 }
 
             });
-          
-
         });
-
-   
 
         function openNote(id) {
             $("#notes").val("");
@@ -386,7 +394,6 @@
                     alert(response.responseText);
                 }
             });
-
         }
         debugger
 
@@ -411,15 +418,12 @@
             //    return false;
             //}
 
-            
-
             var requestdata = {
                 "Id": id,
                 "Note": notes,
                 "NextFollowUpdate": nextfollowupdate,
                 "Status": ddlStatusc,
             }
-
             debugger
             $.ajax({
                 type: "POST",
@@ -439,9 +443,6 @@
             });
 
         });
-
-  
- 
     </script>
 
 }
