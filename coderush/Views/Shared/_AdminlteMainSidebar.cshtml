@@ -88,7 +88,7 @@
                     </a>
                 </li>
             }*@
-            @if (roles.Contains("SuperAdmin") || roles.Contains("HR"))
+            @if (roles.Contains("SuperAdmin") || roles.Contains("HR")|| roles.Contains("Employee"))
             {
                 <li class="@Html.IsSelected(controller: Pages.Leavecount.ControllerName)">
                     <a href="@Pages.Leavecount.UrlDefault">

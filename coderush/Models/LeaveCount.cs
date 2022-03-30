@@ -27,11 +27,14 @@ namespace coderush.Models
 
         [Required]
         public string Count { get; set; }
-        [Display(Name = "Description:")]
+        [Display(Name = "Employee Description:")]
 
-        [Required]
         [StringLength(60, MinimumLength = 3)]
-        public string Description { get; set; }
+        public string EmployeeDescription { get; set; }
+
+        [StringLength(60, MinimumLength = 3)]
+        [Display(Name = "HR Description:")]
+        public string HrDescription { get; set; }
         [Display(Name = "CVUpload:")]
         [Required]
         public string FileUpload { get; set; }

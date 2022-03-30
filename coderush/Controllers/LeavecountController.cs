@@ -20,7 +20,7 @@ using System.IO;
 
 namespace coderush.Controllers
 {
-    [Authorize(Roles = "HR,SuperAdmin")]
+    [Authorize(Roles = "HR,SuperAdmin,Employee")]
     public class LeavecountController : Controller
     {
         private readonly ILogger<HomeController> _logger;
@@ -105,26 +105,64 @@ namespace coderush.Controllers
         }
 
         [HttpGet]
-        public IActionResult BindGridData(string id, string UserName)
+        public async Task <IActionResult> BindGridData(string id, string UserName)
         {
             userid = id;
             username = UserName;
+
+            var user = _userManager.GetUserAsync(User).Result;
+            var adminrole = await _userManager.IsInRoleAsync(user, "HR");
+            //userid = id;
+            //username = UserName;
+            //user = _userManager.GetUserAsync(User).ToString();
+            //var roles =  _userManager.GetRolesAsync(user);
+
+           
             LeaveCountViewModel levcunt = new LeaveCountViewModel();
-            var leavecount = _context.LeaveCount
-                                .Where(w => w.Userid == id)
-                               .Select(s => new LeaveCountViewModel()
-                               {
-                                   Id = s.Id,
-                                   Userid = _userManager.Users.Where(x => x.Id == id).Select(x => x.FirstName + " " + x.LastName ).FirstOrDefault(),//s.Userid, 
-                                   FromdateView = s.Fromdate.Value.ToString("MM/dd/yyyy"),
-                                   TodateView = s.Todate.Value.ToString("MM/dd/yyyy"),
-                                   Filename = s.FileUpload,
-                                   Count = s.Count,
-                                   Description = s.Description,
-                                   Isapprove = s.Isapprove,
-                                   ApproveDate = s.ApproveDate,
-                                   Approveby = s.Approveby,
-                               }).ToList();
+            var leavecount = new  List<LeaveCountViewModel>();
+            if (id != null && id != "")
+            {
+                leavecount = _context.LeaveCount
+                                    .Where(w => w.Userid == id)
+                                   .Select(s => new LeaveCountViewModel()
+                                   {
+                                       Id = s.Id,
+                                       //Userid = _userManager.Users.Where(x => x.Id == id).Select(x => x.FirstName + " " + x.LastName).FirstOrDefault(),//s.Userid, 
+                                       Userid = s.Userid,
+                                       Fromdate = s.Fromdate,
+                                       Todate = s.Todate,
+                                       //FromdateView = s.Fromdate.Value.ToString("MM/dd/yyyy"),
+                                       //TodateView = s.Todate.Value.ToString("MM/dd/yyyy"),
+                                       Filename = s.FileUpload,
+                                       Count = s.Count,
+                                       EmployeeDescription = s.EmployeeDescription != null ? s.EmployeeDescription : string.Empty,
+                                       HrDescription = s.HrDescription != null ? s.HrDescription : string.Empty,
+                                       Isapprove = s.Isapprove,
+                                       ApproveDate = s.ApproveDate,
+                                       Approveby = s.Approveby,
+                                       AdminRole = adminrole,
+                                   }).ToList();
+            }
+            else if (adminrole) 
+            {
+                leavecount = _context.LeaveCount
+                                  .Select(s => new LeaveCountViewModel()
+                                  {
+                                      Id = s.Id,
+                                      /*Userid = _userManager.Users.Where(x => x.Id == UserName).Select(x => x.FirstName + " " + x.LastName).FirstOrDefault(),//s.Userid, */
+                                      Userid = s.Userid,
+                                      Fromdate = s.Fromdate,
+                                      Todate = s.Todate,
+                                       Filename = s.FileUpload,
+                                      Count = s.Count,
+                                      EmployeeDescription = s.EmployeeDescription != null ? s.EmployeeDescription : string.Empty,
+                                      HrDescription = s.HrDescription != null ? s.HrDescription : string.Empty,
+                                      Isapprove = s.Isapprove,
+                                      ApproveDate = s.ApproveDate,
+                                      Approveby = s.Approveby,
+                                      AdminRole = adminrole,
+                                  }).ToList();
+            }
             levcunt.List = leavecount;
 
             //return RedirectToAction(nameof(LeaveIndex), new { id = leaveCounts.Id > 0 ? leaveCounts.Id : 0 });
@@ -149,7 +187,7 @@ namespace coderush.Controllers
         //post submitted leavecount data. if todo.TodoId is null then create new, otherwise edit
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult SubmitForm([Bind("Id", "Userid", "Fromdate", "Todate", "Count", "Description", "ApproveDate", "FileUpload", "Isapprove")] LeaveCountViewModel leaveCounts)
+        public IActionResult SubmitForm([Bind("Id", "Userid", "Fromdate", "Todate", "Count", "EmployeeDescription", "HrDescription", "ApproveDate", "FileUpload", "Isapprove")] LeaveCountViewModel leaveCounts)
         {
             try
             {
@@ -189,7 +227,8 @@ namespace coderush.Controllers
                     newleaveCount.Fromdate = leaveCounts.Fromdate;
                     newleaveCount.Todate = leaveCounts.Todate;
                     newleaveCount.Count = leaveCounts.Count;
-                    newleaveCount.Description = leaveCounts.Description;
+                    newleaveCount.EmployeeDescription = leaveCounts.EmployeeDescription;
+                    newleaveCount.HrDescription = leaveCounts.HrDescription;
                     newleaveCount.FileUpload = leaveCounts.FileUpload.FileName.ToString(); ;
                     newleaveCount.ApproveDate = DateTime.Now;
                     newleaveCount.Isapprove = leaveCounts.Isapprove;
@@ -199,7 +238,8 @@ namespace coderush.Controllers
                     leaveHistory.Fromdate = leaveCounts.Fromdate;
                     leaveHistory.Todate = leaveCounts.Todate;
                     leaveHistory.Count = leaveCounts.Count;
-                    leaveHistory.Description = leaveCounts.Description;
+                    leaveHistory.EmployeeDescription = leaveCounts.EmployeeDescription;
+                    leaveHistory.HRDescription = leaveCounts.HrDescription;
                     leaveHistory.FileUpload = leaveCounts.FileUpload.FileName.ToString();
                     leaveHistory.ApproveDate = DateTime.Now;
                     leaveHistory.Isapprove = leaveCounts.Isapprove;
@@ -221,7 +261,8 @@ namespace coderush.Controllers
                 editLeavecount.Fromdate = leaveCounts.Fromdate;
                 editLeavecount.Todate = leaveCounts.Todate;
                 editLeavecount.Count = leaveCounts.Count;
-                editLeavecount.Description = leaveCounts.Description;
+                editLeavecount.EmployeeDescription = leaveCounts.EmployeeDescription;
+                editLeavecount.HrDescription = leaveCounts.HrDescription;
                 editLeavecount.FileUpload = leaveCounts.FileUpload.FileName.ToString(); 
                 editLeavecount.UpdatedBy = user.Id;
                 editLeavecount.Isapprove = true;
@@ -231,7 +272,8 @@ namespace coderush.Controllers
                 addleaveHistory.Fromdate = leaveCounts.Fromdate;
                 addleaveHistory.Todate = leaveCounts.Todate;
                 addleaveHistory.Count = leaveCounts.Count;
-                addleaveHistory.Description = leaveCounts.Description;
+                addleaveHistory.EmployeeDescription = leaveCounts.EmployeeDescription;
+                addleaveHistory.HRDescription = leaveCounts.HrDescription;
                 addleaveHistory.FileUpload = leaveCounts.FileUpload.FileName.ToString();
                 addleaveHistory.UpdatedBy = user.Id;
                 addleaveHistory.Isapprove = true;
@@ -400,6 +442,26 @@ namespace coderush.Controllers
             return Json(Data);
         }
 
+        [HttpPost]
+        public ActionResult leavepopuop(int Id, string HrDescription, bool Isapprove)
+        {
+
+            try
+            {
+                var models = _context.LeaveCount.Where(x => x.Id == Id).FirstOrDefault();
+                models.HrDescription = HrDescription;
+                models.Isapprove = Isapprove;
+                _context.SaveChanges();
+                var result = new { Success = "true", Message = "Data save successfully." };
+                return Json(result);
+            }
+            catch (Exception ex)
+            {
+                var result = new { Success = "False", Message = ex.Message };
+                return Json(result);
+            }
+
+        }
         //[HttpPost]
         //public async Task<IActionResult> Delete(int Id)
         //{

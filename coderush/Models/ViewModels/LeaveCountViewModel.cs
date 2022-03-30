@@ -23,11 +23,15 @@ namespace coderush.ViewModels
         public IFormFile FileUpload { get; set; }
         public string Filename { get; set; }
         public string Count { get; set; }
-        public string Description { get; set; }
+        public string EmployeeDescription { get; set; }
+        public string HrDescription { get; set; }
+        
         public bool Isapprove { get; set; }
         public DateTime? ApproveDate { get; set; }
         public string Approveby { get; set; }
         public string CreatedBy { get; set; }
         public string UpdatedBy { get; set; }
+        public string UserRole { get; set; }
+        public bool AdminRole { get; set; }
     }
 }

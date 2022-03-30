@@ -15,7 +15,7 @@
         overflow: hidden !important;
         text-overflow: ellipsis;
     }
-  
+
 
     .tooltip-inner {
         max-width: 500px;
@@ -23,7 +23,6 @@
         word-break: break-all;
         overflow-wrap: break-word;
     }
-
 </style>
 
 <script src="jquery-3.5.1.min.js"></script>
@@ -96,12 +95,16 @@
                                 <div class="table-responsive">
                                     <form asp-action="Create">
                                         <input name="IsValid" type="hidden" id="noteid" />
-                                        <div class="form-group">
+                                        <div class="form-group col-md-4">
                                             <label>Amount :</label>
                                             @*<textarea type="text" TextMode="MultiLine" rows="1" cols="10" class="form-control" id="notes" style="width: 572px;height: 165px;"></textarea>*@
-                                            <input type="text" id="Amount" name="Amount" class="form-control"><br><br>
+                                            <input type="text" id="Amount" name="Amount" class="form-control">
+                                        </div>
+                                        <div class="form-group col-md-4">
                                             <label>Manager Name  :</label>
-                                            <input type="text" id="Managername" name="Manager Name" class="form-control"><br><br>
+                                            <input type="text" id="Managername" name="Manager Name" class="form-control">
+                                        </div>
+                                        <div class="form-group col-md-4">
                                             <label>Credit Date :</label>
                                             <input type="date" id="Creditdate" name="Creditdate" class="form-control">
                                         </div>
@@ -185,7 +188,7 @@
                                         @item.ExpenseDate.Value.ToString("dd MMMM yyyy")
                                     </td>
                                     <td>
-                                        <p class="tooltips shortspan"  data-placement="top" title="@item.Description"> @item.Description</p>
+                                        <p class="tooltips shortspan" data-placement="top" title="@item.Description"> @item.Description</p>
                                     </td>
                                     <td>
                                         @item.CreatedBy
@@ -193,7 +196,7 @@
                                     <td>
                                         @item.CreatedDate.Value.ToString("dd MMMM yyyy")
                                     </td>
-                                    <td> 
+                                    <td>
                                         @if (item.filename != null && item.filename != "")
                                         {
                                             @*@item.FileUpload
@@ -238,19 +241,25 @@
 
 @section Scripts{
     <!-- DataTables -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js" integrity="sha512-qTXRIMyZIFb8iQcfjXWCO8+M5Tbc38Qi5WzdPOYZHIlZpzBHG3L3by84BBBOiRGiEb7KKtAOAs5qYdUiZiQNNQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
     @*<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>*@
     <script src="~/adminlte/components/datatables.net/js/jquery.dataTables.min.js"></script>
     <script src="~/adminlte/components/datatables.net-bs/js/dataTables.bootstrap.min.js"></script>
 
     @*<script src="jquery-3.5.1.min.js"></script>*@
     <!-- page script -->
-   
+
     <script type="text/javascript">
+
         $(document).ready(function () {
 
+            $('#Amount').keypress(function (evt) {
+                var charCode = (evt.which) ? evt.which : event.keyCode
+                if (charCode > 31 && (charCode < 48 || charCode > 57))
+                    return false;
 
-
-
+                return true;
+            });
             $('#grid').DataTable({
                 lengthChange: false,
                 info: false,
@@ -259,16 +268,6 @@
                 scrollX: false,
                 pageLength: 25,
             });
-            $(".tooltips").tooltip();
-                
-            //$(".tooltips").tooltip({
-            //  "max- width: 400px"
-
-            //});
-            //$("#tooltip").mouseover();
-            //$("#tooltip").hover(function () {
-            //    $("#tooltiptext").display();
-            //});
 
             $('#FromDate').on('change', function (e) {
                 var FromDate = $('#FromDate').val();
@@ -288,9 +287,9 @@
 
             $("#mybutton").click(function () {
                 // show Modal
+                debugger
                 $('#myModal').modal('show');
                 Notes();
-
                 $(".dataTables_paginate").css("display", "none");
             });
             $('#gridle').DataTable({
@@ -301,7 +300,6 @@
                 scrollX: false,
                 pageLength: 25,
             });
-
             function Notes() {
                 $("#Amount").val("");
                 $("#nextfollow").val("");
@@ -319,13 +317,10 @@
                                 innerHtml += "<tr>";
                                 innerHtml += "<td> " + rowdata.amount + " </td>";
                                 innerHtml += "<td> " + rowdata.managername + " </td>";
-                                innerHtml += "<td> " + moment(rowdata.createddate).format('LL') + " </td>";
-                                /*    innerHtml += "<td> " + moment(rowdata.nextFollowUpdate).format("L") + " </td>";*/
+                                innerHtml += "<td> " + moment(rowdata.creditdate).format('LL') + " </td>";
                                 innerHtml += "</tr>"
                             });
                             $("#notebody").html(innerHtml);
-                            
-                            //$("#myModal").modal("show");
                         }
                     },
                     error: function (response) {
@@ -334,16 +329,11 @@
                 });
             }
 
-
             $("#savenotes").click(function () {
-                debugger
                 var Amount = $("#Amount").val();
                 var Id = $("#noteid").val();
-                var Createddate = $("#Creditdate").val();
+                var Creditdate = $("#Creditdate").val();
                 var Managername = $("#Managername").val();
-
-
-
                 if (Amount == '') {
                     alert("Amount is Required");
                     return false;
@@ -352,26 +342,16 @@
                     alert("Managername is Required");
                     return false;
                 }
-                if (Createddate == '') {
-                    alert("Createddate is Required");
-                    return false;
-                }
-
 
                 $.ajax({
                     type: "POST",
                     url: "/ExpenseMaster/SaveNotes",
-                    data: { "Id": Id, "Amount": Amount, "Creditdate": Createddate, "Managername": Managername },
+                    data: { "Id": Id, "Amount": Amount, "Creditdate": Creditdate, "Managername": Managername },
                     success: function (response) {
-                        debugger
                         console.log(response);
                         if (response.success == "true") {
-
                             alert(response.message);
-                            //$("#myModal").modal("hide");
                             Notes();
-                            //location.reload(true);
-
                         }
                         location.reload(true);
                     },
@@ -382,7 +362,6 @@
 
             });
         });
-
 
     </script>
 

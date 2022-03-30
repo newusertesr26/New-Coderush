@@ -8,6 +8,14 @@ namespace CodesDotHRMS.Models
 {
     public class Credit
     {
+        //public int Id { get; set; }
+        //[Display(Name = "Amount:")]
+        //[Required]
+        //public int Amount { get; set; }
+        //public string Managername { get; set; }
+
+        //[Display(Name = "Date:")]
+        //public DateTime? Createddate { get; set; }
         public int Id { get; set; }
         [Display(Name = "Amount:")]
         [Required]
@@ -15,6 +23,6 @@ namespace CodesDotHRMS.Models
         public string Managername { get; set; }
 
         [Display(Name = "Date:")]
-        public DateTime? Createddate { get; set; }
+        public DateTime creditdate { get; set; }
     }
 }

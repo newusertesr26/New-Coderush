@@ -456,5 +456,29 @@ namespace coderush.Controllers
 
         }
 
+        //  Save Membership indes Deatails
+        [HttpPost]
+        public ActionResult SaveMemberIndex(List<IFormFile> FormFile)
+        {
+            string path = Path.Combine(this._webHostEnvironment.WebRootPath, "document/RecordFile");
+            if (!Directory.Exists(path))
+            {
+                Directory.CreateDirectory(path);
+            }
+            foreach (var formFile in FormFile)
+            {
+                if (formFile.Length > 0)
+                {
+                    string fileName = Path.GetFileName(formFile.FileName);
+                    string filePath = Path.Combine(path, fileName);
+                    using (var stream = System.IO.File.Create(filePath))
+                    {
+                        formFile.CopyToAsync(stream);
+                    }
+                }
+            }
+            return RedirectToAction("Index", "Membership");
+        }
+
     }
 }

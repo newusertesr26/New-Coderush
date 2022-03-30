@@ -15,6 +15,7 @@ using Microsoft.AspNetCore.Authorization;
 using coderush.Models.ViewModels;
 using Microsoft.AspNetCore.Hosting;
 using System.IO;
+using CodesDotHRMS.Models;
 
 namespace coderush.Controllers
 {
@@ -370,6 +371,42 @@ namespace coderush.Controllers
         {
             var Data = _context.ExpenseMaster.Where(x => x.Id == id).FirstOrDefault();
             return Json(Data);
+        }
+
+        public ActionResult Notes()
+        {
+            //if (id == 0)
+            //{
+            //    return null;
+            //}
+
+            Credit model = new Credit();
+
+            var models = _context.Credit.ToList();
+
+            return Json(models);
+        }
+        public ActionResult SaveNotes(int Id, int Amount, string Managername, DateTime creditdate)
+        {
+
+            try
+            {
+                Credit models = new Credit();
+                models.Id = Id;
+                models.Amount = Amount;
+                models.Managername = Managername;
+                models.creditdate = creditdate;
+                _context.Credit.Add(models);
+                _context.SaveChanges();
+                var result = new { Success = "true", Message = "Data save successfully." };
+                return Json(result);
+            }
+            catch (Exception ex)
+            {
+                var result = new { Success = "False", Message = ex.Message };
+                return Json(result);
+            }
+
         }
 
         //[HttpPost]

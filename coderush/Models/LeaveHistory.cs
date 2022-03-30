@@ -15,7 +15,9 @@ namespace coderush.Models
         public DateTime? Fromdate { get; set; }
         public DateTime? Todate { get; set; }
         public string Count { get; set; }
-        public string Description { get; set; }
+        public string EmployeeDescription { get; set; }
+        public string HRDescription { get; set; }
+        
     
         public string FileUpload { get; set; }
         public bool Isapprove { get; set; }

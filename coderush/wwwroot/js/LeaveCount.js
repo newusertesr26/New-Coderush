@@ -6,53 +6,20 @@
         var fromdate = $("#levfrmdate").val();
         var todate = $("#levtodate").val();
         var count = $("#levcount").val();
-        var description = $("#levdescription").val();
+        var EmployeeDescription = $("#levdescription").val();
+        var HrDescription = $("#HrDescription").val();
         var isapprove = $("#isaprv").val();
         var approveDate = $("#apprvdate").val();
-
-
-        ////var Isvalid = true;
-        ////if (userid == null || userid == undefined || userid == "") {
-        ////    $(".spansuerid").show();
-        ////    Isvalid = false;
-        ////}
-
-        ////if (fromdate == null || fromdate == undefined || fromdate == "") {
-        ////    $(".spanfrmdate").show();
-        ////    Isvalid = false;
-        ////}
-
-        ////if (todate == null || todate == undefined || todate == "") {
-        ////    $(".spantodate").show();
-        ////    Isvalid = false;
-        ////}
-
-        ////if (count == null || count == undefined || count == "") {
-        ////    $(".spancount").show();
-        ////    Isvalid = false;
-        ////}
-        ////if (description == null || description == undefined || description == "") {
-        ////    $(".spandescription").show();
-        ////    Isvalid = false;
-        ////}
-
-
-        //if (!Isvalid) {
-        //    return false;
-        //}
-        //$(".text-danger").hide();
         var formdata = new FormData();
         formdata.append('Id', id);
         formdata.append('Userid', userid);
         formdata.append('Fromdate', fromdate);
         formdata.append('Todate', todate);
         formdata.append('Count', count);
-        formdata.append('Description', description);
+        formdata.append('EmployeeDescription', EmployeeDescription);
+        formdata.append('HrDescription', HrDescription);
         formdata.append('Isapprove', isapprove);
         formdata.append('ApproveDate', approveDate);
-
-
-
         $.ajax({
             url: '/Leavecount/SubmitForm',
             type: "POST",
@@ -60,7 +27,6 @@
             processData: false,
             data: formdata,
             success: function (result) {
-                //$("#AddLeave").modal('hide');
                 alert(result.message);
                 Bindtablegrid(userid, "");
             },
@@ -71,18 +37,6 @@
     });
 
 
-    //$("#btncls, #levbtncls").unbind().click(function () {
-    //    $("#hednid").val("");
-    //    $("#levuserid").val("");
-    //    $("#levfrmdate").val("");
-    //    $("#levtodate").val("");
-    //    $("#levcount").val("");
-    //    $("#levdescription").val("");
-    //    $("#isaprv").val("");
-    //    $("#apprvdate").val("");
-    //    $("#AddLeave").modal("hide");
-    //});
-
 
     $("#btninsert").unbind().click(function () {
 
@@ -92,59 +46,101 @@
             return false;
         }
         $(".text-danger").hide();
-        //$("#AddLeave").modal("show");
-        //var BinddrpdwnData = $("#leavedrpdwn option:selected").text();
-        //$("#levuserid").val(BinddrpdwnData);
     });
 
     var Bindtablegrid = function (id, username) {
+
         $.ajax({
             url: "/Leavecount/BindGridData?id=" + id + "&UserName=" + username,
             method: 'Get',
             data: {},
             success: function (data) {
+                console.log(data);
                 $("#levtblbdy").empty();
                 if (data.list != null && data.list.length > 0) {
                     var innerHtml = '';
+                    var arrya = new Array();
                     $.each(data.list, function (i, v) {
-                        var rowdata = data.list[i];
-                        console.log(rowdata);
+                        var rowdata = data.list[i]
                         innerHtml += "<tr>";
                         //innerHtml += "<td><i class='fa fa-edit' style='font-size:20px' id='btnedit' data-id = " + rowdata.id + "></i></td>";
                         //innerHtml += "<td><i class='fa fa-trash' ></i></td>";
                         innerHtml += "<td><a href='/Leavecount/Form/" + rowdata.id + "'><i class='fa fa-edit'></i></a></td>";
                         innerHtml += "<td><a href='/Leavecount/Delete/" + rowdata.id + "'><i class='fa fa-trash'></i></a></td>";
-                        innerHtml += "<td scope='col' id='UserID'>" + rowdata.userid + "</td>";
-                        /*innerHtml += "<td scope='col' id='User ID'>" + rowdata.firstname + rowdata.lastname + "</td>";*/
-                        innerHtml += "<td scope='col' id='FromDate'>" + rowdata.fromdateView + "</td>";
-                        innerHtml += "<td scope='col' id='ToDate'>" + rowdata.todateView + "</td>";
+                        innerHtml += "<td scope='col' id='User ID'>" + rowdata.userid + "</td>";
+                        innerHtml += "<td scope='col' id='From Date'>" + moment(rowdata.fromdate).format('LL') + "</td>";
+                        innerHtml += "<td scope='col' id='To Date'>" + moment(rowdata.todate).format('LL') + "</td>";
                         innerHtml += "<td scope='col' id='Count'>" + rowdata.count + "</td>";
-                        innerHtml += "<td scope='col' id='Description'>" + rowdata.description + "</td>";
-                        innerHtml += "<td scope='col' id='IsApprove'>" + rowdata.isapprove + "</td>";
-                        innerHtml += "<td scope='col' id='ApproveDate'>" + rowdata.approveDate + "</td>";
+                        innerHtml += "<td scope='col' id='Description'>" + rowdata.employeeDescription + "</td>";
+                        if (rowdata.adminRole) {
+                            innerHtml += "<td scope='col' id='Description'>" + rowdata.hrDescription + "</td>";
+                        }
+                        /*innerHtml += "<td scope='col' id='IsApprove'>" + rowdata.isapprove + "</td>";*/
+                        if (rowdata.isapprove == true) {
+                            innerHtml += "<td scope='col' > <input type='checkbox' data-approveId='1' class='clsChecked' id='IsChecked" + rowdata.id + "' disabled /></td>";
+                            arrya.push(rowdata.id);
+                        } else {
+                            innerHtml += "<td scope='col' > <input type='checkbox' data-approveId='0' class='clsChecked' id='IsChecked" + rowdata.id + "' disabled /></td>";
+                        }
+                        innerHtml += "<td scope='col' id='Approve Date'>" + moment(rowdata.approveDate).format('LL') + "</td>";
                         //innerHtml += '<td>@Html.ActionLink("Download", "DownloadFile", new { fileName = item.FileUpload })</td>';
-                        innerHtml += "<td><a href='/Leavecount/DownloadFile/" + rowdata.filename + "'><i class='fa fa-download'></i></a></td>";
+                        innerHtml += "<td><a class='cladownload' data-downloadFile='/document/Leave/" + rowdata.filename + "'><i class='fa fa-download'></i></a></td>";
+                        debugger
+                        if (rowdata.adminRole) {
+                            innerHtml += "<td><input type='button' value='approve' class='clsAprove' data-aproveid='" + rowdata.id + "' id='btn_" + rowdata.id + "' ></td>";
+                        }
                         innerHtml += "</tr>"
                     });
                     $("#levtblbdy").html(innerHtml);
+
+                    for (var i = 0; i < arrya.length; i++) {
+                        console.log(arrya[i]);
+                        $('#IsChecked' + arrya[i]).prop('checked', true);
+                    }
                 }
                 else {
                     var innerhtml = '<tr><td colspan="9" class="text-center">No record found.</td></tr>';
                     $("#levtblbdy").html(innerhtml);
                 }
             }
-
         });
     }
 
-    //$('#levtodate').on('change', function () {
-    //    var fromdate = $('#levfrmdate').val();
-    //    var todate = $('#levtodate').val();
-    //    if (todate < fromdate) {
-    //        alert('To date should be greater than From date.');
-    //        $('#levtodate').val('');
-    //    }
-    //});
+    $(document).on("click", ".clsAprove", function () {
+        var Id = $(this).data('aproveid');
+        $('#myModal').modal('show');
+        $("#leaveId").val(Id);
+        clearTextBox();
+    })
+
+    $(document).on("click", ".Approvcheck", function () {
+        $('.Approvcheck').not(this).prop('checked', false);
+    })
+
+    $(document).on("click", "#saveLeave", function () {
+        var Id = $('#leaveId').val();
+        var HRDescription = $('#notes').val();
+        debugger
+        if (HRDescription == '') {
+            alert("HRDescription is Required");
+            return false;
+        }
+        var Isapprove = $('.Approvcheck:checked').val() == "1" ? true : false;
+        $.ajax({
+            url: "/Leavecount/leavepopuop?Id=" + Id + "&HRDescription=" + HRDescription + "&Isapprove=" + Isapprove,
+            type: "POST",
+            contentType: false,
+            processData: false,
+            contentType: "application/json",
+            success: function (res) {
+                var id = $("#leavedrpdwn option:selected").val();
+                var username = $("#leavedrpdwn option:selected").text();
+                Bindtablegrid(id, username);
+            },
+            error: function (res, err) {
+            }
+        });
+    })
 
     var BinddrpdwnData = function () {
         $.ajax({
@@ -166,36 +162,22 @@
                 if (Make != null && Make != undefined) {
                     $(Project).val(Make.make).trigger('change');
                 }
-
-                //$(Project).on('change', function () {
-                //    var id = $(this).val();
-                //    Bindtablegrid(id);
-                //    $("#grid").show();
-                //})
             },
             error: function (res, err) {
 
             }
-
         });
     };
 
-
-
     $("#leavedrpdwn").on('change', function () {
-        //var id = $(this).val();
         var id = $("#leavedrpdwn option:selected").val();
         var username = $("#leavedrpdwn option:selected").text();
         Bindtablegrid(id, username);
         $("#grid").show();
     });
 
-
-
-
     $('body').on('click', '#btnedit', function () {
         var id = $(this).data('id');
-
         $.ajax({
             url: '/Leavecount/Form?id=' + id,
             type: "GET",
@@ -207,39 +189,34 @@
                 $("#levfrmdate").val(result.fromdate);
                 $("#levtodate").val(result.todate);
                 $("#levcount").val(result.count);
-                $("#levdescription").val(result.description);
+                $("#levdescription").val(result.EmployeeDescription);
                 $("#isaprv").val(result.isapprove);
                 $("#apprvdate").val(result.approveDate);
-                //$("#AddLeave").modal("show");
+                $("#AddLeave").modal("show");
                 $(".text-danger").hide();
             },
             error: function (err) {
-                /*alert(result.message);*/
             }
         });
     });
 
     BinddrpdwnData();
 
+    $(document).on("click", ".cladownload", function () {
+        var fileName = $(this).attr('data-downloadFile');
+        //var path = "/document/Leave/";
+        window.open(window.origin + fileName, '_blank'); // open the pdf in a new window/tab
+    })
+
+
+    function clearTextBox() {
+        $('#notes').val("");
+        $('#notes').css('border-color', 'lightgrey');
+        $('#IsApprove').css('border-color', 'lightgrey');
+        $('#IsReject').css('border-color', 'light');
+        $("#IsApprove").prop("checked", false);
+        $("#IsReject").prop("checked", false);
+
+    }
 });
 
-
-//$(function () {
-//    $("#levfrmdate").datepicker({
-//        minDate: new Date(),
-//        numberOfMonths: 2,
-//        onSelect: function (selected) {
-//            var dt = new Date(selected);
-//            dt.setDate(dt.getDate() + 1);
-//            $("#levtodate").datepicker("option", "minDate", dt);
-//        }
-//    });
-//    $("#levtodate").datepicker({
-//        numberOfMonths: 2,
-//        onSelect: function (selected) {
-//            var dt = new Date(selected);
-//            dt.setDate(dt.getDate() - 1);
-//            $("#levfrmdate").datepicker("option", "maxDate", dt);
-//        }
-//    });
-//});
