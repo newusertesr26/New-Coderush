@@ -72,6 +72,7 @@ namespace coderush.Controllers
                         Name = candidate.Name,
                         Email = candidate.Email,
                         Phone = candidate.Phone,
+                        Technologies =candidate.Technologies,
                         technologies = _context.Datamaster.Where(x => x.Id == candidate.Technologies).Select(x => x.Text).FirstOrDefault(),
                         filename = candidate.FileUpload,
                         IsActive = candidate.IsActive,
@@ -113,15 +114,16 @@ namespace coderush.Controllers
 
                 if (technology != null)
                 {
-                    if (technology != "0")
+                    var T = Convert.ToInt32(technology);
+                    if (T == 0)
                     {
-                        data = data.Where(w => w.Technologies == Convert.ToInt32(technology)).ToList();
+                        data = data.ToList();
 
                     }
                     else
                     {
-                        data = data.ToList();
-
+                      
+                        data = data.Where(w => w.Technologies == T).ToList();
                     }
                 }
 
