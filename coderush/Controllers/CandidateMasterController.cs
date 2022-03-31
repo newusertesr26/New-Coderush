@@ -16,7 +16,7 @@ using Microsoft.AspNetCore.Authorization;
 
 namespace coderush.Controllers
 {
-    [Authorize(Roles = "HR,SuperAdmin")]
+    [Authorize(Roles = "HR,SuperAdmin")] 
     public class CandidateMasterController : Controller
     {
         private readonly ILogger<HomeController> _logger;
@@ -81,13 +81,12 @@ namespace coderush.Controllers
 
             //        }).ToList();
             var TODAYDATE = DateTime.Now.AddDays(-1);
-            var top8Data = _context.CandidateMaster.OrderByDescending(x => x.InterviewDate).Take(9).ToList();
-            var maxDate = top8Data.Where(x => x.InterviewDate > TODAYDATE).Max(x => x.InterviewDate);
-            var minDate = top8Data.Where(x => x.InterviewDate > TODAYDATE).Min(x => x.InterviewDate);
-
-          
+            var top8date = _context.CandidateMaster.OrderByDescending(x => x.InterviewDate).Take(9).ToList();
+            var maxdate = top8date.Where(x => x.InterviewDate > TODAYDATE).Max(x => x.InterviewDate);
+            var mindate = top8date.Where(x => x.InterviewDate > TODAYDATE).Min(x => x.InterviewDate);
             data = (from candidate in _context.CandidateMaster.OrderByDescending(x => x.Id)
                     where !candidate.IsDelete
+                    
 
                     //orderby candidate.Id descending
                     let commentdate = _context.Comments.OrderByDescending(x => x.Id).Where(w => w.CandidateId == candidate.Id).Select(s => s.NextFollowUpdate).FirstOrDefault()                   
@@ -111,7 +110,7 @@ namespace coderush.Controllers
                         CreatedBy = _userManager.Users.Where(x => x.Id == candidate.CreatedBy).Select(x => x.FirstName + " " + x.LastName).FirstOrDefault(),
                         CreatedDate = candidate.CreatedDate,
                         //Color = Last7Day < candidate.InterviewDate && TODAYDATE < candidate.InterviewDate ? "" : "#ffe0bb"
-                        Color = (minDate <= candidate.InterviewDate) && (maxDate >= candidate.InterviewDate) ?  "#ffe0bb" : ""
+                        Color = (mindate <= candidate.InterviewDate) && (maxdate >= candidate.InterviewDate) ?  "#ffe0bb" : ""
                         //Color = TODAYDATE < candidate.InterviewDate ? "" : "#ffe0bb"
 
                     }).ToList();
