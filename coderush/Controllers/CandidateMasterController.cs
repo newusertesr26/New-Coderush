@@ -36,7 +36,7 @@ namespace coderush.Controllers
             _context = context;
             //_hostingEnvironment = hostingEnvironment;
         }
-        public IActionResult CandidateIndex(string sdate, string edate, string curentmonth, string lastmont/*, string technologies*/)
+        public IActionResult CandidateIndex(string sdate, string edate, string lastmont, string technology)
         {
             var user = _userManager.GetUserAsync(User).Result;
             var typelist1 = _context.Datamaster.Where(x => x.Type == DataSelection.technologies).ToList();
@@ -54,32 +54,7 @@ namespace coderush.Controllers
 
             DateTime? nulldate = null;
 
-            //data = (from candidate in _context.CandidateMaster
-            //            //from Comments in _context.Comments
-            //        where !candidate.IsDelete
-            //        let commentdate = _context.Comments.OrderByDescending(x => x.Id).Where(w => w.CandidateId == candidate.Id).Select(s => s.NextFollowUpdate).FirstOrDefault()
-
-            //        select new CandidateMastersViewModel
-            //        {
-            //            Id = candidate.Id,
-            //            Name = candidate.Name,
-            //            Email = candidate.Email,
-            //            Phone = candidate.Phone,
-            //            technologies = _context.Datamaster.Where(x => x.Id == candidate.Technologies).Select(x => x.Text).FirstOrDefault(),
-            //            filename = candidate.FileUpload,
-            //            IsActive = candidate.IsActive,
-            //            InterviewDate = candidate.InterviewDate,
-            //            PlaceOfInterview = candidate.PlaceOfInterview,
-            //            InterviewDescription = candidate.InterviewDescription,
-            //            InterviewTime = candidate.InterviewTime,
-            //            IsReject = candidate.IsReject,
-            //            Status = candidate.Status,
-            //            dateforNext = (commentdate != null ? commentdate : nulldate),
-            //            CreatedBy = _userManager.Users.Where(x => x.Id == candidate.CreatedBy).Select(x => x.FirstName + " " + x.LastName).FirstOrDefault(), //user.Id.ToString(),
-            //            CreatedDate = candidate.CreatedDate,
-            //            //dateforNext = Comments.NextFollowUpdate,
-
-            //        }).ToList();
+          
             var TODAYDATE = DateTime.Now.AddDays(-1);
             var top8date = _context.CandidateMaster.OrderByDescending(x => x.InterviewDate).Take(9).ToList();
             var maxdate = top8date.Where(x => x.InterviewDate > TODAYDATE).Max(x => x.InterviewDate);
@@ -118,24 +93,73 @@ namespace coderush.Controllers
             try
             {
                 int montha;
-                if (curentmonth == "3")
+                if (lastmont == "2")
                 {
                     int dt = DateTime.Now.Month;
 
-                    data = data.Where(x => x.IsDelete == false && x.InterviewDate.Value.Month == dt).ToList();
-                    //  return View(data);
+                  data = data.Where(w => w.InterviewDate.Value.Month == dt).ToList();
                 }
-                else if (lastmont == "2")
+
+                if (lastmont == "1")
                 {
                     var today = DateTime.Today;
                     var month = new DateTime(today.Year, today.Month, 1);
                     var first = month.AddMonths(-1);
                     montha = first.Month;
 
-                    data = data.Where(x => x.IsDelete == false && x.InterviewDate.Value.Month == montha).ToList();
-                    // return View(data);
+                    data = data.Where(w => w.InterviewDate.Value.Month == montha).ToList();
+
                 }
-                 
+
+                if (technology != null)
+                {
+                    if (technology != "0")
+                    {
+                        data = data.Where(w => w.Technologies == Convert.ToInt32(technology)).ToList();
+
+                    }
+                    else
+                    {
+                        data = data.ToList();
+
+                    }
+                }
+
+                if (sdate != null && edate != null)
+                {
+                    data = data.Where(w =>
+                                             w.InterviewDate >= Convert.ToDateTime(sdate)
+                                            && w.InterviewDate <= Convert.ToDateTime(edate)
+                                           ).ToList();
+
+                }
+
+
+                ViewData["selectedtech"] = technology;
+                ViewData["lastmonth"] = lastmont;
+                ViewData["sdate"] = sdate;
+                ViewData["edate"] = edate;
+            }
+               
+                //int montha;
+                //if (curentmonth == "3")
+                //{
+                //    int dt = DateTime.Now.Month;
+
+                //    data = data.Where(x => x.IsDelete == false && x.InterviewDate.Value.Month == dt).ToList();
+                //    //  return View(data);
+                //}
+                //else if (lastmont == "2")
+                //{
+                //    var today = DateTime.Today;
+                //    var month = new DateTime(today.Year, today.Month, 1);
+                //    var first = month.AddMonths(-1);
+                //    montha = first.Month;
+
+                //    data = data.Where(x => x.IsDelete == false && x.InterviewDate.Value.Month == montha).ToList();
+                //    // return View(data);
+                //}
+
                 //if (technologies != null)
                 //{
                 //    data = data.Where(x => x.IsDelete == false
@@ -181,16 +205,16 @@ namespace coderush.Controllers
                 //   // return View(search);
 
                 //}
-                else if (sdate != null && edate != null)
-                {
-                    ViewBag.startdate = sdate;
-                    ViewBag.enddate = edate;
+                //    else if (sdate != null && edate != null)
+                //    {
+                //        ViewBag.startdate = sdate;
+                //        ViewBag.enddate = edate;
 
-                    data = data.Where(x => x.IsDelete == false
-                                         && x.InterviewDate >= Convert.ToDateTime(sdate) && x.InterviewDate <= Convert.ToDateTime(edate)).ToList();
-                }
-                data.OrderBy(x => x.CreatedDate).ToList();
-            }
+                //        data = data.Where(x => x.IsDelete == false
+                //                             && x.InterviewDate >= Convert.ToDateTime(sdate) && x.InterviewDate <= Convert.ToDateTime(edate)).ToList();
+                //    }
+                //    data.OrderBy(x => x.CreatedDate).ToList();
+                //}
             catch (Exception ex)
             {
                 throw ex;
