@@ -19,6 +19,7 @@
         overflow: hidden !important;
         text-overflow: ellipsis;
     }
+
     .tooltip-inner {
         max-width: 500px;
         display: inline-block;
@@ -97,12 +98,12 @@
                                 <th width="10%">Interview Date/Time</th>
                                 <th width="10%">Place Of Interview</th>
                                 <th width="10%">Interview Description</th>
-                                <th width="10%">Created By</th>
-                                <th width="10%">Created Date</th>
+                                <th width="10%">Created By / Date</th>
                                 <th width="10%">Next FollowUp date</th>
                                 <th width="10%">Status</th>
                                 <th id="cmtopenbtn">Comment</th>
                                 <th>Action</th>
+                                <th></th>
                             </tr>
                         </thead>
                         <tbody>
@@ -116,67 +117,61 @@
                                 }
 
                                 @*@if (DateTime.Today.AddDays(-8) < currentDate)
-                                {
-                                    COLOR = "";
-                                }
-                                else
-                                {
-                                    COLOR = "";
-                                }
-                                COUNT++;*@
-                            <tr style="background-color:@item.Color">
-                                <td>
-                                    @item.Id
-                                </td>
-                                <td>
-                                    @item.Name
-                                </td>
-                                <td>
-                                    @item.Email
-                                </td>
-                                <td>
-                                    @item.Phone
-                                </td>
-                                <td>
-                                    @item.technologies
-                                </td>
-                                <td>
-                                    @*@item.FileUpload
-            <br />
-             @Html.ActionLink("Download", "DownloadFile", new { fileName = item.FileUpload })*@
-                                    @*<a asp-controller="CandidateMaster" asp-action="DownloadFile" asp-route-filename="@item.FileUpload"><i class="fa fa-download"></i></a>*@
-                                    <a href="~/document/Candidate/@item.filename" target="_blank"><i class="fa fa-download"></i></a>
-                                </td>
-                                <td>
-                                    @item.InterviewDate.Value.ToString("dd MMMM yyyy")
-                                </td>
-                                <td>
-                                    @item.PlaceOfInterview
-                                </td>
-                                <td>
-                                    @(item.InterviewTime.HasValue? dtDateTime.ToString("hh:mm tt", CultureInfo.InvariantCulture):"")
-                                </td>
-                                <td>
-                                    @item.InterviewDescription
-                                </td>
-                                <td>
-                                    @item.CreatedBy
-                                </td>
-                                <td>
-                                    @item.CreatedDate
-                                </td>
-                                <td>
-
-                                    @{
-                                        if (item.dateforNext != null)
-                                        {
-                                            @item.dateforNext.Value.ToString("dd MMMM yyyy");
-                                        }
-                                        else
-                                        {
-                                            <label></label>
-                                        }
+                                    {
+                                        COLOR = "";
                                     }
+                                    else
+                                    {
+                                        COLOR = "";
+                                    }
+                                    COUNT++;*@
+                                <tr style="background-color:@item.Color">
+                                    <td>
+                                        @item.Id
+                                    </td>
+                                    <td>
+                                        @item.Name
+                                    </td>
+                                    <td>
+                                        @item.Email
+                                    </td>
+                                    <td>
+                                        @item.Phone
+                                    </td>
+                                    <td>
+                                        @item.technologies
+                                    </td>
+                                    <td>
+                                        <a href="~/document/Candidate/@item.filename" target="_blank"><i class="fa fa-download"></i></a>
+                                    </td>
+                                    <td>
+                                        @item.InterviewDate.Value.ToString("dd MMMM yyyy")
+                                        &nbsp;&nbsp;&nbsp;
+                                        @(item.InterviewTime.HasValue? dtDateTime.ToString("hh:mm tt", CultureInfo.InvariantCulture):"")
+                                    </td>
+                                    <td>
+                                        @item.PlaceOfInterview
+                                    </td>
+                                    <td>
+                                        @item.InterviewDescription
+                                    </td>
+                                    <td>
+                                        @item.CreatedBy
+                                        &nbsp;&nbsp;&nbsp;
+                                        @item.CreatedDate
+                                    </td>
+                                    <td>
+
+                                        @{
+                                            if (item.dateforNext != null)
+                                            {
+                                                @item.dateforNext.Value.ToString("dd MMMM yyyy");
+                                            }
+                                            else
+                                            {
+                                                <label></label>
+                                            }
+                                        }
 
                                     </td>
                                     <td>
@@ -313,7 +308,7 @@
                 dom: 'lrtip',
                 scrollX: false,
                 pageLength: 25,
-                order : [[0, "desc"]]
+                order: [[0, "desc"]]
             });
 
             $(".tooltips").tooltip();

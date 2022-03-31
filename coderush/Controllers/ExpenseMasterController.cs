@@ -6,16 +6,12 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
-using System.Threading.Tasks;
 using coderush.DataEnum;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Authorization;
 using coderush.Models.ViewModels;
 using Microsoft.AspNetCore.Hosting;
 using System.IO;
-using CodesDotHRMS.Models;
 
 namespace coderush.Controllers
 {
@@ -395,7 +391,7 @@ namespace coderush.Controllers
                 models.Id = Id;
                 models.Amount = Amount;
                 models.Managername = Managername;
-                models.creditdate = creditdate;
+                models.Creditdate = creditdate;
                 _context.Credit.Add(models);
                 _context.SaveChanges();
                 var result = new { Success = "true", Message = "Data save successfully." };
