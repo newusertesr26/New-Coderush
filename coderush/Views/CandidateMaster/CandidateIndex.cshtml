@@ -10,10 +10,22 @@
     var roles = await _userManager.GetRolesAsync(user);
 
 }
-@*@{
-    var currentDate = System.DateTime.Now;
-    var COLOR = "";
-}*@
+
+<style>
+    .shortspan {
+        display: inline-block;
+        width: 50px;
+        white-space: nowrap;
+        overflow: hidden !important;
+        text-overflow: ellipsis;
+    }
+    .tooltip-inner {
+        max-width: 500px;
+        display: inline-block;
+        word-break: break-all;
+        overflow-wrap: break-word;
+    }
+</style>
 <!-- Content Wrapper. Contains page content -->
 <div class="content-wrapper">
     <!-- Content Header (Page header) -->
@@ -82,13 +94,12 @@
                                 <th width="8%">Phone</th>
                                 <th width="10%">Technologies</th>
                                 <th width="4%">CV</th>
-                                <th width="10%">Interview Date</th>
+                                <th width="10%">Interview Date/Time</th>
                                 <th width="10%">Place Of Interview</th>
-                                <th width="10%">Interview Time</th>
                                 <th width="10%">Interview Description</th>
                                 <th width="10%">Created By</th>
                                 <th width="10%">Created Date</th>
-                                <th width="10%">Next Follow Update</th>
+                                <th width="10%">Next FollowUp date</th>
                                 <th width="10%">Status</th>
                                 <th id="cmtopenbtn">Comment</th>
                                 <th>Action</th>
@@ -167,39 +178,43 @@
                                         }
                                     }
 
-                                </td>
-                                <td>
-                                    @*@item.Status*@
-                                    @{
-                                        if (item.Status == 1)
-                                        {
-                                            <p>Schedule Interview</p>
-                                        }
-                                        else if (item.Status == 2)
-                                        {
-                                            <p>Inprogress Interview</p>
-                                        }
-                                        else if (item.Status == 3)
-                                        {
-                                            <p>Done</p>
-                                        }
+                                    </td>
+                                    <td>
+                                        @*@item.Status*@
+                                        @{
+                                            if (item.Status == 1)
+                                            {
+                                                <p>Schedule Interview</p>
+                                            }
+                                            else if (item.Status == 2)
+                                            {
+                                                <p>Inprogress Interview</p>
+                                            }
+                                            else if (item.Status == 3)
+                                            {
+                                                <p>Done</p>
+                                            }
+                                            else if (item.Status == 0)
+                                            {
+                                                <p>--Select--</p>
+                                            }
 
-                                    }
-                                </td>
+                                        }
+                                    </td>
 
 
-                                @*<td><span style="text-decoration-line:@(item.Isactive ? "line-through" : "none")">@item.Isactive</span></td>*@
-                                <td>
-                                    <a href="#"><i id="myModal" onclick="openNote(@item.Id)" &nbsp; class="fa fa-comments-o"></i></a>
-                                </td>
-                                <td>
-                                    <a href="/CandidateMaster/Form/@item.Id"><i class="fa fa-edit"></i></a> &nbsp; &nbsp;
-                                    @if (roles.Contains("SuperAdmin"))
-                                    {
-                                        <a href="/CandidateMaster/Delete/@item.Id"><i class="fa fa-trash"></i></a>
-                                    }
-                                </td>
-                            </tr>
+                                    @*<td><span style="text-decoration-line:@(item.Isactive ? "line-through" : "none")">@item.Isactive</span></td>*@
+                                    <td>
+                                        <a href="#"><i id="myModal" onclick="openNote(@item.Id)" &nbsp; class="fa fa-comments-o"></i></a>
+                                    </td>
+                                    <td>
+                                        <a href="/CandidateMaster/Form/@item.Id"><i class="fa fa-edit"></i></a> &nbsp; &nbsp;
+                                        @if (roles.Contains("SuperAdmin"))
+                                        {
+                                            <a href="/CandidateMaster/Delete/@item.Id"><i class="fa fa-trash"></i></a>
+                                        }
+                                    </td>
+                                </tr>
                             }
                         </tbody>
                     </table>
@@ -245,7 +260,7 @@
                         @*<span class="notereq">Note is Required</span>*@
                     </div>
                     <div class="form-group">
-                        <label> Next Follow Update</label>
+                        <label> Next FollowUp date</label>
                         <input type="date" id="nextfollow" @*value="@DateTime.Today.ToString("dd/mm/yyyy")"*@ class="form-control" />
                     </div>
                     @*<div class="form-group">
@@ -284,7 +299,6 @@
     <!-- DataTables -->
     <script src="~/adminlte/components/datatables.net/js/jquery.dataTables.min.js"></script>
     <script src="~/adminlte/components/datatables.net-bs/js/dataTables.bootstrap.min.js"></script>
-
     @*<script type="text/javascript" src="https://code.jquery.com/jquery-1.11.3.min.js"></script>*@
     <script type="text/javascript" src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js"></script>
@@ -299,7 +313,10 @@
                 dom: 'lrtip',
                 scrollX: false,
                 pageLength: 25,
+                order : [[0, "desc"]]
             });
+
+            $(".tooltips").tooltip();
 
             $('#canFromDate').on('change', function (e) {
                 var candidateFromDate = $('#canFromDate').val();
@@ -366,7 +383,6 @@
         function openNote(id) {
             $("#notes").val("");
             $("#nextfollow").val("");
-            $("#ddlStatus").val("");
             $.ajax({
                 type: "GET",
                 url: "/CandidateMaster/Notes",

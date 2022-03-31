@@ -1,8 +1,8 @@
-﻿@model coderush.Models.ApplicationUser  
-
+﻿@using coderush.ViewModels
+@model Register
 
 @{
-    ViewData["Title"] = "Change Profile";
+    ViewData["Title"] = "Register";
 }
 
 <!-- Content Wrapper. Contains page content -->
@@ -20,10 +20,10 @@
     <!-- Main content -->
     <section class="content">
         <!-- Default box -->
-        <form asp-controller="Membership" enctype="multipart/form-data" asp-action="SubmitChangeProfile" method="post">
+        <form asp-controller="EmployeeMaster" asp-action="SubmitRegister" method="post">
             <div class="box">
                 <div class="box-header with-border">
-                    <h3 class="box-title">Change member profile</h3>
+                    <h3 class="box-title">Register new member</h3>
                     <div class="box-tools pull-right">
                         <button type="button" class="btn btn-box-tool" data-widget="collapse" data-toggle="tooltip"
                                 title="Collapse">
@@ -35,15 +35,21 @@
                     </div>
                 </div>
                 <div class="box-body">
-                    <input type="hidden" asp-for="Id" />
-                    <div class="form-group">
-                        <label asp-for="UserName"></label>
-                        <input asp-for="UserName" class="form-control" disabled />
-                    </div>
+
                     <div class="form-group">
                         <label asp-for="Email"></label>
                         <input asp-for="Email" class="form-control" />
                         <span asp-validation-for="Email" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="FirstName"></label>
+                        <input asp-for="FirstName" class="form-control" />
+                        <span asp-validation-for="FirstName" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="LastName"></label>
+                        <input asp-for="LastName" class="form-control" />
+                        <span asp-validation-for="LastName" class="text-danger"></span>
                     </div>
                     <div class="form-group">
                         <label asp-for="PhoneNumber"></label>
@@ -51,33 +57,24 @@
                         <span asp-validation-for="PhoneNumber" class="text-danger"></span>
                     </div>
                     <div class="form-group">
-                        <label asp-for="JoiningDate"></label>
-                        <input type="date" asp-for="JoiningDate" class="form-control" />
-                        <span asp-validation-for="JoiningDate" class="text-danger"></span>
-                    </div>
-                    <div class="form-group">
-                        <label asp-for="ProfilePicture"></label>
-                        <input type="file" asp-for="ProfilePicture" class="form-control" />
-                        <span asp-validation-for="ProfilePicture" class="text-danger"></span>
-                    </div>
-                    <div class="form-group">
-                        <label asp-for="FirstName"></label>
-                        <input  asp-for="FirstName" class="form-control" />
-                        <span asp-validation-for="FirstName" class="text-danger"></span>
-                    </div>
-                    <div class="form-group">
-                        <label asp-for="LastName"></label>
-                        <input  asp-for="LastName" class="form-control" />
-                        <span asp-validation-for="LastName" class="text-danger"></span>
-                    </div>
-                    <div class="form-group">
                         <input asp-for="EmailConfirmed" type="checkbox" class="flat-red" />
                         <label> Active</label>
                     </div>
+                    <div class="form-group">
+                        <label asp-for="Password"></label>
+                        <input asp-for="Password" class="form-control" />
+                        <span asp-validation-for="Password" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="ConfirmPassword"></label>
+                        <input asp-for="ConfirmPassword" class="form-control" />
+                        <span asp-validation-for="ConfirmPassword" class="text-danger"></span>
+                    </div>
+
                 </div>
                 <!-- /.box-body -->
                 <div class="box-footer">
-                    <a href="/Membership/Index" class="btn btn-default">Back</a>
+                    <a href="/EmployeeMaster/Index" class="btn btn-default">Back</a>
                     <button type="submit" class="btn btn-primary">Save</button>
                 </div>
                 <!-- /.box-footer-->
@@ -96,9 +93,8 @@
 }
 
 
-@section Scripts{   
+@section Scripts{
 
     <partial name="_ValidationScriptsPartial" />
 }
-
 

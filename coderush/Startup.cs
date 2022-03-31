@@ -112,6 +112,10 @@ namespace coderush
 
             services.AddControllersWithViews();
 
+            
+            //services.AddControllersWithViews();
+            services.AddMvc().AddRazorRuntimeCompilation();
+
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -154,6 +158,8 @@ namespace coderush
 
             app.UseAuthentication();
             app.UseAuthorization();
+
+            
 
             app.UseEndpoints(routes =>
             {
