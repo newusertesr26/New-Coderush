@@ -136,21 +136,23 @@
                 pageLength: 25,
             });
 
-            $(".tooltips").tooltip({
-                $(".tooltips").css("max-width: 100% !important")
-            });
+            //$(".tooltips").tooltip({
+            //    $(".tooltips").css("max-width: 100% !important")
+            //});
 
-            var number = parseInt(@ViewBag.key);
+             var number = parseInt(@ViewBag.key);
             $('select option[value='+number+']').attr("selected", true);
             console.log(number);
             $('#Serchkey').on('change', function (e) {
+                debugger
                 var searchvalue = $('#Serchkey').val();
                 var newUrl = "\Index?Searcvalue=" + searchvalue;
                 $("#Ancar").attr("href", newUrl); // Set herf value
 
             });
-
         });
+
+
 
     </script>
 

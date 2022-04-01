@@ -19,6 +19,7 @@
         overflow: hidden !important;
         text-overflow: ellipsis;
     }
+
     .tooltip-inner {
         max-width: 500px;
         display: inline-block;
@@ -83,39 +84,42 @@
                             <button id="clear" style="margin-top: 25px" class="btn btn-primary">Clear</button>
                         </div>
 
-                    </div>
-
-                    <br />
-                    <br />
-
-                    <h3 class="box-title">List of Candidate item</h3>
-                    <div class="box-tools pull-right">
-                        <a href="/CandidateMaster/Form" class="btn btn-primary"><i class="fa fa-plus"></i></a>
-                    </div>
                 </div>
-                <div class="box-body">
-                    <div class="table-responsive">
-                        <table id="grid" class="table table-striped" cellspacing="0" width="100%">
-                            <thead>
-                                <tr>
-                                    <th>Sr No.</th>
-                                    <th width="20%">Name</th>
-                                    <th width="10%">Email</th>
-                                    <th width="8%">Phone</th>
-                                    <th width="10%">Technologies</th>
-                                    <th width="4%">CV</th>
-                                    <th width="10%">Interview Date/Time</th>
-                                    <th width="10%">Place Of Interview</th>
-                                    <th width="10%">Interview Description</th>
-                                    <th width="10%">Created By</th>
-                                    <th width="10%">Created Date</th>
-                                    <th width="10%">Next FollowUp date</th>
-                                    <th width="10%">Status</th>
-                                    <th id="cmtopenbtn">Comment</th>
-                                    <th>Action</th>
-                                </tr>
-                            </thead>
-                            <tbody>
+                <br />
+                <br />
+                @*<div class="col-md-4">
+                        <select name="type" class="form-control" style="" id="btnddl" asp-items="@ViewBag.CandidatetechnologiesList">
+                            <option value="">-- ALL --</option>
+                        </select>
+                    </div>*@
+                <h3 class="box-title">List of Candidate item</h3>
+                <div class="box-tools pull-right">
+                    <a href="/CandidateMaster/Form" class="btn btn-primary"><i class="fa fa-plus"></i></a>
+                </div>
+            </div>
+            <div class="box-body">
+                <div class="table-responsive">
+                    <table id="grid" class="table table-striped" cellspacing="0" width="100%">
+                        <thead>
+                            <tr>
+                                <th>Sr No.</th>
+                                <th width="20%">Name</th>
+                                <th width="10%">Email</th>
+                                <th width="8%">Phone</th>
+                                <th width="10%">Technologies</th>
+                                <th width="4%">CV</th>
+                                <th width="10%">Interview Date/Time</th>
+                                <th width="10%">Place Of Interview</th>
+                                <th width="10%">Interview Description</th>
+                                <th width="10%">Created By / Date</th>
+                                <th width="10%">Next FollowUp date</th>
+                                <th width="10%">Status</th>
+                                <th id="cmtopenbtn">Comment</th>
+                                <th>Action</th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody>
 
                                 @foreach (var item in Model)
                                 {
@@ -125,7 +129,7 @@
                                         dtDateTime = dtDateTime.AddSeconds(item.InterviewTime.Value.TotalSeconds).ToLocalTime();
                                     }
 
-                                    @*@if (DateTime.Today.AddDays(-8) < currentDate)
+                                @*@if (DateTime.Today.AddDays(-8) < currentDate)
                                     {
                                         COLOR = "";
                                     }
@@ -134,57 +138,53 @@
                                         COLOR = "";
                                     }
                                     COUNT++;*@
-                                    <tr style="background-color:@item.Color">
-                                        <td>
-                                            @item.Id
-                                        </td>
-                                        <td>
-                                            @item.Name
-                                        </td>
-                                        <td>
-                                            @item.Email
-                                        </td>
-                                        <td>
-                                            @item.Phone
-                                        </td>
-                                        <td>
-                                            @item.technologies
-                                        </td>
-                                        <td>
-                                            @*@item.FileUpload
-                                            <br />
-                                             @Html.ActionLink("Download", "DownloadFile", new { fileName = item.FileUpload })*@
-                                            @*<a asp-controller="CandidateMaster" asp-action="DownloadFile" asp-route-filename="@item.FileUpload"><i class="fa fa-download"></i></a>*@
-                                            <a href="~/document/Candidate/@item.filename" target="_blank"><i class="fa fa-download"></i></a>
-                                        </td>
-                                        <td>
-                                            @item.InterviewDate.Value.ToString("dd MMMM yyyy")
-                                            @(item.InterviewTime.HasValue? dtDateTime.ToString("hh:mm tt", CultureInfo.InvariantCulture):"")
-                                        </td>
-                                        <td>
-                                            @item.PlaceOfInterview
-                                        </td>
-                                        <td>
-                                            @item.InterviewDescription
-                                        </td>
-                                        <td>
-                                            @item.CreatedBy
-                                        </td>
-                                        <td>
-                                            @item.CreatedDate
-                                        </td>
-                                        <td>
+                                <tr style="background-color:@item.Color">
+                                    <td>
+                                        @item.Id
+                                    </td>
+                                    <td>
+                                        @item.Name
+                                    </td>
+                                    <td>
+                                        @item.Email
+                                    </td>
+                                    <td>
+                                        @item.Phone
+                                    </td>
+                                    <td>
+                                        @item.technologies
+                                    </td>
+                                    <td>
+                                        <a href="~/document/Candidate/@item.filename" target="_blank"><i class="fa fa-download"></i></a>
+                                    </td>
+                                    <td>
+                                        @item.InterviewDate.Value.ToString("dd MMMM yyyy")
+                                        &nbsp;&nbsp;&nbsp;
+                                        @(item.InterviewTime.HasValue? dtDateTime.ToString("hh:mm tt", CultureInfo.InvariantCulture):"")
+                                    </td>
+                                    <td>
+                                        @item.PlaceOfInterview
+                                    </td>
+                                    <td>
+                                        @item.InterviewDescription
+                                    </td>
+                                    <td>
+                                        @item.CreatedBy
+                                        &nbsp;&nbsp;&nbsp;
+                                        @item.CreatedDate
+                                    </td>
+                                    <td>
 
-                                            @{
-                                                if (item.dateforNext != null)
-                                                {
-                                                    @item.dateforNext.Value.ToString("dd MMMM yyyy");
-                                                }
-                                                else
-                                                {
-                                                    <label></label>
-                                                }
+                                        @{
+                                            if (item.dateforNext != null)
+                                            {
+                                                @item.dateforNext.Value.ToString("dd MMMM yyyy");
                                             }
+                                            else
+                                            {
+                                                <label></label>
+                                            }
+                                        }
 
                                         </td>
                                         <td>
@@ -317,15 +317,15 @@
         <script type="text/javascript">
             $(document).ready(function () {
 
-                $('#grid').DataTable({
-                    lengthChange: false,
-                    info: false,
-                    searching: true,
-                    dom: 'lrtip',
-                    scrollX: false,
-                    pageLength: 25,
-                    order: [[0, "desc"]]
-                });
+            $('#grid').DataTable({
+                lengthChange: false,
+                info: false,
+                searching: true,
+                dom: 'lrtip',
+                scrollX: false,
+                pageLength: 25,
+                order: [[0, "desc"]]
+            });
 
                 $(".tooltips").tooltip();
 
