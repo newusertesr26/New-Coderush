@@ -364,6 +364,7 @@
                                 innerHtml += "<tr>";
                                 innerHtml += "<td> " + rowdata.note + " </td>";
                                 innerHtml += "<td> " + moment(rowdata.nextFollowUpdate).format("L") + " </td>";
+                                innerHtml += "<td> " + rowdata.loginUser  + " </td>";
                                 innerHtml += "</tr>"
                             });
                             $("#notebody").html(innerHtml);
@@ -415,7 +416,7 @@
                         if (response.success == "true") {
                             alert(response.message);
                             $("#addComments").modal("hide");
-                            window.location.href = "/CandidateMaster/CandidateIndex";
+                          window.location.href = "/CandidateMaster/CandidateIndex";
                         }
                     },
                     error: function (response) {
