@@ -60,7 +60,7 @@
                     <div class=" form-group col-md-6">
                         <label asp-for="Technologies"></label>
                         @*@Html.DropDownList("Selection", new SelectList(ViewBag.SelectionList, "Value", "Text"), new { @class = "form-control", @id = "ddlSelectionList" })*@
-                        <select name="technologies" class="form-control" asp-items="@ViewBag.CandidatetechnologiesList" asp-for="technologies">
+                        <select name="technologies" class="form-control" asp-items="@ViewBag.CandidatetechnologiesList" asp-for="Technologies">
                             <option value="">-- Select --</option>
                         </select>
                         <span asp-validation-for="technologies" class="text-danger"></span>
