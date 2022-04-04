@@ -33,5 +33,6 @@ namespace coderush.ViewModels
         public string UpdatedBy { get; set; }
         public string UserRole { get; set; }
         public bool AdminRole { get; set; }
+        public string UserName { get; set; }
     }
 }
