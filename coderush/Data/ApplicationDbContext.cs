@@ -1,5 +1,4 @@
 ﻿using coderush.Models;
-using CodesDotHRMS.Models;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
