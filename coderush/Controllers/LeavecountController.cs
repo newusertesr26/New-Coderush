@@ -20,7 +20,7 @@ using System.IO;
 
 namespace coderush.Controllers
 {
-    [Authorize(Roles = "HR,SuperAdmin")]
+    [Authorize(Roles = "HR,SuperAdmin,Employee")]
     public class LeavecountController : Controller
     {
         private readonly ILogger<HomeController> _logger;
@@ -44,7 +44,7 @@ namespace coderush.Controllers
             _webHostEnvironment = webHostEnvironment;
             //_hostingEnvironment = hostingEnvironment;
         }
-        public IActionResult LeaveIndex(string selectedFilter)
+        public IActionResult LeaveIndex(string id)
         {
             List<LeaveCountViewModel> model = new List<LeaveCountViewModel>();
 
@@ -105,62 +105,130 @@ namespace coderush.Controllers
         }
 
         [HttpGet]
-        public IActionResult BindGridData(string id, string UserName)
+        public async Task<IActionResult> BindGridData(string id, string UserName)
         {
             userid = id;
             username = UserName;
+
+            var user = _userManager.GetUserAsync(User).Result;
+            var adminrole = await _userManager.IsInRoleAsync(user, "HR");
+
+            //userid = id;
+            //username = UserName;
+            //user = _userManager.GetUserAsync(User).ToString();
+            //var roles =  _userManager.GetRolesAsync(user);
+
+
             LeaveCountViewModel levcunt = new LeaveCountViewModel();
-            var leavecount = _context.LeaveCount
-                                .Where(w => w.Userid == id)
-                               .Select(s => new LeaveCountViewModel()
-                               {
-                                   Id = s.Id,
-                                   Userid = _userManager.Users.Where(x => x.Id == id).Select(x => x.FirstName + " " + x.LastName ).FirstOrDefault(),//s.Userid, 
-                                   FromdateView = s.Fromdate.Value.ToString("MM/dd/yyyy"),
-                                   TodateView = s.Todate.Value.ToString("MM/dd/yyyy"),
-                                   Filename = s.FileUpload,
-                                   Count = s.Count,
-                                   Description = s.Description,
-                                   Isapprove = s.Isapprove,
-                                   ApproveDate = s.ApproveDate,
-                                   Approveby = s.Approveby,
-                               }).ToList();
+            var leavecount = new List<LeaveCountViewModel>();
+            if (!adminrole)
+            {
+
+                leavecount = _context.LeaveCount
+                                    .Where(w => w.Userid == user.Id)
+                                   .Select(s => new LeaveCountViewModel()
+                                   {
+                                       Id = s.Id,
+                                       //Userid = _userManager.Users.Where(x => x.Id == id).Select(x => x.FirstName + " " + x.LastName).FirstOrDefault(),//s.Userid, 
+                                       Userid = UserName,
+                                       Fromdate = s.Fromdate,
+                                       Todate = s.Todate,
+                                       //FromdateView = s.Fromdate.Value.ToString("MM/dd/yyyy"),
+                                       //TodateView = s.Todate.Value.ToString("MM/dd/yyyy"),
+                                       Filename = s.FileUpload,
+                                       Count = s.Count,
+                                       EmployeeDescription = s.EmployeeDescription != null ? s.EmployeeDescription : string.Empty,
+                                       HrDescription = s.HrDescription != null ? s.HrDescription : string.Empty,
+                                       Isapprove = s.Isapprove,
+                                       ApproveDate = s.ApproveDate,
+                                       Approveby = s.Approveby,
+                                       AdminRole = adminrole,
+                                   }).ToList();
+            }
+            else if (adminrole)
+            {
+                try
+                {
+                    leavecount = _context.LeaveCount
+                         .Where(w => w.Userid == id)
+                                      .Select(s => new LeaveCountViewModel()
+                                      {
+                                          Id = s.Id,
+                                          /*Userid = _userManager.Users.Where(x => x.Id == UserName).Select(x => x.FirstName + " " + x.LastName).FirstOrDefault(),//s.Userid, */
+                                          Userid = UserName,
+                                          Fromdate = s.Fromdate,
+                                          Todate = s.Todate,
+                                          Filename = s.FileUpload,
+                                          Count = s.Count,
+                                          EmployeeDescription = s.EmployeeDescription != null ? s.EmployeeDescription : string.Empty,
+                                          HrDescription = s.HrDescription != null ? s.HrDescription : string.Empty,
+                                          Isapprove = s.Isapprove,
+                                          ApproveDate = s.ApproveDate,
+                                          Approveby = s.Approveby,
+                                          AdminRole = adminrole,
+                                      }).ToList();
+                }
+                catch (Exception ew)
+                {
+
+                }
+            }
             levcunt.List = leavecount;
 
             //return RedirectToAction(nameof(LeaveIndex), new { id = leaveCounts.Id > 0 ? leaveCounts.Id : 0 });
 
             return Json(levcunt);
         }
-        public IActionResult BinddrpdwnData()
+        public async Task<IActionResult> BinddrpdwnData()
         {
-            var leavecount = _userManager.Users
-                                .Where(w => w.UserName != null)
-                               .Select(s => new SelectListItem()
-                               {
+            var user = _userManager.GetUserAsync(User).Result;
+            var adminrole = await _userManager.IsInRoleAsync(user, "HR");
 
-                                   Text = String.Format("{0} {1} {2}", s.UserName, s.FirstName != null ?  "|| " + s.FirstName : "",  s.LastName != null ? "|| " + s.LastName : "").ToString(),
-                                   Value = s.Id.ToString()
-                               }).ToList();
-            return Json(leavecount);
+            if (!adminrole)
+            {
+                var leavecount = _userManager.Users
+                                    .Where(w => w.UserName != null && w.Email == user.ToString())
+                                   .Select(s => new SelectListItem()
+                                   {
+                                       Text = String.Format("{0} {1} {2}", s.UserName, s.FirstName != null ? "|| " + s.FirstName : "", s.LastName != null ? "|| " + s.LastName : "").ToString(),
+                                       Value = s.Id.ToString()
+                                   }).ToList();
+                return Json(leavecount);
+            }
+            else if (adminrole)
+            {
+                var leavecount = _userManager.Users
+                                    .Where(w => w.UserName != null)
+                                   .Select(s => new SelectListItem()
+                                   {
+                                       Text = String.Format("{0} {1} {2}", s.UserName, s.FirstName != null ? "|| " + s.FirstName : "", s.LastName != null ? "|| " + s.LastName : "").ToString(),
+                                       Value = s.Id.ToString()
+                                   }).ToList();
+                return Json(leavecount);
+            }
+
+            return null;
         }
 
-      
+
 
         //post submitted leavecount data. if todo.TodoId is null then create new, otherwise edit
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult SubmitForm([Bind("Id", "Userid", "Fromdate", "Todate", "Count", "Description", "ApproveDate", "FileUpload", "Isapprove")] LeaveCountViewModel leaveCounts)
+        public IActionResult SubmitForm([Bind("Id", "Userid", "Fromdate", "Todate", "Count", "EmployeeDescription", "HrDescription", "ApproveDate", "FileUpload", "Isapprove")] LeaveCountViewModel leaveCounts)
         {
             try
             {
                 if (!ModelState.IsValid)
                 {
                     TempData[StaticString.StatusMessage] = "Error: Model state not valid.";
-                    return RedirectToAction(nameof(Form), new { id = leaveCounts.Id > 0 ? leaveCounts.Id : 0 });
+                    return RedirectToAction(nameof(Form), new { id = leaveCounts.Id > 0 ? leaveCounts.Id : 0, userid = leaveCounts.Userid });
                 }
 
                 var user = _userManager.GetUserAsync(User).Result;
 
+
+                
 
                 string wwwPath = this._webHostEnvironment.WebRootPath;
                 string contentPath = this._webHostEnvironment.ContentRootPath;
@@ -185,21 +253,23 @@ namespace coderush.Controllers
                 {
                     LeaveCount newleaveCount = new LeaveCount();
                     LeaveHistory leaveHistory = new LeaveHistory();
-                    newleaveCount.Userid = userid;
+                    newleaveCount.Userid = leaveCounts.Userid;
                     newleaveCount.Fromdate = leaveCounts.Fromdate;
                     newleaveCount.Todate = leaveCounts.Todate;
                     newleaveCount.Count = leaveCounts.Count;
-                    newleaveCount.Description = leaveCounts.Description;
+                    newleaveCount.EmployeeDescription = leaveCounts.EmployeeDescription;
+                    newleaveCount.HrDescription = leaveCounts.HrDescription;
                     newleaveCount.FileUpload = leaveCounts.FileUpload.FileName.ToString(); ;
                     newleaveCount.ApproveDate = DateTime.Now;
                     newleaveCount.Isapprove = leaveCounts.Isapprove;
                     newleaveCount.CreatedBy = user.Id;
                     newleaveCount.Approveby = user.Id;
-                    leaveHistory.Userid = userid;
+                    leaveHistory.Userid = leaveCounts.Userid;
                     leaveHistory.Fromdate = leaveCounts.Fromdate;
                     leaveHistory.Todate = leaveCounts.Todate;
                     leaveHistory.Count = leaveCounts.Count;
-                    leaveHistory.Description = leaveCounts.Description;
+                    leaveHistory.EmployeeDescription = leaveCounts.EmployeeDescription;
+                    leaveHistory.HRDescription = leaveCounts.HrDescription;
                     leaveHistory.FileUpload = leaveCounts.FileUpload.FileName.ToString();
                     leaveHistory.ApproveDate = DateTime.Now;
                     leaveHistory.Isapprove = leaveCounts.Isapprove;
@@ -210,28 +280,30 @@ namespace coderush.Controllers
                     _context.SaveChanges();
 
                     TempData[StaticString.StatusMessage] = "Create new leave count item success.";
-                    return RedirectToAction(nameof(Form), new { id = leaveCounts.Id > 0 ? leaveCounts.Id : 0 });
+                    return RedirectToAction(nameof(Form), new { id = leaveCounts.Id > 0 ? leaveCounts.Id : 0, userid = leaveCounts.Userid });
                 }
 
                 //edit existing
                 LeaveCount editLeavecount = new LeaveCount();
                 LeaveHistory addleaveHistory = new LeaveHistory();
                 editLeavecount = _context.LeaveCount.Where(x => x.Id.Equals(leaveCounts.Id)).FirstOrDefault();
-                editLeavecount.Userid = userid;
+                editLeavecount.Userid = leaveCounts.Userid;
                 editLeavecount.Fromdate = leaveCounts.Fromdate;
                 editLeavecount.Todate = leaveCounts.Todate;
                 editLeavecount.Count = leaveCounts.Count;
-                editLeavecount.Description = leaveCounts.Description;
-                editLeavecount.FileUpload = leaveCounts.FileUpload.FileName.ToString(); 
+                editLeavecount.EmployeeDescription = leaveCounts.EmployeeDescription;
+                editLeavecount.HrDescription = leaveCounts.HrDescription;
+                editLeavecount.FileUpload = leaveCounts.FileUpload.FileName.ToString();
                 editLeavecount.UpdatedBy = user.Id;
                 editLeavecount.Isapprove = true;
                 editLeavecount.Approveby = user.Id;
                 editLeavecount.ApproveDate = DateTime.Now;
-                addleaveHistory.Userid = userid;
+                addleaveHistory.Userid = leaveCounts.Userid;
                 addleaveHistory.Fromdate = leaveCounts.Fromdate;
                 addleaveHistory.Todate = leaveCounts.Todate;
                 addleaveHistory.Count = leaveCounts.Count;
-                addleaveHistory.Description = leaveCounts.Description;
+                addleaveHistory.EmployeeDescription = leaveCounts.EmployeeDescription;
+                addleaveHistory.HRDescription = leaveCounts.HrDescription;
                 addleaveHistory.FileUpload = leaveCounts.FileUpload.FileName.ToString();
                 addleaveHistory.UpdatedBy = user.Id;
                 addleaveHistory.Isapprove = true;
@@ -242,19 +314,19 @@ namespace coderush.Controllers
                 _context.SaveChanges();
 
                 TempData[StaticString.StatusMessage] = "Edit existing leave count item success.";
-                return RedirectToAction(nameof(Form), new { id = leaveCounts.Id > 0 ? leaveCounts.Id : 0 });
+                return RedirectToAction(nameof(Form), new { id = leaveCounts.Id > 0 ? leaveCounts.Id : 0 , userid = leaveCounts.Userid });
             }
             catch (Exception ex)
             {
 
                 TempData[StaticString.StatusMessage] = "Error: " + ex.Message;
-                return RedirectToAction(nameof(Form), new { id = leaveCounts.Id > 0 ? leaveCounts.Id : 0 });
+                return RedirectToAction(nameof(Form), new { id = leaveCounts.Id > 0 ? leaveCounts.Id : 0, userid = leaveCounts.Userid });
             }
         }
 
         //display leavecount create edit form
         [HttpGet]
-        public IActionResult Form(int id)
+        public IActionResult Form(int id, string userid)
         {
             //ViewBag.leavecountList = _userManager.Users
             //                    .Where(w => w.UserName != null)
@@ -263,7 +335,13 @@ namespace coderush.Controllers
             //                       Text = s.UserName,
             //                       Value = s.Id.ToString()
             //                   }).ToList();
+
+
+
             LeaveCountViewModel model = new LeaveCountViewModel();
+
+
+
             //ViewBag.Role = HttpContext.Session.GetString("Role");
             //if (HttpContext.Session.GetString("Role") == "Other")
             //{
@@ -271,24 +349,56 @@ namespace coderush.Controllers
             //}
             //return View(model);
 
-            //create new
+            ////create new
+          //LeaveCountViewModel model = new LeaveCountViewModel();
+
             if (id == 0)
             {
-                LeaveCount newleavecount = new LeaveCount();
-                newleavecount.Userid = username;
-                return View(newleavecount);
-            }
 
-            //edit leavecount master
-            LeaveCount editnewleavecount = new LeaveCount();
-            editnewleavecount = _context.LeaveCount.Where(x => x.Id.Equals(id)).FirstOrDefault();
-            editnewleavecount.Userid = username;
-            if (editnewleavecount == null)
+                var user = _userManager.GetUserAsync(User).Result;
+                var udser = _userManager.Users.Where(w => w.Id == userid).FirstOrDefault();
+               
+                //newleavecount.Userid = udser.UserName;
+                model.UserName = udser.UserName;
+                model.Userid = udser.Id;
+                return View(model);
+            }
+            else
             {
-                return NotFound();
+                var editnewleavecount = (from data in _context.LeaveCount
+                                         join user in _userManager.Users on userid equals user.Id
+                                         where data.Id == id
+                                         select new LeaveCountViewModel
+                                         {
+
+                                             Id = data.Id,
+                                             UserName = userid,
+                                             Fromdate = data.Fromdate,
+                                             Todate = data.Todate,
+                                             Filename = data.FileUpload,
+                                             Count = data.Count,
+                                             EmployeeDescription = data.EmployeeDescription,
+                                             HrDescription = data.HrDescription,
+                                             Isapprove = data.Isapprove,
+                                             ApproveDate = data.ApproveDate,
+                                             Approveby = data.Approveby
+
+                                         }).FirstOrDefault();
+                return View(editnewleavecount);
+                    //_context.LeaveCount.
+                    //Where(x => x.Id.Equals(id)).Select().FirstOrDefault();
             }
 
-            return View(editnewleavecount);
+            ////edit leavecount master
+            //LeaveCount editnewleavecount = new LeaveCount();
+            //editnewleavecount = _context.LeaveCount.Where(x => x.Id.Equals(id)).FirstOrDefault();
+            //editnewleavecount.Userid = username;
+            //if (editnewleavecount == null)
+            //{
+            //    return NotFound();
+            //}
+
+            //return View(editnewleavecount);
 
         }
 
@@ -329,7 +439,7 @@ namespace coderush.Controllers
             catch (Exception ex)
             {
                 TempData[StaticString.StatusMessage] = "Error: " + ex.Message;
-                return RedirectToAction(nameof(Delete), new { id = leave.Id > 0 ? leave.Id : 0 });
+                return RedirectToAction(nameof(Delete), new { id = leave.Id > 0 ? leave.Id : 0, userid = leave.Userid });
             }
         }
 
@@ -400,6 +510,26 @@ namespace coderush.Controllers
             return Json(Data);
         }
 
+        [HttpPost]
+        public ActionResult leavepopuop(int Id, string HrDescription, bool Isapprove)
+        {
+
+            try
+            {
+                var models = _context.LeaveCount.Where(x => x.Id == Id).FirstOrDefault();
+                models.HrDescription = HrDescription;
+                models.Isapprove = Isapprove;
+                _context.SaveChanges();
+                var result = new { Success = "true", Message = "Data save successfully." };
+                return Json(result);
+            }
+            catch (Exception ex)
+            {
+                var result = new { Success = "False", Message = ex.Message };
+                return Json(result);
+            }
+
+        }
         //[HttpPost]
         //public async Task<IActionResult> Delete(int Id)
         //{

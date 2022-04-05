@@ -14,10 +14,9 @@ using System.Collections.Generic;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Authorization;
 
-
 namespace coderush.Controllers
 {
-    [Authorize(Roles = "HR,SuperAdmin")]
+    [Authorize(Roles = "HR,SuperAdmin")] 
     public class CandidateMasterController : Controller
     {
         private readonly ILogger<HomeController> _logger;
@@ -28,7 +27,7 @@ namespace coderush.Controllers
         public CandidateMasterController(ILogger<HomeController> logger, UserManager<ApplicationUser> userManager,
             RoleManager<IdentityRole> roleManager,
             ApplicationDbContext context,
-            IWebHostEnvironment webHostEnvironment)
+            IWebHostEnvironment webHostEnvironment) 
         {
             _logger = logger;
             _roleManager = roleManager;
@@ -37,15 +36,14 @@ namespace coderush.Controllers
             _context = context;
             //_hostingEnvironment = hostingEnvironment;
         }
-        public IActionResult CandidateIndex(string sdate, string edate, string curentmonth, string lastmont/*, string technologies*/)
+        public IActionResult CandidateIndex(string sdate, string edate, string lastmont, string technology)
         {
             var user = _userManager.GetUserAsync(User).Result;
             var typelist1 = _context.Datamaster.Where(x => x.Type == DataSelection.technologies).ToList();
 
             //TimeSpan timespan = new TimeSpan(03, 00, 00);
             //DateTime time = DateTime.Today.Add(timespan);
-            //string displayTime = time.ToString("hh:mm tt");
-
+            //string displayTime = time.ToString("hh:mm tt"); 
 
             ViewBag.CandidatetechnologiesList = typelist1.Select(v => new SelectListItem
             {
@@ -56,137 +54,100 @@ namespace coderush.Controllers
 
             DateTime? nulldate = null;
 
-            //data = (from candidate in _context.CandidateMaster
-            //            //from Comments in _context.Comments
-            //        where !candidate.IsDelete
-            //        let commentdate = _context.Comments.OrderByDescending(x => x.Id).Where(w => w.CandidateId == candidate.Id).Select(s => s.NextFollowUpdate).FirstOrDefault()
-
-            //        select new CandidateMastersViewModel
-            //        {
-            //            Id = candidate.Id,
-            //            Name = candidate.Name,
-            //            Email = candidate.Email,
-            //            Phone = candidate.Phone,
-            //            technologies = _context.Datamaster.Where(x => x.Id == candidate.Technologies).Select(x => x.Text).FirstOrDefault(),
-            //            filename = candidate.FileUpload,
-            //            IsActive = candidate.IsActive,
-            //            InterviewDate = candidate.InterviewDate,
-            //            PlaceOfInterview = candidate.PlaceOfInterview,
-            //            InterviewDescription = candidate.InterviewDescription,
-            //            InterviewTime = candidate.InterviewTime,
-            //            IsReject = candidate.IsReject,
-            //            Status = candidate.Status,
-            //            dateforNext = (commentdate != null ? commentdate : nulldate),
-            //            CreatedBy = _userManager.Users.Where(x => x.Id == candidate.CreatedBy).Select(x => x.FirstName + " " + x.LastName).FirstOrDefault(), //user.Id.ToString(),
-            //            CreatedDate = candidate.CreatedDate,
-            //            //dateforNext = Comments.NextFollowUpdate,
-
-
-            //        }).ToList();
-           data = (from candidate in _context.CandidateMaster
-             where !candidate.IsDelete
-             let commentdate = _context.Comments.OrderByDescending(x => x.Id).Where(w => w.CandidateId == candidate.Id).Select(s => s.NextFollowUpdate).FirstOrDefault()
-             let last7Day = DateTime.Now.AddDays(-8)
-             orderby candidate.Id descending
-             select new CandidateMastersViewModel
-
-             {
-                 Id = candidate.Id,
-                 Name = candidate.Name,
-                 Email = candidate.Email,
-                 Phone = candidate.Phone,
-                 technologies = _context.Datamaster.Where(x => x.Id == candidate.Technologies).Select(x => x.Text).FirstOrDefault(),
-                 filename = candidate.FileUpload,
-                 IsActive = candidate.IsActive,
-                 InterviewDate = candidate.InterviewDate,
-                 PlaceOfInterview = candidate.PlaceOfInterview,
-                 InterviewDescription = candidate.InterviewDescription,
-                 InterviewTime = candidate.InterviewTime,
-                 IsReject = candidate.IsReject,
-                 Status = candidate.Status,
-                 dateforNext = (commentdate != null ? commentdate : nulldate),
-                 CreatedBy = _userManager.Users.Where(x => x.Id == candidate.CreatedBy).Select(x => x.FirstName + " " + x.LastName).FirstOrDefault(),
-                 CreatedDate = candidate.CreatedDate,
-                 Color = last7Day > candidate.InterviewDate ? "" : "#ffe0bb",
-             }).ToList();
-
           
+            var TODAYDATE = DateTime.Now.AddDays(-1);
+            var top8date = _context.CandidateMaster.OrderByDescending(x => x.InterviewDate).Take(9).ToList();
+            var maxdate = top8date.Where(x => x.InterviewDate > TODAYDATE).Max(x => x.InterviewDate);
+            var mindate = top8date.Where(x => x.InterviewDate > TODAYDATE).Min(x => x.InterviewDate);
+            data = (from candidate in _context.CandidateMaster.OrderByDescending(x => x.Id)
+                    where !candidate.IsDelete
+                    
+
+                    //orderby candidate.Id descending
+                    let commentdate = _context.Comments.OrderByDescending(x => x.Id).Where(w => w.CandidateId == candidate.Id).Select(s => s.NextFollowUpdate).FirstOrDefault()                   
+                    //let After7Day = DateTime.Now.AddDays(+9)
+                    select new CandidateMastersViewModel
+                    {
+                        Id = candidate.Id,
+                        Name = candidate.Name,
+                        Email = candidate.Email,
+                        Phone = candidate.Phone,
+                        Technologies =candidate.Technologies,
+                        technologies = _context.Datamaster.Where(x => x.Id == candidate.Technologies).Select(x => x.Text).FirstOrDefault(),
+                        filename = candidate.FileUpload,
+                        IsActive = candidate.IsActive,
+                        InterviewDate = candidate.InterviewDate,
+                        PlaceOfInterview = candidate.PlaceOfInterview,
+                        InterviewDescription = candidate.InterviewDescription,
+                        InterviewTime = candidate.InterviewTime,
+                        IsReject = candidate.IsReject,
+                        Status = candidate.Status,
+                        dateforNext = (commentdate != null ? commentdate : nulldate),
+                        CreatedBy = _userManager.Users.Where(x => x.Id == candidate.CreatedBy).Select(x => x.FirstName + " " + x.LastName).FirstOrDefault(),
+                        CreatedDate = candidate.CreatedDate,
+                        //Color = Last7Day < candidate.InterviewDate && TODAYDATE < candidate.InterviewDate ? "" : "#ffe0bb"
+                        Color = (mindate <= candidate.InterviewDate) && (maxdate >= candidate.InterviewDate) ?  "#ffe0bb" : ""
+                        //Color = TODAYDATE < candidate.InterviewDate ? "" : "#ffe0bb"
+
+                    }).ToList();
+
             try
             {
                 int montha;
-                if (curentmonth == "3")
+                if (lastmont == "2")
                 {
                     int dt = DateTime.Now.Month;
 
-                    data = data.Where(x => x.IsDelete == false && x.InterviewDate.Value.Month == dt).ToList();
-                    //  return View(data);
+                  data = data.Where(w => w.InterviewDate.Value.Month == dt).ToList();
                 }
-                else if (lastmont == "2")
+
+                if (lastmont == "1")
                 {
                     var today = DateTime.Today;
                     var month = new DateTime(today.Year, today.Month, 1);
                     var first = month.AddMonths(-1);
                     montha = first.Month;
 
-                    data = data.Where(x => x.IsDelete == false && x.InterviewDate.Value.Month == montha).ToList();
-                    // return View(data);
+                    data = data.Where(w => w.InterviewDate.Value.Month == montha).ToList();
+
                 }
-
-                //if (technologies != null)
-                //{
-                //    data = data.Where(x => x.IsDelete == false
-                //                         && x.Technologies == Convert.ToInt32(technologies)).ToList();
-                //}
-
-                //if (sdate == null && )
-                //{
-
-                //    //var getfist = _context.CandidateMaster.Where(x => !x.IsDelete).OrderByDescending(x => x.Id).FirstOrDefault();
-                //    // var last7Day = getfist.InterviewDate.Value.AddDays(-8);
-                //    //var commentdate = _context.Comments.OrderByDescending(x => x.Id).Where(w => w.Id == w.CandidateId).Select(s => s.NextFollowUpdate).FirstOrDefault();
-                //    //var serch = _context.CandidateMaster.Where(x => !x.IsDelete).Select(candidate => new CandidateMastersViewModel
-
-                //    var search = (from candidate in _context.CandidateMaster
-                //                  where !candidate.IsDelete
-                //                  let commentdate = _context.Comments.OrderByDescending(x => x.Id).Where(w => w.CandidateId == candidate.Id).Select(s => s.NextFollowUpdate).FirstOrDefault()
-                //                  let last7Day = DateTime.Now.AddDays(-8)
-                //                   select new CandidateMastersViewModel
-
-                //                  {
-                //                      Id = candidate.Id,
-                //                      Name = candidate.Name,
-                //                      Email = candidate.Email,
-                //                      Phone = candidate.Phone,
-                //                      technologies = _context.Datamaster.Where(x => x.Id == candidate.Technologies).Select(x => x.Text).FirstOrDefault(),
-                //                      filename = candidate.FileUpload,
-                //                      IsActive = candidate.IsActive,
-                //                      InterviewDate = candidate.InterviewDate,
-                //                      PlaceOfInterview = candidate.PlaceOfInterview,
-                //                      InterviewDescription = candidate.InterviewDescription,
-                //                      InterviewTime = candidate.InterviewTime,
-                //                      IsReject = candidate.IsReject,
-                //                      Status = candidate.Status,
-                //                      dateforNext = (commentdate != null ? commentdate : nulldate),
-                //                      CreatedBy = _userManager.Users.Where(x => x.Id == candidate.CreatedBy).Select(x => x.FirstName + " " + x.LastName).FirstOrDefault(),
-                //                      CreatedDate = candidate.CreatedDate,
-                //                      Color = last7Day > candidate.InterviewDate ? "" : "#ffe0bb",
-                //                  }).ToList();
-
-                //    data = search;
-
-                //   // return View(search);
-
-                //}
-                else if (sdate != null && edate != null)
+                if (lastmont == "0")
                 {
-                    ViewBag.startdate = sdate;
-                    ViewBag.enddate = edate;
-
-                    data = data.Where(x => x.IsDelete == false
-                                         && x.InterviewDate >= Convert.ToDateTime(sdate) && x.InterviewDate <= Convert.ToDateTime(edate)).ToList();
+                    data = data.ToList();
                 }
-                data.OrderBy(x => x.CreatedDate).ToList();
+
+                if (technology != null)
+                {
+                    var T = Convert.ToInt32(technology);
+                    if (T == 0)
+                    {
+                        data = data.ToList();
+
+                    }
+                    else
+                    {
+                      
+                        data = data.Where(w => w.Technologies == T).ToList();
+                    }
+                }
+
+                if (sdate != null && edate != null)
+                {
+                    data = data.Where(w =>
+                                             w.InterviewDate >= Convert.ToDateTime(sdate)
+                                            && w.InterviewDate <= Convert.ToDateTime(edate)
+                                           ).ToList();
+
+                }
+
+
+                ViewData["selectedtech"] = technology;
+                ViewData["lastmonth"] = lastmont;
+                ViewData["sdate"] = sdate;
+                ViewData["edate"] = edate;
             }
+               
+               
             catch (Exception ex)
             {
                 throw ex;
@@ -419,7 +380,7 @@ namespace coderush.Controllers
         }
 
 
-        public ActionResult Notes(int id)                           
+        public ActionResult Notes(int id)
         {
             if (id == 0)
             {
@@ -427,7 +388,7 @@ namespace coderush.Controllers
             }
 
             Comments model = new Comments();
-
+          // ViewData["user"] = _userManager.GetUserAsync(User).Result;
             var models = _context.Comments.Where(x => x.CandidateId.Equals(id)).ToList();
 
             return Json(models);
@@ -438,11 +399,13 @@ namespace coderush.Controllers
 
             try
             {
+               var user = _userManager.GetUserAsync(User).Result;
                 Comments models = new Comments();
                 models.CandidateId = data.Id;
                 models.Note = data.Note;
                 models.NextFollowUpdate = data.NextFollowUpdate;
                 models.Status = data.Status;
+                models.LoginUser = user.Email;
                 _context.Comments.Add(models);
                 _context.SaveChanges();
                 var result = new { Success = "true", Message = "Data save successfully." };

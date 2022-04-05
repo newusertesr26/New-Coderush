@@ -78,17 +78,17 @@
                 </li>
             }
             @*@if (roles.Contains("SuperAdmin"))
-            {
-                <li class="@Html.IsSelected(controller: Pages.LeadMaster.ControllerName)">
-                    <a href="@Pages.LeadMaster.UrlDefault">
-                        <i class="fa fa-th"></i> <span>@Pages.LeadMaster.NavigationName</span>
-                        <span class="pull-right-container">
-                            <small class="label pull-right bg-green">List</small>
-                        </span>
-                    </a>
-                </li>
-            }*@
-            @if (roles.Contains("SuperAdmin") || roles.Contains("HR"))
+        {
+            <li class="@Html.IsSelected(controller: Pages.LeadMaster.ControllerName)">
+                <a href="@Pages.LeadMaster.UrlDefault">
+                    <i class="fa fa-th"></i> <span>@Pages.LeadMaster.NavigationName</span>
+                    <span class="pull-right-container">
+                        <small class="label pull-right bg-green">List</small>
+                    </span>
+                </a>
+            </li>
+        }*@
+            @if (roles.Contains("SuperAdmin") || roles.Contains("HR") || roles.Contains("Employee"))
             {
                 <li class="@Html.IsSelected(controller: Pages.Leavecount.ControllerName)">
                     <a href="@Pages.Leavecount.UrlDefault">
@@ -100,27 +100,27 @@
                 </li>
             }
             @*@if (roles.Contains("SuperAdmin") || roles.Contains("Sales"))
-            {
-                <li class="@Html.IsSelected(controller: Pages.ProjectMaster.ControllerName)">
-                    <a href="@Pages.ProjectMaster.UrlDefault">
-                        <i class="fa fa-th"></i> <span>@Pages.ProjectMaster.NavigationName</span>
-                        <span class="pull-right-container">
-                            <small class="label pull-right bg-green">List</small>
-                        </span>
-                    </a>
-                </li>
-            }*@
+        {
+            <li class="@Html.IsSelected(controller: Pages.ProjectMaster.ControllerName)">
+                <a href="@Pages.ProjectMaster.UrlDefault">
+                    <i class="fa fa-th"></i> <span>@Pages.ProjectMaster.NavigationName</span>
+                    <span class="pull-right-container">
+                        <small class="label pull-right bg-green">List</small>
+                    </span>
+                </a>
+            </li>
+        }*@
             @*@if (roles.Contains("SuperAdmin") || roles.Contains("Sales"))
-            {
-                <li class="@Html.IsSelected(controller: Pages.InvoiceMaster.ControllerName)">
-                    <a href="@Pages.InvoiceMaster.UrlDefault">
-                        <i class="fa fa-th"></i> <span>@Pages.InvoiceMaster.NavigationName</span>
-                        <span class="pull-right-container">
-                            <small class="label pull-right bg-green">List</small>
-                        </span>
-                    </a>
-                </li>
-            }*@
+        {
+            <li class="@Html.IsSelected(controller: Pages.InvoiceMaster.ControllerName)">
+                <a href="@Pages.InvoiceMaster.UrlDefault">
+                    <i class="fa fa-th"></i> <span>@Pages.InvoiceMaster.NavigationName</span>
+                    <span class="pull-right-container">
+                        <small class="label pull-right bg-green">List</small>
+                    </span>
+                </a>
+            </li>
+        }*@
             @if (roles.Contains("SuperAdmin") || roles.Contains("HR"))
             {
                 <li class="@Html.IsSelected(controller: Pages.Todo.ControllerName)">
@@ -188,6 +188,8 @@
                     </a>
                 </li>
             }
+
+           
         </ul>
     </section>
     <!-- /.sidebar -->
