@@ -16,7 +16,7 @@ using Microsoft.AspNetCore.Authorization;
 
 namespace coderush.Controllers
 {
-    [Authorize(Roles = "HR,SuperAdmin")]
+    [Authorize(Roles = "HR,SuperAdmin")] 
     public class CandidateMasterController : Controller
     {
         private readonly ILogger<HomeController> _logger;
@@ -27,7 +27,7 @@ namespace coderush.Controllers
         public CandidateMasterController(ILogger<HomeController> logger, UserManager<ApplicationUser> userManager,
             RoleManager<IdentityRole> roleManager,
             ApplicationDbContext context,
-            IWebHostEnvironment webHostEnvironment)
+            IWebHostEnvironment webHostEnvironment) 
         {
             _logger = logger;
             _roleManager = roleManager;
@@ -36,7 +36,7 @@ namespace coderush.Controllers
             _context = context;
             //_hostingEnvironment = hostingEnvironment;
         }
-        public IActionResult CandidateIndex(string sdate, string edate, string curentmonth, string lastmont, string nameOrEamil, string Technologieshar/*, string technologies*/)
+        public IActionResult CandidateIndex(string sdate, string edate, string lastmont, string technology)
         {
             var user = _userManager.GetUserAsync(User).Result;
             var typelist1 = _context.Datamaster.Where(x => x.Type == DataSelection.technologies).ToList();
@@ -54,17 +54,17 @@ namespace coderush.Controllers
 
             DateTime? nulldate = null;
 
-
+          
             var TODAYDATE = DateTime.Now.AddDays(-1);
             var top8date = _context.CandidateMaster.OrderByDescending(x => x.InterviewDate).Take(9).ToList();
             var maxdate = top8date.Where(x => x.InterviewDate > TODAYDATE).Max(x => x.InterviewDate);
             var mindate = top8date.Where(x => x.InterviewDate > TODAYDATE).Min(x => x.InterviewDate);
             data = (from candidate in _context.CandidateMaster.OrderByDescending(x => x.Id)
                     where !candidate.IsDelete
-
+                    
 
                     //orderby candidate.Id descending
-                    let commentdate = _context.Comments.OrderByDescending(x => x.Id).Where(w => w.CandidateId == candidate.Id).Select(s => s.NextFollowUpdate).FirstOrDefault()
+                    let commentdate = _context.Comments.OrderByDescending(x => x.Id).Where(w => w.CandidateId == candidate.Id).Select(s => s.NextFollowUpdate).FirstOrDefault()                   
                     //let After7Day = DateTime.Now.AddDays(+9)
                     select new CandidateMastersViewModel
                     {
@@ -72,7 +72,7 @@ namespace coderush.Controllers
                         Name = candidate.Name,
                         Email = candidate.Email,
                         Phone = candidate.Phone,
-                        Technologies = candidate.Technologies,
+                        Technologies =candidate.Technologies,
                         technologies = _context.Datamaster.Where(x => x.Id == candidate.Technologies).Select(x => x.Text).FirstOrDefault(),
                         filename = candidate.FileUpload,
                         IsActive = candidate.IsActive,
@@ -86,7 +86,7 @@ namespace coderush.Controllers
                         CreatedBy = _userManager.Users.Where(x => x.Id == candidate.CreatedBy).Select(x => x.FirstName + " " + x.LastName).FirstOrDefault(),
                         CreatedDate = candidate.CreatedDate,
                         //Color = Last7Day < candidate.InterviewDate && TODAYDATE < candidate.InterviewDate ? "" : "#ffe0bb"
-                        Color = (mindate <= candidate.InterviewDate) && (maxdate >= candidate.InterviewDate) ? "#ffe0bb" : ""
+                        Color = (mindate <= candidate.InterviewDate) && (maxdate >= candidate.InterviewDate) ?  "#ffe0bb" : ""
                         //Color = TODAYDATE < candidate.InterviewDate ? "" : "#ffe0bb"
 
                     }).ToList();
@@ -98,7 +98,7 @@ namespace coderush.Controllers
                 {
                     int dt = DateTime.Now.Month;
 
-                    data = data.Where(w => w.InterviewDate.Value.Month == dt).ToList();
+                  data = data.Where(w => w.InterviewDate.Value.Month == dt).ToList();
                 }
 
                 if (lastmont == "1")
@@ -108,44 +108,52 @@ namespace coderush.Controllers
                     var first = month.AddMonths(-1);
                     montha = first.Month;
 
-                    data = data.Where(x => x.IsDelete == false && x.InterviewDate.Value.Month == montha).ToList();
+                    data = data.Where(w => w.InterviewDate.Value.Month == montha).ToList();
+
                 }
-
-
-                else if (sdate != null && edate != null)
+                if (lastmont == "0")
                 {
-                    ViewBag.startdate = sdate;
-                    ViewBag.enddate = edate;
+                    data = data.ToList();
                 }
-            }
 
-            //        data = data.Where(x => x.IsDelete == false
-            //                             && x.InterviewDate >= Convert.ToDateTime(sdate) && x.InterviewDate <= Convert.ToDateTime(edate)).ToList();
-            //    }
-            //    data.OrderBy(x => x.CreatedDate).ToList();
-            //}
+                if (technology != null)
+                {
+                    var T = Convert.ToInt32(technology);
+                    if (T == 0)
+                    {
+                        data = data.ToList();
+
+                    }
+                    else
+                    {
+                      
+                        data = data.Where(w => w.Technologies == T).ToList();
+                    }
+                }
+
+                if (sdate != null && edate != null)
+                {
+                    data = data.Where(w =>
+                                             w.InterviewDate >= Convert.ToDateTime(sdate)
+                                            && w.InterviewDate <= Convert.ToDateTime(edate)
+                                           ).ToList();
+
+                }
+
+
+                ViewData["selectedtech"] = technology;
+                ViewData["lastmonth"] = lastmont;
+                ViewData["sdate"] = sdate;
+                ViewData["edate"] = edate;
+            }
+               
+               
             catch (Exception ex)
             {
                 throw ex;
             }
 
-
-            if (nameOrEamil != null && nameOrEamil != "")
-            {
-                data = data.Where(x => x.Name.Contains(nameOrEamil) || x.Email.Contains(nameOrEamil)).ToList();
-            }
-
-            if (Technologieshar != null && Technologieshar != "")
-            {
-                data = data.Where(x => x.Technologies.ToString() == Technologieshar).ToList();
-            }
-
             return View(data);
-
-
-
-
-
         }
 
         //ViewBag.Role = HttpContext.Session.GetString("Role");
@@ -380,7 +388,7 @@ namespace coderush.Controllers
             }
 
             Comments model = new Comments();
-
+          // ViewData["user"] = _userManager.GetUserAsync(User).Result;
             var models = _context.Comments.Where(x => x.CandidateId.Equals(id)).ToList();
 
             return Json(models);
@@ -391,11 +399,13 @@ namespace coderush.Controllers
 
             try
             {
+               var user = _userManager.GetUserAsync(User).Result;
                 Comments models = new Comments();
                 models.CandidateId = data.Id;
                 models.Note = data.Note;
                 models.NextFollowUpdate = data.NextFollowUpdate;
                 models.Status = data.Status;
+                models.LoginUser = user.Email;
                 _context.Comments.Add(models);
                 _context.SaveChanges();
                 var result = new { Success = "true", Message = "Data save successfully." };

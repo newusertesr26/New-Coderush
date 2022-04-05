@@ -1,6 +1,6 @@
 ﻿@using Microsoft.AspNetCore.Identity
 @using coderush.Models.ViewModels
-@model List<ExpenseMasterViewModel>
+@model coderush.Models.ViewModels.ExpenseMasterViewModel;
 @inject UserManager<ApplicationUser> _userManager
 @{ ViewData["Title"] = "Expense";
     var user = await _userManager.GetUserAsync(User);
@@ -64,17 +64,17 @@
                     </div>
                     <div class="col-lg-4">
                         <div class="serch-btn">
-                            <a href="/ExpenseMaster/ExpenseIndex" class="btn btn-primary" id="btnSearch">Search</a>
-                            <a href="/ExpenseMaster/ExpenseIndex?lastmont=1" class="btn btn-primary" id="btnLastMonth">Last Month</a>
-                            <a href="/ExpenseMaster/ExpenseIndex?curentmonth=2" class="btn btn-primary" id="btnCurrentMonth">Current Month</a>
+                            <a href="/ExpenseMaster/ExpenseIndex" style="margin-top: 25px" class="btn btn-primary" id="btnSearch">Search</a>
+                            <a href="/ExpenseMaster/ExpenseIndex?lastmont=1" style="margin-top: 25px" class="btn btn-primary" id="btnLastMonth">Last Month</a>
+                            <a href="/ExpenseMaster/ExpenseIndex?curentmonth=2" style="margin-top: 25px" class="btn btn-primary" id="btnCurrentMonth">Current Month</a>
                             @*<a href="#"><i id="myModal" onclick="Creadit" &nbsp; class="fa fa-comments-o"></i></a>*@
                             @*<br />
-                                <br />
-                                <a href="/ExpenseMaster/ExpenseIndex" onclick="openNote" class="btn btn-primary" id="myModal">Creadit</a>*@
+                <br />
+                <a href="/ExpenseMaster/ExpenseIndex" onclick="openNote" class="btn btn-primary" id="myModal">Creadit</a>*@
                             @*<button type="button" class="btn btn-primary" data-toggle="modal" data-target="#myModal">Credit </button>*@
                         </div>
                     </div>
-
+                
                 </div>
             </div>
 
@@ -139,12 +139,40 @@
 
             <!-- Default box -->
             <div class="box-header with-border">
-                <h3 class="box-title">List of Expense item</h3>
-                <div class="box-tools pull-right">
-                    <a href="/ExpenseMaster/Form" class="btn btn-primary"><i class="fa fa-plus"></i></a>
-                    <button type="button" class="btn btn-primary" id="mybutton">Credit</button> @*data-target="#myModal" data-toggle="modal"*@
+                <div class="col-lg-3">
+                    <h3 class="box-title">List of Expense item</h3>
                 </div>
-            </div>
+
+                    <div class="col-lg-3">
+                        <label style="margin-top: 10px ;font :bold ;color:red"> Total Credited Amount: </label>
+                        <label style="font :bold ;color:red">  @ViewBag.TotalCredit INR </label>
+                    </div>
+                    <div class="col-lg-3">
+                        <label style="margin-top: 10px; font: bold; color: red ">Total Expense Amount: </label>
+                        <label style="font :bold ;color:red">
+                            @ViewBag.TotalExpense INR
+                        </label>
+
+                    </div>
+
+                    <div class="col-lg-3">
+                        <label style="margin-top: 10px; font: bold; color: red"> Balance: </label>
+                        <label style="font :bold ;color:red">
+                            @{var credit = ViewBag.TotalCredit;
+                                var expense = ViewBag.TotalExpense;
+                                var balance = credit - expense;
+                                ViewBag.Balance = balance;
+                            }
+                            @ViewBag.Balance INR
+                        </label>
+
+                    </div>
+
+                    <div class="box-tools pull-right">
+                        <a href="/ExpenseMaster/Form" class="btn btn-primary"><i class="fa fa-plus"></i></a>
+                        <button type="button" onclick="" class="btn btn-primary" id="mybutton">Credit</button> @*data-target="#myModal" data-toggle="modal"*@
+                    </div>
+                </div>
             <div class="box-body">
                 <div class="table-responsive">
                     <table id="grid" class="table table-striped" cellspacing="0" width="100%">
@@ -168,7 +196,7 @@
                             </tr>
                         </thead>
                         <tbody>
-                            @foreach (var item in Model)
+                            @foreach (var item in Model.List)
                             {
                                 <tr>
                                     <td>
@@ -183,6 +211,7 @@
                                     </td>
                                     <td>
                                         @item.Amount
+                                       
                                     </td>
                                     <td>
                                         @item.ExpenseDate.Value.ToString("dd MMMM yyyy")
@@ -310,6 +339,7 @@
                     //data: { "id": id },
                     success: function (response) {
                         console.log(response);
+                   
                         if (response != null) {
                             var innerHtml = '';
                             $.each(response, function (i, v) {
@@ -321,6 +351,7 @@
                                 innerHtml += "</tr>"
                             });
                             $("#notebody").html(innerHtml);
+                           
                         }
                     },
                     error: function (response) {

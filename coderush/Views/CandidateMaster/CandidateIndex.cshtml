@@ -28,7 +28,7 @@
     }
 </style>
 
-<!-- Content Wrapper. Contains page content -->
+    <!-- Content Wrapper. Contains page content -->
 <div class="content-wrapper">
     <!-- Content Header (Page header) -->
     <section class="content-header">
@@ -41,21 +41,28 @@
 
     </section>
     <!-- Main content -->
-    <section class="content">
-        <!-- Default box -->
-        <form>
+    <form asp-controller="CandidateMaster" asp-action="CandidateIndex" method="get">
+        <section class="content">
+            <!-- Default box -->
             <div class="box">
                 <div class="box-header with-border">
+                    <h3 class="box-title">List of Candidate item</h3>
+                    <div class="box-tools pull-right">
+                        <a href="/ProjectMaster/Form" class="btn btn-primary"><i class="fa fa-plus"></i></a>
+                    </div>
+                </div>
+                <div class="box-body">
+
                     <div class="row">
 
-                        <div class="col-lg-3">
+                        <div class="col-lg-2">
                             <label>From Date:</label>
-                            <input id="canFromDate" type="date" class="form-control" />
+                            <input id="canFromDate" asp-for="@ViewData["sdate"]" type="date" name="sdate" class="form-control" />
                         </div>
-                        @*Start Date: <input type="datetime" name="sdate" />*@
-                        <div class="col-lg-3">
+
+                        <div class="col-lg-2">
                             <label>TO:</label>
-                            <input id="canTO" type="date" class="form-control" />
+                            <input id="canTO" type="date" asp-for="@ViewData["edate"]" name="edate" class="form-control" />
 
                         </div>
                         <div class="col-lg-2">
@@ -77,42 +84,42 @@
                             <button id="clear" style="margin-top: 25px" class="btn btn-primary">Clear</button>
                         </div>
 
-                    </div>
-                    <br />
-                    <br />
-                    @*<div class="col-md-4">
-                            <select name="type" class="form-control" style="" id="btnddl" asp-items="@ViewBag.CandidatetechnologiesList">
-                                <option value="">-- ALL --</option>
-                            </select>
-                        </div>*@
-                    <h3 class="box-title">List of Candidate item</h3>
-                    <div class="box-tools pull-right">
-                        <a href="/CandidateMaster/Form" class="btn btn-primary"><i class="fa fa-plus"></i></a>
-                    </div>
                 </div>
-                <div class="box-body">
-                    <div class="table-responsive">
-                        <table id="grid" class="table table-striped" cellspacing="0" width="100%">
-                            <thead>
-                                <tr>
-                                    <th>Sr No.</th>
-                                    <th width="20%">Name</th>
-                                    <th width="10%">Email</th>
-                                    <th width="8%">Phone</th>
-                                    <th width="10%">Technologies</th>
-                                    <th width="4%">CV</th>
-                                    <th width="10%">Interview Date/Time</th>
-                                    <th width="10%">Place Of Interview</th>
-                                    <th width="10%">Interview Description</th>
-                                    <th width="10%">Created By / Date</th>
-                                    <th width="10%">Next FollowUp date</th>
-                                    <th width="10%">Status</th>
-                                    <th id="cmtopenbtn">Comment</th>
-                                    <th>Action</th>
-                                    <th></th>
-                                </tr>
-                            </thead>
-                            <tbody>
+                <br />
+                <br />
+                @*<div class="col-md-4">
+                        <select name="type" class="form-control" style="" id="btnddl" asp-items="@ViewBag.CandidatetechnologiesList">
+                            <option value="">-- ALL --</option>
+                        </select>
+                    </div>*@
+                <h3 class="box-title">List of Candidate item</h3>
+                <div class="box-tools pull-right">
+                    <a href="/CandidateMaster/Form" class="btn btn-primary"><i class="fa fa-plus"></i></a>
+                </div>
+            </div>
+            <div class="box-body">
+                <div class="table-responsive">
+                    <table id="grid" class="table table-striped" cellspacing="0" width="100%">
+                        <thead>
+                            <tr>
+                                <th>Sr No.</th>
+                                <th width="20%">Name</th>
+                                <th width="10%">Email</th>
+                                <th width="8%">Phone</th>
+                                <th width="10%">Technologies</th>
+                                <th width="4%">CV</th>
+                                <th width="10%">Interview Date/Time</th>
+                                <th width="10%">Place Of Interview</th>
+                                <th width="10%">Interview Description</th>
+                                <th width="10%">Created By / Date</th>
+                                <th width="10%">Next FollowUp date</th>
+                                <th width="10%">Status</th>
+                                <th id="cmtopenbtn">Comment</th>
+                                <th>Action</th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody>
 
                                 @foreach (var item in Model)
                                 {
@@ -122,62 +129,62 @@
                                         dtDateTime = dtDateTime.AddSeconds(item.InterviewTime.Value.TotalSeconds).ToLocalTime();
                                     }
 
-                                    @*@if (DateTime.Today.AddDays(-8) < currentDate)
-                                        {
-                                            COLOR = "";
-                                        }
-                                        else
-                                        {
-                                            COLOR = "";
-                                        }
-                                        COUNT++;*@
-                                    <tr style="background-color:@item.Color">
-                                        <td>
-                                            @item.Id
-                                        </td>
-                                        <td>
-                                            @item.Name
-                                        </td>
-                                        <td>
-                                            @item.Email
-                                        </td>
-                                        <td>
-                                            @item.Phone
-                                        </td>
-                                        <td>
-                                            @item.technologies
-                                        </td>
-                                        <td>
-                                            <a href="~/document/Candidate/@item.filename" target="_blank"><i class="fa fa-download"></i></a>
-                                        </td>
-                                        <td>
-                                            @item.InterviewDate.Value.ToString("dd MMMM yyyy")
-                                            &nbsp;&nbsp;&nbsp;
-                                            @(item.InterviewTime.HasValue? dtDateTime.ToString("hh:mm tt", CultureInfo.InvariantCulture):"")
-                                        </td>
-                                        <td>
-                                            @item.PlaceOfInterview
-                                        </td>
-                                        <td>
-                                            @item.InterviewDescription
-                                        </td>
-                                        <td>
-                                            @item.CreatedBy
-                                            &nbsp;&nbsp;&nbsp;
-                                            @item.CreatedDate
-                                        </td>
-                                        <td>
+                                @*@if (DateTime.Today.AddDays(-8) < currentDate)
+                                    {
+                                        COLOR = "";
+                                    }
+                                    else
+                                    {
+                                        COLOR = "";
+                                    }
+                                    COUNT++;*@
+                                <tr style="background-color:@item.Color">
+                                    <td>
+                                        @item.Id
+                                    </td>
+                                    <td>
+                                        @item.Name
+                                    </td>
+                                    <td>
+                                        @item.Email
+                                    </td>
+                                    <td>
+                                        @item.Phone
+                                    </td>
+                                    <td>
+                                        @item.technologies
+                                    </td>
+                                    <td>
+                                        <a href="~/document/Candidate/@item.filename" target="_blank"><i class="fa fa-download"></i></a>
+                                    </td>
+                                    <td>
+                                        @item.InterviewDate.Value.ToString("dd MMMM yyyy")
+                                        &nbsp;&nbsp;&nbsp;
+                                        @(item.InterviewTime.HasValue? dtDateTime.ToString("hh:mm tt", CultureInfo.InvariantCulture):"")
+                                    </td>
+                                    <td>
+                                        @item.PlaceOfInterview
+                                    </td>
+                                    <td>
+                                        @item.InterviewDescription
+                                    </td>
+                                    <td>
+                                        @item.CreatedBy
+                                        &nbsp;&nbsp;&nbsp;
+                                        @item.CreatedDate
+                                    </td>
+                                    <td>
 
-                                            @{
-                                                if (item.dateforNext != null)
-                                                {
-                                                    @item.dateforNext.Value.ToString("dd MMMM yyyy");
-                                                }
-                                                else
-                                                {
-                                                    <label></label>
-                                                }
+                                        @{
+                                            if (item.dateforNext != null)
+                                            {
+                                                @item.dateforNext.Value.ToString("dd MMMM yyyy");
                                             }
+                                            else
+                                            {
+                                                <label></label>
+                                            }
+                                        }
 
                                         </td>
                                         <td>
@@ -224,90 +231,91 @@
                 <!-- /.box-body -->
             </div>
             <!-- /.box -->
-        </form>
-    </section>
+        </section>
+       </form>
 </div>
+    
+        <!-- /.content -->
+    
+    <!-- /.content-wrapper -->
+    
 
-<!-- /.content -->
-<!-- /.content-wrapper -->
-
-
-<div class="modal fade" id="addComments" tabindex="-1" role="dialog" aria-labelledby="addCommentsLabel" aria-hidden="true">
-    <div class="modal-dialog" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="addPositionsLabel">Add Comments</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-
-            <div class="modal-body">
-                <div class="table-responsive">
-                    <table id="grid" class="table table-striped" cellspacing="0" width="100%">
-                        <thead>
-                            <tr>
-                                <th></th>
-                            </tr>
-                        </thead>
-                        <tbody id="notebody">
-                        </tbody>
-                    </table>
+    <div class="modal fade" id="addComments" tabindex="-1" role="dialog" aria-labelledby="addCommentsLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="addPositionsLabel">Add Comments</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
                 </div>
-                <form>
-                    <input name="IsValid" type="hidden" id="noteid" />
-                    <div class="form-group">
-                        <label>Notes:</label>
-                        <textarea type="text" TextMode="MultiLine" rows="1" cols="10" class="form-control" id="notes" style="width: 572px;height: 165px;"></textarea>
-                        @*<span asp-validation-for="PositionName" class="text-danger"></span>*@
-                        @*<span class="notereq">Note is Required</span>*@
-                    </div>
-                    <div class="form-group">
-                        <label> Next FollowUp date</label>
-                        <input type="date" id="nextfollow" @*value="@DateTime.Today.ToString("dd/mm/yyyy")"*@ class="form-control" />
-                    </div>
-                    @*<div class="form-group">
-                            <label>Reject :</label>
-                            <input type="checkbox" id="reject" class="flat-red icheckbox_flat-green checked check" />
-                        </div>*@
-                    <div class="form-group col-md-3">
-                        <label>Status:</label>
-                        <select id="ddlStatus" class="form-control">
-                            <option value="0"> --Select--</option>
-                            <option value="1"> Schedule Interview</option>
-                            <option value="2"> Inprogress Interview</option>
-                            <option value="3"> Done</option>
-                        </select>
 
+                <div class="modal-body">
+                    <div class="table-responsive">
+                        <table id="grid" class="table table-striped" cellspacing="0" width="100%">
+                            <thead>
+                                <tr>
+                                    <th></th>
+                                </tr>
+                            </thead>
+                            <tbody id="notebody">
+                            </tbody>
+                        </table>
                     </div>
-                </form>
-            </div>
-            <div class="modal-footer">
-                @*<button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>*@
-                <button type="button" class="btn btn-primary" id="saveNote" data-save="modal">Save</button>
+                    <form>
+                        <input name="IsValid" type="hidden" id="noteid" />
+                        <div class="form-group">
+                            <label>Notes:</label>
+                            <textarea type="text" TextMode="MultiLine" rows="1" cols="10" class="form-control" id="notes" style="width: 572px;height: 165px;"></textarea>
+                            @*<span asp-validation-for="PositionName" class="text-danger"></span>*@
+                            @*<span class="notereq">Note is Required</span>*@
+                        </div>
+                        <div class="form-group">
+                            <label> Next FollowUp date</label>
+                            <input type="date" id="nextfollow" @*value="@DateTime.Today.ToString("dd/mm/yyyy")"*@ class="form-control" />
+                        </div>
+                        @*<div class="form-group">
+                                <label>Reject :</label>
+                                <input type="checkbox" id="reject" class="flat-red icheckbox_flat-green checked check" />
+                            </div>*@
+                        <div class="form-group col-md-3">
+                            <label>Status:</label>
+                            <select id="ddlStatus" class="form-control">
+                                <option value="0"> --Select--</option>
+                                <option value="1"> Schedule Interview</option>
+                                <option value="2"> Inprogress Interview</option>
+                                <option value="3"> Done</option>
+                            </select>
+
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    @*<button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>*@
+                    <button type="button" class="btn btn-primary" id="saveNote" data-save="modal">Save</button>
+                </div>
             </div>
         </div>
     </div>
-</div>
 
 
-@section Styles{
-    <!-- DataTables -->
-    <link rel="stylesheet" href="~/adminlte/components/datatables.net-bs/css/dataTables.bootstrap.min.css">
-}
+    @section Styles{
+        <!-- DataTables -->
+        <link rel="stylesheet" href="~/adminlte/components/datatables.net-bs/css/dataTables.bootstrap.min.css">
+    }
 
-@section Scripts{
+    @section Scripts{
 
 
-    <!-- DataTables -->
-    <script src="~/adminlte/components/datatables.net/js/jquery.dataTables.min.js"></script>
-    <script src="~/adminlte/components/datatables.net-bs/js/dataTables.bootstrap.min.js"></script>
-    @*<script type="text/javascript" src="https://code.jquery.com/jquery-1.11.3.min.js"></script>*@
-    <script type="text/javascript" src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js"></script>
-    <!-- page script -->
-    <script type="text/javascript">
-        $(document).ready(function () {
+        <!-- DataTables -->
+        <script src="~/adminlte/components/datatables.net/js/jquery.dataTables.min.js"></script>
+        <script src="~/adminlte/components/datatables.net-bs/js/dataTables.bootstrap.min.js"></script>
+        @*<script type="text/javascript" src="https://code.jquery.com/jquery-1.11.3.min.js"></script>*@
+        <script type="text/javascript" src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js"></script>
+        <!-- page script -->
+        <script type="text/javascript">
+            $(document).ready(function () {
 
             $('#grid').DataTable({
                 lengthChange: false,
@@ -319,117 +327,104 @@
                 order: [[0, "desc"]]
             });
 
-            $(".tooltips").tooltip();
+                $(".tooltips").tooltip();
 
-            $("#canFromDate, #canTO, #dropdown, #btnddl").on('change', function () {
-                $("#btnSearch").trigger('click');
+                $("#canFromDate, #canTO, #dropdown, #btnddl").on('change', function () {
+                    $("#btnSearch").trigger('click');
+
+                });
+
+                $("#clear").click(function () {
+                    $("#canTO").val("");
+                    $("#dropdown").val("");
+                    $("#canFromDate").val("");
+                    $("#btnddl").val("");
+                });
+
 
             });
 
-            $('#canTO').on('change', function (e) {
-                var candidateFromDate = $('#canFromDate').val();
-                var candidateTo = $('#canTO').val();
-                var newUrl = "\CandidateIndex?sdate=" + candidateFromDate + "&edate=" + candidateTo;
-                $("#btnSearch").attr("href", newUrl); // Set herf value
 
-            });
+            function openNote(id) {
+                $("#notes").val("");
+                $("#nextfollow").val("");
+                $.ajax({
+                    type: "GET",
+                    url: "/CandidateMaster/Notes",
+                    data: { "id": id },
+                    success: function (response) {
+                        console.log(response);
+                        if (response != null) {
+                            $("#notes").val("");
+                            $("#noteid").val(id);
+                            var innerHtml = '';
+                            debugger
+                            $.each(response, function (i, v) {
+                                var rowdata = response[i]
+                                innerHtml += "<tr>";
+                                innerHtml += "<td> " + rowdata.note + " </td>";
+                                innerHtml += "<td> " + moment(rowdata.nextFollowUpdate).format("L") + " </td>";
+                                innerHtml += "<td> " + rowdata.loginUser  + " </td>";
+                                innerHtml += "</tr>"
+                            });
+                            $("#notebody").html(innerHtml);
 
-            $('#namemailId').on('change', function (e) {
-                var candidatenameemail = $('#namemailId').val();
-                var newUrl = "\CandidateIndex?nameOrEamil=" + candidatenameemail;
-                $("#btnSearch").attr("href", newUrl);
-            });
+                            $("#addComments").modal("show");
+                        }
+                    },
+                    error: function (response) {
+                        alert(response.responseText);
+                    }
+                });
+            }
+         
 
-            $('#technologiesid').on('change', function (e) {
+            $("#saveNote").click(function () {
+                var notes = $("#notes").val();
+                var id = $("#noteid").val();
+                var nextfollowupdate = $("#nextfollow").val();
+                var ddlStatusc = $("#ddlStatus").val();
+
+                //  var reject = $("#reject");
+                if (notes == '') {
+                    alert("Note is Required");
+                    return false;
+                }
+
+                //var date = $("#nextfollow").val();
+                //var d = new Date(Date.now()).toLocaleString().split(',')[0];
+
+                //if (date < d) {
+                //    alert("Next Follow Update date is greater or equal today date");
+                //    $("#nextfollow").val("");
+                //    return false;
+                //}
+
+                var requestdata = {
+                    "Id": id,
+                    "Note": notes,
+                    "NextFollowUpdate": nextfollowupdate,
+                    "Status": ddlStatusc,
+                }
                 debugger
-                var candidatetechnologies = $('#technologiesid').val();
-                var newUrl = "\CandidateIndex?Technologieshar=" + candidatetechnologies;
-                $("#btnSearch").attr("href", newUrl);
-            });
-
-
-        });
-
-
-        function openNote(id) {
-            $("#notes").val("");
-            $("#nextfollow").val("");
-            $.ajax({
-                type: "GET",
-                url: "/CandidateMaster/Notes",
-                data: { "id": id },
-                success: function (response) {
-                    console.log(response);
-                    if (response != null) {
-                        $("#notes").val("");
-                        $("#noteid").val(id);
-                        var innerHtml = '';
-                        debugger
-                        $.each(response, function (i, v) {
-                            var rowdata = response[i]
-                            innerHtml += "<tr>";
-                            innerHtml += "<td> " + rowdata.note + " </td>";
-                            innerHtml += "<td> " + moment(rowdata.nextFollowUpdate).format("L") + " </td>";
-                            innerHtml += "</tr>"
-                        });
-                        $("#notebody").html(innerHtml);
-
-                        $("#addComments").modal("show");
-                    }
-                },
-                error: function (response) {
-                    alert(response.responseText);
-                }
-            });
-        }
-
-
-        $("#saveNote").click(function () {
-            var notes = $("#notes").val();
-            var id = $("#noteid").val();
-            var nextfollowupdate = $("#nextfollow").val();
-            var ddlStatusc = $("#ddlStatus").val();
-
-            //  var reject = $("#reject");
-            if (notes == '') {
-                alert("Note is Required");
-                return false;
-            }
-
-            //var date = $("#nextfollow").val();
-            //var d = new Date(Date.now()).toLocaleString().split(',')[0];
-
-            //if (date < d) {
-            //    alert("Next Follow Update date is greater or equal today date");
-            //    $("#nextfollow").val("");
-            //    return false;
-            //}
-
-            var requestdata = {
-                "Id": id,
-                "Note": notes,
-                "NextFollowUpdate": nextfollowupdate,
-                "Status": ddlStatusc,
-            }
-            debugger
-            $.ajax({
-                type: "POST",
-                url: "/CandidateMaster/SaveNotes",
-                data: requestdata,
-                success: function (response) {
-                    console.log(response);
-                    if (response.success == "true") {
+                $.ajax({
+                    type: "POST",
+                    url: "/CandidateMaster/SaveNotes",
+                    data: requestdata,
+                    success: function (response) {
+                        console.log(response);
+                        if (response.success == "true") {
+                            alert(response.message);
+                            $("#addComments").modal("hide");
+                          window.location.href = "/CandidateMaster/CandidateIndex";
+                        }
+                    },
+                    error: function (response) {
                         alert(response.message);
-                        $("#addComments").modal("hide");
-                        window.location.href = "/CandidateMaster/CandidateIndex";
                     }
-                },
-                error: function (response) {
-                    alert(response.message);
-                }
+                });
+
             });
+        </script>
 
-        });
-    </script>
-
-}
+    }

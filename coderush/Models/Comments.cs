@@ -16,5 +16,6 @@ namespace coderush.Models
         //[DataType(DataType.Date)]
         public DateTime? NextFollowUpdate { get; set; }
         public int? Status { get; set; }
+        public string LoginUser { get; set; }
     }
 }
