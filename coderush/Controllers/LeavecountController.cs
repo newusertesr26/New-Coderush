@@ -130,7 +130,7 @@ namespace coderush.Controllers
                                    {
                                        Id = s.Id,
                                        //Userid = _userManager.Users.Where(x => x.Id == id).Select(x => x.FirstName + " " + x.LastName).FirstOrDefault(),//s.Userid, 
-                                       Userid = s.Userid,
+                                       Userid = UserName,
                                        Fromdate = s.Fromdate,
                                        Todate = s.Todate,
                                        //FromdateView = s.Fromdate.Value.ToString("MM/dd/yyyy"),
@@ -155,7 +155,7 @@ namespace coderush.Controllers
                                       {
                                           Id = s.Id,
                                           /*Userid = _userManager.Users.Where(x => x.Id == UserName).Select(x => x.FirstName + " " + x.LastName).FirstOrDefault(),//s.Userid, */
-                                          Userid = s.Userid,
+                                          Userid = UserName,
                                           Fromdate = s.Fromdate,
                                           Todate = s.Todate,
                                           Filename = s.FileUpload,
