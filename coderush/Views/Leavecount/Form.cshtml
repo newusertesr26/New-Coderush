@@ -1,5 +1,5 @@
 ﻿@using Microsoft.AspNetCore.Identity
-@model LeaveCount
+@model LeaveCountViewModel
 @inject UserManager<ApplicationUser> _userManager
 @{ ViewData["Title"] = "Leave Form";
     var user = await _userManager.GetUserAsync(User);
@@ -40,7 +40,8 @@
                     <input type="hidden" asp-for="Id" />
                     <div class="form-group">
                         <label asp-for="Userid"></label>
-                        <input id="levuserid" asp-for="Userid" class="form-control" readonly />
+                        <input id="levuserid" asp-for="UserName" class="form-control" readonly />
+                        <input type="hidden" id="levuserid" asp-for="Userid" class="form-control" readonly />
                         <span asp-validation-for="Userid" class="text-danger"></span>
                         @*<span class="text-danger hidespan spantext">Please enter Text</span>*@
                     </div>
@@ -133,7 +134,9 @@
         });
 
             //$(document).ready(function () {
-            //    var BinddrpdwnData = $("#leavedrpdwn option:selected").val();
+        //    var BinddrpdwnData = $("#
+
+        option: selected").val();
             //    $("#levuserid").val(BinddrpdwnData);
             //});
     </script>

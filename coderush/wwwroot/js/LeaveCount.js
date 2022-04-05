@@ -1,6 +1,7 @@
 ﻿$(document).ready(function () {
 
     $('#btninsert').click(function () {
+        debugger
         var id = $("#hednid").val();
         var userid = $("#leavedrpdwn").val();
         var fromdate = $("#levfrmdate").val();
@@ -42,16 +43,16 @@
 
         var userid = $("#leavedrpdwn").val();
         if (userid == null || userid == "" || userid == undefined) {
-            alert("Please select drowpdown menu first !!");
+            /* alert("Please select drowpdown menu first !!");*/
             return false;
         }
         $(".text-danger").hide();
     });
 
-    var Bindtablegrid = function (id, username) {
-
+    var Bindtablegrid = function (id, username, userid) {
+        debugger
         $.ajax({
-            url: "/Leavecount/BindGridData?id=" + id + "&UserName=" + username,
+            url: "/Leavecount/BindGridData?id=" + id + "&UserName=" + username + "&Userid=" + userid,
             method: 'Get',
             data: {},
             success: function (data) {
@@ -65,8 +66,9 @@
                         innerHtml += "<tr>";
                         //innerHtml += "<td><i class='fa fa-edit' style='font-size:20px' id='btnedit' data-id = " + rowdata.id + "></i></td>";
                         //innerHtml += "<td><i class='fa fa-trash' ></i></td>";
-                        innerHtml += "<td><a href='/Leavecount/Form/" + rowdata.id + "'><i class='fa fa-edit'></i></a></td>";
-                        innerHtml += "<td><a href='/Leavecount/Delete/" + rowdata.id + "'><i class='fa fa-trash'></i></a></td>";
+                        //innerHtml += "<td><a href='/Leavecount/Form?id=" + rowdata.id + "'&userid='" + rowdata.userid +"'><i class='fa fa-edit'></i></a></td>";
+                         innerHtml += "<td><a href='javascript:void(0)' class='editleave'data-id='" + rowdata.id + "'data-userid='" + rowdata.userid + "'><i class='fa fa-edit'></i></a></td>";
+                        //innerHtml += "<td><a href='/Leavecount/Delete/" + rowdata.id + "'><i class='fa fa-trash'></i></a></td>";
                         innerHtml += "<td scope='col' id='User ID'>" + rowdata.userid + "</td>";
                         innerHtml += "<td scope='col' id='From Date'>" + moment(rowdata.fromdate).format('LL') + "</td>";
                         innerHtml += "<td scope='col' id='To Date'>" + moment(rowdata.todate).format('LL') + "</td>";
@@ -92,6 +94,12 @@
                         innerHtml += "</tr>"
                     });
                     $("#levtblbdy").html(innerHtml);
+
+                    $(".editleave").unbind().click(function () {
+                        var id = $(this).data('id');
+                        var userid = $(this).data('userid');
+                        window.location.href = '/LeaveCount/Form?id=' + id + '&userid=' + userid;
+                    });
 
                     for (var i = 0; i < arrya.length; i++) {
                         console.log(arrya[i]);
@@ -143,6 +151,7 @@
     })
 
     var BinddrpdwnData = function () {
+        debugger
         $.ajax({
             url: "/Leavecount/BinddrpdwnData",
             type: "GET",
@@ -150,18 +159,23 @@
             processData: false,
             contentType: "application/json",
             success: function (res) {
+                debugger
                 var Project = "#leavedrpdwn";
                 $(Project).empty();
+                debugger
                 $(Project).append($("<option></option>").val("").html("--Select--"));
                 $.each(res, function (index, object) {
-
+                    debugger
                     $(Project).append($("<option></option>").val(object.value).html(object.text));
+                    //debugger
+                    //Bindtablegrid(object.value, object.text);
                 });
 
-                var Make = $(Project).data();
-                if (Make != null && Make != undefined) {
-                    $(Project).val(Make.make).trigger('change');
-                }
+                //var Make = $(Project).data();
+                //if (Make != null && Make != undefined) {
+                //    $(Project).val(Make.make).trigger('change');
+                //}
+
             },
             error: function (res, err) {
 
@@ -170,10 +184,15 @@
     };
 
     $("#leavedrpdwn").on('change', function () {
+        debugger
         var id = $("#leavedrpdwn option:selected").val();
         var username = $("#leavedrpdwn option:selected").text();
         Bindtablegrid(id, username);
         $("#grid").show();
+    });
+    $("#btninsert").unbind().click(function () {
+        var userid = $("#leavedrpdwn").val();
+        window.location.href = '/LeaveCount/Form?id=' + 0 + '&userid=' + userid;
     });
 
     $('body').on('click', '#btnedit', function () {
@@ -201,6 +220,8 @@
     });
 
     BinddrpdwnData();
+
+    Bindtablegrid("","");
 
     $(document).on("click", ".cladownload", function () {
         var fileName = $(this).attr('data-downloadFile');

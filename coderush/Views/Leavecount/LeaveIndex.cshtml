@@ -29,41 +29,55 @@
             <div class="box-header with-border">
                 <h3 class="box-title">List of Leave item</h3>
                 <div class="box-tools pull-right">
-                    <a href="/LeaveCount/Form" id="btninsert" class="btn btn-primary"><i class="fa fa-plus"></i></a>
+                    <a href="javascript:void(0)" id="btninsert" class="btn btn-primary"><i class="fa fa-plus"></i></a>
                 </div>
             </div>
+
             <div class="box-body">
-                <div class="form-group">
-                    <select name="Userid" id="leavedrpdwn" class="form-control" asp-items="@ViewBag.UserList"></select>
-                    @*<select class="dropdown-mega-menu-xl" id="leavedrpdwn"></select>*@
-                </div>
+                @if (roles.Contains("SuperAdmin") || roles.Contains("HR"))
+                {
+                    <div class="form-group">
+                        <select name="Userid" id="leavedrpdwn" class="form-control" asp-items="@ViewBag.UserList"></select>
+                        @*<select class="dropdown-mega-menu-xl" id="leavedrpdwn"></select>*@
+                    </div>
+                }
+                else
+                {
+                    <div class="form-group">
+                        <select name="Userid" id="leavedrpdwn" style="display:none" class="form-control" asp-items="@ViewBag.UserList"></select>
+                        @*<select class="dropdown-mega-menu-xl" id="leavedrpdwn"></select>*@
+                    </div>
+                }
+
 
                 <div class="table-responsive">
                     <table id="grid" class="table table-striped" cellspacing="0" width="120%">
                         <thead>
                             <tr>
-                                <th width="5%">Edit</th>
-                                <th width="5%">Delete</th>
-                                <th width="20%">Userid</th>
-                                <th width="10%">Fromdate</th>
-                                <th width="10%">Todate</th>
-                                <th width="10%">Count</th>
-                                <th width="10%">EmployeeDescription</th>
-                                @if (roles.Contains("SuperAdmin") || roles.Contains("HR"))
+                                @if (roles.Contains("SuperAdmin"))
                                 {
-                                    <th width="10%">HrDescription</th>
+                                    <th width="5%">Edit</th>
                                 }
+                                    <th width="20%">Userid</th>
+                                    <th width="10%">Fromdate</th>
+                                    <th width="10%">Todate</th>
+                                    <th width="10%">Count</th>
+                                    <th width="10%">EmployeeDescription</th>
+                                    @if (roles.Contains("SuperAdmin") || roles.Contains("HR"))
+                                    {
+                                        <th width="10%">HrDescription</th>
+                                    }
 
-                                <th width="10%">Is approve</th>
-                                <th width="10%">Approve Date</th>
+                                    <th width="10%">Is approve</th>
+                                    <th width="10%">Approve Date</th>
 
-                                <th width="10%">FileUpload</th>
-                                @if (roles.Contains("SuperAdmin") || roles.Contains("HR"))
-                                {
-                                    <th width="10%">approve</th>
-                                }
+                                    <th width="10%">FileUpload</th>
+                                    @if (roles.Contains("SuperAdmin") || roles.Contains("HR"))
+                                    {
+                                        <th width="10%">approve</th>
+                                    }
 
-                            </tr>
+                                </tr>
                         </thead>
 
                         <tbody id="levtblbdy">
