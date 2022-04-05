@@ -41,7 +41,10 @@ namespace coderush.Controllers
         {
 
             var user = _userManager.GetUserAsync(User).Result;
-            var data = (from expense in _context.ExpenseMaster
+
+            ExpenseMasterViewModel serchadata = new ExpenseMasterViewModel();
+
+             serchadata.List = (from expense in _context.ExpenseMaster
                         where expense.Isdelete == false
                         orderby expense.Id descending
                         select new ExpenseMasterViewModel
@@ -49,7 +52,7 @@ namespace coderush.Controllers
                             Id = expense.Id,
                             ExpName = expense.ExpName,
                             exptype = _context.Datamaster.Where(x => x.Id == expense.Exptype).Select(x => x.Text).FirstOrDefault(),
-                            Amount = expense.Amount,
+                            Amount = Convert.ToInt64(expense.Amount),
                             ExpenseDate = expense.ExpenseDate,
                             Description = expense.Description,
                             filename = expense.FileUpload,
@@ -60,6 +63,9 @@ namespace coderush.Controllers
 
             //return View(data);
             var typelist1 = _context.Datamaster.Where(x => x.Type == DataSelection.Expenses).ToList();
+            ViewBag.TotalCredit = _context.Credit.Sum(item => item.Amount);
+            serchadata.TotalAmount = serchadata.List.Sum(item => item.Amount);
+            ViewBag.TotalExpense = serchadata.TotalAmount;
 
             ViewBag.Expensetypelist = typelist1.Select(v => new SelectListItem
             {
@@ -75,7 +81,6 @@ namespace coderush.Controllers
 
             }).ToList();
             //ViewBag.Role = HttpContext.Session.GetString("Role");
-            var serchadata = new List<ExpenseMasterViewModel>();
             try
             {
                 int montha;
@@ -83,7 +88,7 @@ namespace coderush.Controllers
                 {
                     int dt = DateTime.Now.Month;
 
-                    data = data.Where(x => x.Isdelete == false && x.ExpenseDate.Value.Month == dt).ToList();
+                    serchadata.List = serchadata.List.Where(x => x.Isdelete == false && x.ExpenseDate.Value.Month == dt).ToList();
                     //  return View(data);
                 }
                 else if (lastmont == "1")
@@ -93,7 +98,7 @@ namespace coderush.Controllers
                     var first = month.AddMonths(-1);
                     montha = first.Month;
 
-                    data = data.Where(x => x.Isdelete == false && x.ExpenseDate.Value.Month == montha).ToList();
+                    serchadata.List = serchadata.List.Where(x => x.Isdelete == false && x.ExpenseDate.Value.Month == montha).ToList();
                     // return View(data);
                 }
 
@@ -106,7 +111,7 @@ namespace coderush.Controllers
                    // serchadata = _context.ExpenseMaster.Where(x => !x.Isdelete && x.CreatedDate >= Convert.ToDateTime(sdate)).ToList();
                     return View(serchadata);
 
-                    data = data.Where(x => x.Isdelete == false
+                    serchadata.List = serchadata.List.Where(x => x.Isdelete == false
                                          && x.ExpenseDate >= Convert.ToDateTime(sdate) && x.ExpenseDate <= Convert.ToDateTime(edate)).ToList();
                 }
             }
@@ -114,8 +119,9 @@ namespace coderush.Controllers
             {
                 throw ex;
             }
+          
 
-            return View(data);
+            return View(serchadata);
         }
         [HttpGet]
         public IActionResult Searchdata(string sdate, string edate)
@@ -220,7 +226,7 @@ namespace coderush.Controllers
                         newexpenseMaster.FileUpload = string.Empty;
                     }
                     newexpenseMaster.Exptype = expenseMasters.Exptype;
-                    newexpenseMaster.Amount = expenseMasters.Amount;
+                    newexpenseMaster.Amount = expenseMasters.Amount.ToString();
                     newexpenseMaster.ExpenseDate = expenseMasters.ExpenseDate;
                     newexpenseMaster.isactive = expenseMasters.isactive;
                     newexpenseMaster.CreatedBy = user.Id.ToString();
@@ -236,7 +242,7 @@ namespace coderush.Controllers
                 editexpensemaster = _context.ExpenseMaster.Where(x => x.Id.Equals(expenseMasters.Id)).FirstOrDefault();
                 editexpensemaster.ExpName = expenseMasters.ExpName;
                 editexpensemaster.Exptype = expenseMasters.Exptype;
-                editexpensemaster.Amount = expenseMasters.Amount;
+                editexpensemaster.Amount = expenseMasters.Amount.ToString();
                 editexpensemaster.ExpenseDate = expenseMasters.ExpenseDate;
                 if (editexpensemaster.FileUpload != null)
                 {
@@ -286,7 +292,7 @@ namespace coderush.Controllers
             editnewexpensemaster.Id = expensemaster.Id;
             editnewexpensemaster.ExpName = expensemaster.ExpName;
             editnewexpensemaster.Exptype = expensemaster.Exptype;
-            editnewexpensemaster.Amount = expensemaster.Amount;
+            editnewexpensemaster.Amount = Convert.ToInt64(expensemaster.Amount);
             editnewexpensemaster.ExpenseDate = expensemaster.ExpenseDate;
             //if (editexpensemaster.FileUpload != null)
             //{
@@ -379,10 +385,10 @@ namespace coderush.Controllers
             Credit model = new Credit();
 
             var models = _context.Credit.ToList();
-
+            
             return Json(models);
         }
-        public ActionResult SaveNotes(int Id, int Amount, string Managername, DateTime creditdate)
+        public ActionResult SaveNotes(int Id, int Amount, string Managername, string creditdate)
         {
 
             try
@@ -391,18 +397,23 @@ namespace coderush.Controllers
                 models.Id = Id;
                 models.Amount = Amount;
                 models.Managername = Managername;
-                models.Creditdate = creditdate;
+                models.Creditdate = Convert.ToDateTime(creditdate);
                 _context.Credit.Add(models);
                 _context.SaveChanges();
+             
                 var result = new { Success = "true", Message = "Data save successfully." };
+                
+                
+
                 return Json(result);
             }
+
             catch (Exception ex)
             {
                 var result = new { Success = "False", Message = ex.Message };
                 return Json(result);
             }
-
+      
         }
 
         //[HttpPost]

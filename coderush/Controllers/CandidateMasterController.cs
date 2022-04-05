@@ -111,6 +111,10 @@ namespace coderush.Controllers
                     data = data.Where(w => w.InterviewDate.Value.Month == montha).ToList();
 
                 }
+                if (lastmont == "0")
+                {
+                    data = data.ToList();
+                }
 
                 if (technology != null)
                 {
