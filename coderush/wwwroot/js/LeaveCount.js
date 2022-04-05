@@ -1,7 +1,6 @@
 ﻿$(document).ready(function () {
 
     $('#btninsert').click(function () {
-        debugger
         var id = $("#hednid").val();
         var userid = $("#leavedrpdwn").val();
         var fromdate = $("#levfrmdate").val();
@@ -50,7 +49,6 @@
     });
 
     var Bindtablegrid = function (id, username, userid) {
-        debugger
         $.ajax({
             url: "/Leavecount/BindGridData?id=" + id + "&UserName=" + username + "&Userid=" + userid,
             method: 'Get',
@@ -67,7 +65,9 @@
                         //innerHtml += "<td><i class='fa fa-edit' style='font-size:20px' id='btnedit' data-id = " + rowdata.id + "></i></td>";
                         //innerHtml += "<td><i class='fa fa-trash' ></i></td>";
                         //innerHtml += "<td><a href='/Leavecount/Form?id=" + rowdata.id + "'&userid='" + rowdata.userid +"'><i class='fa fa-edit'></i></a></td>";
-                         innerHtml += "<td><a href='javascript:void(0)' class='editleave'data-id='" + rowdata.id + "'data-userid='" + rowdata.userid + "'><i class='fa fa-edit'></i></a></td>";
+                        if (rowdata.adminRole) {
+                            innerHtml += "<td><a href='javascript:void(0)' class='editleave'data-id='" + rowdata.id + "'data-userid='" + rowdata.userid + "'><i class='fa fa-edit'></i></a></td>";
+                        }
                         //innerHtml += "<td><a href='/Leavecount/Delete/" + rowdata.id + "'><i class='fa fa-trash'></i></a></td>";
                         innerHtml += "<td scope='col' id='User ID'>" + rowdata.userid + "</td>";
                         innerHtml += "<td scope='col' id='From Date'>" + moment(rowdata.fromdate).format('LL') + "</td>";
@@ -87,7 +87,6 @@
                         innerHtml += "<td scope='col' id='Approve Date'>" + moment(rowdata.approveDate).format('LL') + "</td>";
                         //innerHtml += '<td>@Html.ActionLink("Download", "DownloadFile", new { fileName = item.FileUpload })</td>';
                         innerHtml += "<td><a class='cladownload' data-downloadFile='/document/Leave/" + rowdata.filename + "'><i class='fa fa-download'></i></a></td>";
-                        debugger
                         if (rowdata.adminRole) {
                             innerHtml += "<td><input type='button' value='approve' class='clsAprove' data-aproveid='" + rowdata.id + "' id='btn_" + rowdata.id + "' ></td>";
                         }
@@ -128,7 +127,6 @@
     $(document).on("click", "#saveLeave", function () {
         var Id = $('#leaveId').val();
         var HRDescription = $('#notes').val();
-        debugger
         if (HRDescription == '') {
             alert("HRDescription is Required");
             return false;
@@ -151,7 +149,6 @@
     })
 
     var BinddrpdwnData = function () {
-        debugger
         $.ajax({
             url: "/Leavecount/BinddrpdwnData",
             type: "GET",
@@ -159,15 +156,11 @@
             processData: false,
             contentType: "application/json",
             success: function (res) {
-                debugger
                 var Project = "#leavedrpdwn";
                 $(Project).empty();
-                debugger
                 $(Project).append($("<option></option>").val("").html("--Select--"));
                 $.each(res, function (index, object) {
-                    debugger
                     $(Project).append($("<option></option>").val(object.value).html(object.text));
-                    //debugger
                     //Bindtablegrid(object.value, object.text);
                 });
 
