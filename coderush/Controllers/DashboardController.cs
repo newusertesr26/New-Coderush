@@ -17,7 +17,7 @@ using CodesDotHRMS.Models;
 
 namespace coderush.Controllers
 {
-    [Authorize(Roles = "HR,SuperAdmin,Employee")].
+    [Authorize(Roles = "HR,SuperAdmin,Employee")]
     public class DashboardController : Controller
     {
         private readonly ILogger<HomeController> _logger;
