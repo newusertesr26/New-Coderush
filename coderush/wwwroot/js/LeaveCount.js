@@ -43,6 +43,7 @@
         var userid = $("#leavedrpdwn").val();
         if (userid == null || userid == "" || userid == undefined) {
             /* alert("Please select drowpdown menu first !!");*/
+            alert("Please select user");
             return false;
         }
         $(".text-danger").hide();
@@ -177,13 +178,21 @@
     };
 
     $("#leavedrpdwn").on('change', function () {
-        debugger
         var id = $("#leavedrpdwn option:selected").val();
         var username = $("#leavedrpdwn option:selected").text();
         Bindtablegrid(id, username);
         $("#grid").show();
     });
     $("#btninsert").unbind().click(function () {
+        var userid = $("#leavedrpdwn").val();
+        if (userid == null || userid == "" || userid == undefined) {
+
+            var username = $("#leavedrpdwn option:selected").text();
+            alert("Please select user");
+            return false;
+        }
+        
+
         var userid = $("#leavedrpdwn").val();
         window.location.href = '/LeaveCount/Form?id=' + 0 + '&userid=' + userid;
     });
