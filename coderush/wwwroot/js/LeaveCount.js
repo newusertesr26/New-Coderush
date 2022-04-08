@@ -226,7 +226,6 @@
             contentType: false,
             processData: false,
             success: function (result) {
-                de
                 $("#hednid").val(result.id);
                 $("#levuserid").val($("#leavedrpdwn option:selected").text());
                 $("#levfrmdate").val(result.fromdate);
