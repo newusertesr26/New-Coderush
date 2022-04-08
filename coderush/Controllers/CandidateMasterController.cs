@@ -18,7 +18,7 @@ using Microsoft.AspNetCore.Authorization;
 namespace coderush.Controllers
 {
     [Authorize(Roles = "HR,SuperAdmin")]
-    public class CandidateMasterController : Controller
+    public class CandidateMasterController : Controller  //Harshal working on-->
     {
         private readonly ILogger<HomeController> _logger;
         private readonly UserManager<ApplicationUser> _userManager;

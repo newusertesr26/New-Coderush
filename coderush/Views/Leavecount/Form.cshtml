@@ -3,9 +3,8 @@
 @inject UserManager<ApplicationUser> _userManager
 @{ ViewData["Title"] = "Leave Form";
     var user = await _userManager.GetUserAsync(User);
-    var roles = await _userManager.GetRolesAsync(user); }
-
-
+    var roles = await _userManager.GetRolesAsync(user);
+}
 
 <!-- Content Wrapper. Contains page content -->
 <div class="content-wrapper">
@@ -39,11 +38,8 @@
                 <div class="box-body">
                     <input type="hidden" asp-for="Id" />
                     <div class="form-group">
-                        <label asp-for="Userid"></label>
                         <input id="levuserid" asp-for="UserName" class="form-control" readonly />
-                        <input type="hidden" id="levuserid" asp-for="Userid" class="form-control" readonly />
-                        <span asp-validation-for="Userid" class="text-danger"></span>
-                        @*<span class="text-danger hidespan spantext">Please enter Text</span>*@
+                        <input type="hidden" asp-for="Userid" value="@Model.Userid" />
                     </div>
                     <div class="form-group">
                         <div class="col-md-6">
@@ -77,11 +73,11 @@
                         @*<span class="text-danger hidespan spantext">Please enter Text</span>*@
                     </div>
                     @*@if (roles.Contains("SuperAdmin") || roles.Contains("HR"))
-        {
-            <div class="form-group">
-                <label asp-for="Isapprove"></label>
-                <input asp-for="Isapprove" type="checkbox" id="isaprv" class="flat-red" />
-            </div>}*@
+                        {
+                            <div class="form-group">
+                                <label asp-for="Isapprove"></label>
+                                <input asp-for="Isapprove" type="checkbox" id="isaprv" class="flat-red" />
+                            </div>}*@
                     <div class="form-group" style="display:none">
                         <label>Isapprove</label>
                         <input type="checkbox" id="isaprv" class="flat-red" />
@@ -102,24 +98,18 @@
                 <!-- /.box-footer-->
             </div>
         </form>
-
-
         <!-- /.box -->
     </section>
     <!-- /.content -->
 </div>
 <!-- /.content-wrapper -->
 
-
 @section Styles{
     <!-- DataTables -->
     <link rel="stylesheet" href="~/adminlte/components/datatables.net-bs/css/dataTables.bootstrap.min.css">
-
 }
 
-
 @section Scripts{
-
     <partial name="_ValidationScriptsPartial" />
     <script src="~/js/LeaveCount.js"></script>
     <script type="text/javascript">
@@ -132,72 +122,5 @@
                 $('#levtodate').val('');
             }
         });
-
-            //$(document).ready(function () {
-        //    var BinddrpdwnData = $("#
-
-        option: selected").val();
-            //    $("#levuserid").val(BinddrpdwnData);
-            //});
     </script>
-    @*<script type="text/javascript">
-
-            $('#btnsave').click(function () {
-                var id = $("#hideid").val();
-                var type = $("#ddlSelectionList option:selected").val();
-                var text = $("#datatext").val();
-                var description = $("#datadescription").val();
-                var isactive = $("#ckisactive").is(":checked");
-
-                var Isvalid = true;
-                if (text == null || text == undefined || text == "") {
-                    $("#datatext").attr('maxlength', '50');
-                    $(".spantext").show();
-                    Isvalid = false;
-                }
-
-                if (description == null || description == undefined || description == "") {
-                    $(".spandescription").show();
-                    Isvalid = false;
-                }
-
-                if (type == null || type == undefined || type == "") {
-                    $(".spanSelection").show();
-                    Isvalid = false;
-
-                }
-                if (!Isvalid) {
-                    return false;
-                }
-                $(".text-danger").hide();
-
-
-                var fileData = new FormData();
-                fileData.append('Id', id);
-                fileData.append('Type', type);
-                fileData.append('Text', text);
-                fileData.append('Description', description);
-                fileData.append('isactive', isactive);
-
-
-                $.ajax({
-                    url: '/DataMaster/SubmitForm',
-                    type: "POST",
-                    contentType: false,
-                    processData: false,
-                    data: fileData,
-                    success: function (result) {
-                        $("#AddData").modal('hide');
-                        alert(result.message);
-                        window.location.reload();
-                    },
-                    error: function (err) {
-                        alert("Fail!");
-                    }
-                });
-            });
-
-
-        </script>*@
-
 }

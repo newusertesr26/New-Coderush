@@ -20,7 +20,7 @@ using System.IO;
 
 namespace coderush.Controllers
 {
-    [Authorize(Roles = "HR,SuperAdmin,Employee")]
+    [Authorize(Roles = "HR,SuperAdmin,Employee")] //Harshal working on
     public class LeavecountController : Controller
     {
         private readonly ILogger<HomeController> _logger;
@@ -48,59 +48,6 @@ namespace coderush.Controllers
         {
             List<LeaveCountViewModel> model = new List<LeaveCountViewModel>();
 
-            //var data = (from leave in _context.LeadMaster
-            //            where leave.IsDelete == false
-            //            select new LeaveCountViewModel
-            //            {
-            //                Id = leave.id,
-            //                Userid = _context.ApplicationUser.Where(x => x.Id == Userid).Select(x => x.FirstName + " " + x.LastName).FirstOrDefault(),
-            //                Amount = leave.Amount,
-            //                ExpenseDate = leave.ExpenseDate,
-            //                Description = leave.Description,
-            //                filename = leave.FileUpload,
-            //                isactive = leave.isactive 
-
-            //            }).ToList();
-
-            //ViewBag.UserList = _userManager.Users
-            //                    .Where(w => w.UserName != null)
-            //                   .Select(s => new SelectListItem()
-            //                   {
-            //                       Text = s.UserName,
-            //                       Value = s.Id.ToString()
-            //                   }).ToList();
-
-            //ViewBag.leavecountList = _userManager.Users
-            //                    .Where(w => w.UserName != null)
-            //                   .Select(s => new SelectListItem()
-            //                   {
-            //                       Text = s.UserName,
-            //                       Value = s.Id.ToString()
-            //                   }).ToList();
-            //ViewBag.Role = HttpContext.Session.GetString("Role");
-            //if (HttpContext.Session.GetString("Role") == "Other")
-            //{
-            //    return RedirectToAction("PageError", "Home");
-            //}
-
-            //userid = selectedFilter;
-            //LeaveCountViewModel levcunt = new LeaveCountViewModel();
-            //model = _context.LeaveCount
-            //                    .Where(w => w.Userid == selectedFilter)
-            //                   .Select(s => new LeaveCountViewModel()
-            //                   {
-            //                       Id = s.Id,
-            //                       Userid = s.Userid,
-            //                       Fromdate = s.Fromdate,
-            //                       Todate = s.Todate,
-            //                       Count = s.Count,
-            //                       Description = s.Description,
-            //                       Isapprove = s.Isapprove,
-            //                       ApproveDate = s.ApproveDate,
-            //                       Approveby = s.Approveby,
-            //                   }).ToList();
-            ////levcunt.List = leavecount;
-
             return View(model);
         }
 
@@ -113,28 +60,21 @@ namespace coderush.Controllers
             var user = _userManager.GetUserAsync(User).Result;
             var adminrole = await _userManager.IsInRoleAsync(user, "HR");
 
-            //userid = id;
-            //username = UserName;
-            //user = _userManager.GetUserAsync(User).ToString();
-            //var roles =  _userManager.GetRolesAsync(user);
-
-
             LeaveCountViewModel levcunt = new LeaveCountViewModel();
             var leavecount = new List<LeaveCountViewModel>();
+            var todayDate = DateTime.Now;
             if (!adminrole)
             {
-
+                
                 leavecount = _context.LeaveCount
                                     .Where(w => w.Userid == user.Id)
                                    .Select(s => new LeaveCountViewModel()
                                    {
                                        Id = s.Id,
                                        //Userid = _userManager.Users.Where(x => x.Id == id).Select(x => x.FirstName + " " + x.LastName).FirstOrDefault(),//s.Userid, 
-                                       Userid = s.Userid,
+                                       Userid = user.UserName,
                                        Fromdate = s.Fromdate,
                                        Todate = s.Todate,
-                                       //FromdateView = s.Fromdate.Value.ToString("MM/dd/yyyy"),
-                                       //TodateView = s.Todate.Value.ToString("MM/dd/yyyy"),
                                        Filename = s.FileUpload,
                                        Count = s.Count,
                                        EmployeeDescription = s.EmployeeDescription != null ? s.EmployeeDescription : string.Empty,
@@ -143,7 +83,30 @@ namespace coderush.Controllers
                                        ApproveDate = s.ApproveDate,
                                        Approveby = s.Approveby,
                                        AdminRole = adminrole,
+                                       isedit = (s.Todate <= todayDate) ? true : false,
+                                       colouris = s.Todate > todayDate ? "#ffe0bb" : "",
                                    }).ToList();
+                var leavecount1 = leavecount.Where(x => x.colouris == "").ToList();
+                leavecount = leavecount.OrderByDescending(x => x.Todate).Where(x => x.Todate > todayDate).OrderBy(x => x.Todate).ToList();
+                foreach (var data in leavecount1)
+                {
+                    LeaveCountViewModel ab = new LeaveCountViewModel();
+                    ab.Id = data.Id;
+                    ab.Userid = user.UserName;
+                    ab.Fromdate = data.Fromdate;
+                    ab.Todate = data.Todate;
+                    ab.Filename = data.Filename;
+                    ab.Count = data.Count;
+                    ab.EmployeeDescription = data.EmployeeDescription != null ? data.EmployeeDescription : string.Empty;
+                    ab.HrDescription = data.HrDescription != null ? data.HrDescription : string.Empty;
+                    ab.Isapprove = data.Isapprove;
+                    ab.ApproveDate = data.ApproveDate;
+                    ab.Approveby = data.Approveby;
+                    ab.AdminRole = adminrole;
+                    ab.isedit = (data.Todate <= todayDate) ? true : false;
+                    leavecount.Add(ab);
+                }
+
             }
             else if (adminrole)
             {
@@ -155,7 +118,7 @@ namespace coderush.Controllers
                                       {
                                           Id = s.Id,
                                           /*Userid = _userManager.Users.Where(x => x.Id == UserName).Select(x => x.FirstName + " " + x.LastName).FirstOrDefault(),//s.Userid, */
-                                          Userid = s.Userid,
+                                          Userid = UserName,
                                           Fromdate = s.Fromdate,
                                           Todate = s.Todate,
                                           Filename = s.FileUpload,
@@ -166,7 +129,35 @@ namespace coderush.Controllers
                                           ApproveDate = s.ApproveDate,
                                           Approveby = s.Approveby,
                                           AdminRole = adminrole,
+                                          isedit = (s.Todate <= todayDate) ? true : false,
+                                          colouris= s.Todate > todayDate ? "#ffe0bb" : "",
                                       }).ToList();
+                    //leavecount = leavecount.OrderByDescending(x => x.Todate).ToList();
+                    //leavecount = leavecount.OrderByDescending(x => x.Todate).Where(x => x.Todate > todayDate).OrderBy(x=>x.Todate).ToList();
+                    var leavecount1 = leavecount.Where(x => x.colouris=="").ToList();
+                    leavecount = leavecount.OrderByDescending(x => x.Todate).Where(x => x.Todate > todayDate).OrderBy(x=>x.Todate).ToList();
+                      foreach (var data in leavecount1)
+                    {
+                        LeaveCountViewModel ab = new LeaveCountViewModel();
+                        ab.Id = data.Id;
+                        ab.Userid = UserName;
+                        ab.Fromdate = data.Fromdate;
+                        ab.Todate = data.Todate;
+                        ab.Filename = data.Filename;
+                        ab.Count = data.Count;
+                        ab.EmployeeDescription = data.EmployeeDescription != null ? data.EmployeeDescription : string.Empty;
+                        ab.HrDescription = data.HrDescription != null ? data.HrDescription : string.Empty;
+                        ab.Isapprove = data.Isapprove;
+                        ab.ApproveDate = data.ApproveDate;
+                        ab.Approveby = data.Approveby;
+                        ab.AdminRole = adminrole;
+                        ab.isedit = (data.Todate <= todayDate) ? true : false;
+                        leavecount.Add(ab);
+
+
+                    }
+
+
                 }
                 catch (Exception ew)
                 {
@@ -174,9 +165,7 @@ namespace coderush.Controllers
                 }
             }
             levcunt.List = leavecount;
-
             //return RedirectToAction(nameof(LeaveIndex), new { id = leaveCounts.Id > 0 ? leaveCounts.Id : 0 });
-
             return Json(levcunt);
         }
         public async Task<IActionResult> BinddrpdwnData()
@@ -206,12 +195,8 @@ namespace coderush.Controllers
                                    }).ToList();
                 return Json(leavecount);
             }
-
             return null;
         }
-
-
-
         //post submitted leavecount data. if todo.TodoId is null then create new, otherwise edit
         [HttpPost]
         [ValidateAntiForgeryToken]
@@ -224,23 +209,13 @@ namespace coderush.Controllers
                     TempData[StaticString.StatusMessage] = "Error: Model state not valid.";
                     return RedirectToAction(nameof(Form), new { id = leaveCounts.Id > 0 ? leaveCounts.Id : 0, userid = leaveCounts.Userid });
                 }
-
                 var user = _userManager.GetUserAsync(User).Result;
-
-
-                
 
                 string wwwPath = this._webHostEnvironment.WebRootPath;
                 string contentPath = this._webHostEnvironment.ContentRootPath;
                 var filename = leaveCounts.FileUpload.FileName;
                 string path = Path.Combine(this._webHostEnvironment.WebRootPath, "document/Leave");
-                //if (!Directory.Exists(path))
-                //{
-                //    Directory.CreateDirectory(path);
-                //}
-
                 List<string> uploadedFiles = new List<string>();
-
                 string fileName = Path.GetFileName(leaveCounts.FileUpload.FileName);
                 using (FileStream stream = new FileStream(Path.Combine(path, fileName), FileMode.Create))
                 {
@@ -314,7 +289,7 @@ namespace coderush.Controllers
                 _context.SaveChanges();
 
                 TempData[StaticString.StatusMessage] = "Edit existing leave count item success.";
-                return RedirectToAction(nameof(Form), new { id = leaveCounts.Id > 0 ? leaveCounts.Id : 0 , userid = leaveCounts.Userid });
+                return RedirectToAction(nameof(Form), new { id = leaveCounts.Id > 0 ? leaveCounts.Id : 0, userid = leaveCounts.Userid });
             }
             catch (Exception ex)
             {
@@ -326,41 +301,25 @@ namespace coderush.Controllers
 
         //display leavecount create edit form
         [HttpGet]
-        public IActionResult Form(int id, string userid)
+        public async Task<IActionResult> Form(int id, string userid)
         {
-            //ViewBag.leavecountList = _userManager.Users
-            //                    .Where(w => w.UserName != null)
-            //                   .Select(s => new SelectListItem()
-            //                   {
-            //                       Text = s.UserName,
-            //                       Value = s.Id.ToString()
-            //                   }).ToList();
-
-
-
             LeaveCountViewModel model = new LeaveCountViewModel();
+            var userRole = _userManager.GetUserAsync(User).Result;
+            var roleHR = await _userManager.IsInRoleAsync(userRole, "HR");
+            var roleSuperAdmin = await _userManager.IsInRoleAsync(userRole, "SUPERADMIN");
 
+            var userDetail = _userManager.GetUserAsync(User).Result;
 
-
-            //ViewBag.Role = HttpContext.Session.GetString("Role");
-            //if (HttpContext.Session.GetString("Role") == "Other")
-            //{
-            //    return RedirectToAction("PageError", "Home");
-            //}
-            //return View(model);
-
-            ////create new
-          //LeaveCountViewModel model = new LeaveCountViewModel();
+            if (!roleHR && !roleSuperAdmin)
+                userid = userDetail.Id;
 
             if (id == 0)
             {
-
-                var user = _userManager.GetUserAsync(User).Result;
                 var udser = _userManager.Users.Where(w => w.Id == userid).FirstOrDefault();
-               
                 //newleavecount.Userid = udser.UserName;
                 model.UserName = udser.UserName;
                 model.Userid = udser.Id;
+               // model.strUserid = udser.Id;
                 return View(model);
             }
             else
@@ -370,7 +329,6 @@ namespace coderush.Controllers
                                          where data.Id == id
                                          select new LeaveCountViewModel
                                          {
-
                                              Id = data.Id,
                                              UserName = userid,
                                              Fromdate = data.Fromdate,
@@ -382,26 +340,10 @@ namespace coderush.Controllers
                                              Isapprove = data.Isapprove,
                                              ApproveDate = data.ApproveDate,
                                              Approveby = data.Approveby
-
                                          }).FirstOrDefault();
                 return View(editnewleavecount);
-                    //_context.LeaveCount.
-                    //Where(x => x.Id.Equals(id)).Select().FirstOrDefault();
             }
-
-            ////edit leavecount master
-            //LeaveCount editnewleavecount = new LeaveCount();
-            //editnewleavecount = _context.LeaveCount.Where(x => x.Id.Equals(id)).FirstOrDefault();
-            //editnewleavecount.Userid = username;
-            //if (editnewleavecount == null)
-            //{
-            //    return NotFound();
-            //}
-
-            //return View(editnewleavecount);
-
         }
-
         //display leavecount item for deletion
         [HttpGet]
         public IActionResult Delete(int id)
@@ -410,11 +352,9 @@ namespace coderush.Controllers
             {
                 return NotFound();
             }
-
             var leavecount = _context.LeaveCount.Where(x => x.Id.Equals(id)).FirstOrDefault();
             return View(leavecount);
         }
-
         //delete submitted leave count item if found, otherwise 404
         [HttpPost]
         [ValidateAntiForgeryToken]
@@ -427,7 +367,6 @@ namespace coderush.Controllers
                 {
                     return NotFound();
                 }
-
                 deleteleavecount.Isapprove = true;
                 deleteleavecount.IsDelete = false;
                 _context.LeaveCount.Update(deleteleavecount);
@@ -443,66 +382,6 @@ namespace coderush.Controllers
             }
         }
 
-        //[HttpPost]
-        //public async Task<IActionResult> AddOrEdit(DataMaster model)
-        //{
-        //    bool IsDataExist = false;
-
-        //    DataMaster data = await _context.Datamaster.FindAsync(model.Id);
-
-        //    if (data != null)
-        //    {
-        //        IsDataExist = true;
-        //    }
-        //    else
-        //    {
-        //        data = new DataMaster();
-        //    }
-        //    var user = _userManager.GetUserAsync(User).Result;
-        //    //if (ModelState.IsValid)
-        //    {
-        //        try
-        //        {
-        //            data.Type = model.Type;
-        //            data.Text = model.Text;
-        //            data.Description = model.Description;
-        //            data.Isactive = model.Isactive;
-
-        //            if (IsDataExist)
-        //            {
-        //                data.UpdatedBy = user.Id;
-        //                data.UpdatedDate = DateTime.Now;
-        //                _context.Update(data);
-        //            }
-        //            else
-        //            {
-        //                data.CreatedBy = user.Id;
-        //                data.CreatedDate = DateTime.Now;
-        //                _context.Add(data);
-        //            }
-        //            await _context.SaveChangesAsync();
-        //    }
-        //        catch (Exception ex)
-        //    {
-        //        return Json(new { success = false, message = ex.Message });
-        //    }
-        //}
-
-        //    return Json(new { success = true, message = "Data saved successfully." });
-        //}
-
-        //public FileResult DownloadFile(string fileName)
-        //{
-        //    //Build the File Path.
-        //    string path = Path.Combine(this._webHostEnvironment.WebRootPath, "document/Leave/") + fileName;
-
-        //    //Read the File data into Byte Array.
-        //    byte[] bytes = System.IO.File.ReadAllBytes(path);
-
-        //    //Send the File to Download.
-        //    return File(bytes, "application/octet-stream", fileName);
-        //}
-
         [HttpGet]
         public IActionResult EditData(int id)
         {
@@ -513,7 +392,6 @@ namespace coderush.Controllers
         [HttpPost]
         public ActionResult leavepopuop(int Id, string HrDescription, bool Isapprove)
         {
-
             try
             {
                 var models = _context.LeaveCount.Where(x => x.Id == Id).FirstOrDefault();
@@ -528,18 +406,7 @@ namespace coderush.Controllers
                 var result = new { Success = "False", Message = ex.Message };
                 return Json(result);
             }
-
         }
-        //[HttpPost]
-        //public async Task<IActionResult> Delete(int Id)
-        //{
-        //    var data = await _context.Datamaster.FindAsync(Id);
-        //    data.Isdeleted = true;
-        //    _context.Datamaster.Update(data);
-        //    await _context.SaveChangesAsync();
-
-        //    return Json(new { success = true, message = "Data deleted successfully." });
-        //}
     }
 }
 

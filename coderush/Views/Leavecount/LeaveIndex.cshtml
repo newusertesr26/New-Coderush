@@ -3,7 +3,7 @@
 
 @model List<LeaveCountViewModel>
 
-@inject UserManager<ApplicationUser> _userManager
+@inject UserManager<ApplicationUser> _userManager              
 @{ ViewData["Title"] = "Leave";
     var user = await _userManager.GetUserAsync(User);
     var roles = await _userManager.GetRolesAsync(user);
@@ -21,7 +21,7 @@
         </p>
 
     </section>
-    <!-- Main content -->
+    <!-- Main content //Harshal working on-->
     <section class="content">
         @Html.AntiForgeryToken()
         <!-- Default box -->
@@ -32,7 +32,7 @@
                     <a href="javascript:void(0)" id="btninsert" class="btn btn-primary"><i class="fa fa-plus"></i></a>
                 </div>
             </div>
-
+            <div><input type="hidden" id=""></div>
             <div class="box-body">
                 @if (roles.Contains("SuperAdmin") || roles.Contains("HR"))
                 {
@@ -41,39 +41,28 @@
                         @*<select class="dropdown-mega-menu-xl" id="leavedrpdwn"></select>*@
                     </div>
                 }
-                else
-                {
-                    <div class="form-group">
-                        <select name="Userid" id="leavedrpdwn" style="display:none" class="form-control" asp-items="@ViewBag.UserList"></select>
-                        @*<select class="dropdown-mega-menu-xl" id="leavedrpdwn"></select>*@
-                    </div>
-                }
-
-
                 <div class="table-responsive">
-                    <table id="grid" class="table table-striped" cellspacing="0" width="120%">
+                    <table id="grid" class="table table-striped" cellspacing="0" width="100%">
                         <thead>
                             <tr>
-                                <th width="5%">Edit</th>
-                                <th width="20%">Userid</th>
-                                <th width="10%">Fromdate</th>
-                                <th width="10%">Todate</th>
-                                <th width="10%">Count</th>
-                                <th width="10%">EmployeeDescription</th>
+                                <th width="4%">Edit</th>
+                                <th width="19%">UserName</th>
+                                <th width="8%">From Date</th>
+                                <th width="8%">To Date</th>
+                                <th width="5%">Count</th>
+                                <th width="14%">EmployeeDescription</th>
                                 @if (roles.Contains("SuperAdmin") || roles.Contains("HR"))
                                 {
-                                    <th width="10%">HrDescription</th>
+                                    <th width="13%">HrDescription</th>
                                 }
-
-                                <th width="10%">Is approve</th>
+                                <th width="8%">Is Approve</th>
                                 <th width="10%">Approve Date</th>
 
-                                <th width="10%">FileUpload</th>
+                                <th width="5%">FileUpload</th>
                                 @if (roles.Contains("SuperAdmin") || roles.Contains("HR"))
                                 {
-                                    <th width="10%">approve</th>
+                                    <th width="6%">Approve</th>
                                 }
-
                             </tr>
                         </thead>
 
@@ -133,53 +122,45 @@
                             @*<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>*@
                             <button type="button" class="btn btn-success" id="saveLeave" data-dismiss="modal">Save</button>
                         </div>
-
                     </div>
-
                 </div>
-
-
             </div>
-
         </div>
     </div>
-
 </div>
 
 @section Styles{
     <!-- DataTables -->
     <link rel="stylesheet" href="~/adminlte/components/datatables.net-bs/css/dataTables.bootstrap.min.css">
 }
-
-
 @section Scripts{
-
-
     <!-- DataTables -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js" integrity="sha512-qTXRIMyZIFb8iQcfjXWCO8+M5Tbc38Qi5WzdPOYZHIlZpzBHG3L3by84BBBOiRGiEb7KKtAOAs5qYdUiZiQNNQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
     <script src="~/adminlte/components/datatables.net/js/jquery.dataTables.min.js"></script>
     <script src="~/adminlte/components/datatables.net-bs/js/dataTables.bootstrap.min.js"></script>
-    @*<script src="~/js/jquery.min.js"></script>
-        <script src="~/js/jquery-ui.js"></script>*@
-
     <script src="~/js/LeaveCount.js"></script>
 
     <!-- page script -->
     <script type="text/javascript">
         $(document).ready(function () {
+            debugger
+            //$("#grid").dataTable({
+            //    aaSorting: [[2, 'asc']],
+            //    bPaginate: false,
+            //    bFilter: false,
+            //    bInfo: false,
+            //    bSortable: true,
+            //    bRetrieve: true,
+            //    aoColumnDefs: [
+            //        { "aTargets": [0], "bSortable": true },
+            //        { "aTargets": [1], "bSortable": true },
+            //        { "aTargets": [2], "bSortable": true },
+            //        { "aTargets": [3], "bSortable": false }
+            //    ]
+            //});"/Leavecount/LeaveIndex"
 
-            $('#grid').DataTable({
-                lengthChange: false,
-                info: false,
-                searching: true,
-                dom: 'lrtip',
-                scrollX: false,
-                pageLength: 25,
-            });
 
         });
-
-
     </script>
 
 }

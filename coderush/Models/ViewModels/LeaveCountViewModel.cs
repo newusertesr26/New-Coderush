@@ -11,11 +11,12 @@ namespace coderush.ViewModels
     {
         public LeaveCountViewModel()
         {
-            List = new List<LeaveCountViewModel>();
+            List = new List<LeaveCountViewModel>();//Harshal working on-->
         }
         public List<LeaveCountViewModel> List { get; set; }
         public int Id { get; set; }
         public string Userid { get; set; }
+
         public DateTime? Fromdate { get; set; }
         public string FromdateView { get; set; }
         public DateTime? Todate { get; set; }
@@ -34,5 +35,7 @@ namespace coderush.ViewModels
         public string UserRole { get; set; }
         public bool AdminRole { get; set; }
         public string UserName { get; set; }
+       public bool isedit { get; set; }
+       public string colouris { get; set; }
     }
 }

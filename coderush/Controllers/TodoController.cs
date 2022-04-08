@@ -15,7 +15,7 @@ using Microsoft.Extensions.Logging;
 
 namespace coderush.Controllers
 {
-    [Authorize(Roles = "SuperAdmin,HR")]
+    [Authorize(Roles = "SuperAdmin,HR,Employee")]
     public class TodoController : Controller
     {
         private readonly Services.Security.ICommon _security;
