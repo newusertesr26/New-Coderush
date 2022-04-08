@@ -8,6 +8,7 @@ using coderush.Models;
 using coderush.Models.ViewModels;
 using coderush.Services.Security;
 using coderush.ViewModels;
+using CodesDotHRMS.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
@@ -46,7 +47,7 @@ namespace coderush.Controllers
         }
 
         public IActionResult Index()
-        {            
+        {
             List<ApplicationUser> users = new List<ApplicationUser>();
             users = _security.GetAllMembers();
             return View(users);
@@ -56,14 +57,14 @@ namespace coderush.Controllers
         [HttpGet]
         public IActionResult ChangeProfile(string id)
         {
-          
+
 
             if (id == null)
             {
                 return NotFound();
             }
 
-           var appUser = _security.GetMemberByApplicationId(id);
+            var appUser = _security.GetMemberByApplicationId(id);
 
             if (appUser == null)
             {
@@ -126,20 +127,20 @@ namespace coderush.Controllers
                 updatedUser.EmailConfirmed = applicationUser.EmailConfirmed;
                 updatedUser.JoiningDate = applicationUser.JoiningDate;
                 updatedUser.ProfilePicture = applicationUser.Id + filetext;
-                
+
 
                 _context.Update(updatedUser);
                 await _context.SaveChangesAsync();
 
                 TempData[StaticString.StatusMessage] = "Update success";
-                return RedirectToAction(nameof(ChangeProfile), new { id = updatedUser.Id});
+                return RedirectToAction(nameof(ChangeProfile), new { id = updatedUser.Id });
             }
             catch (Exception ex)
             {
                 TempData[StaticString.StatusMessage] = "Error: " + ex.Message;
                 return RedirectToAction(nameof(ChangeProfile), new { id = applicationUser.Id });
             }
-            
+
         }
 
         //display change password screen if user founded, otherwise 404
@@ -228,8 +229,8 @@ namespace coderush.Controllers
             {
                 return NotFound();
             }
-            
-            var registeredRoles = await _userManager.GetRolesAsync(member);            
+
+            var registeredRoles = await _userManager.GetRolesAsync(member);
 
             ChangeRoles changeRole = new ChangeRoles();
             changeRole.Id = id;
@@ -245,10 +246,10 @@ namespace coderush.Controllers
         //post submitted change role request
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> SubmitChangeRole([Bind("Id", "HR", "Admin", "SuperAdmin", "Employee", "Sales")]ChangeRoles changeRoles)
+        public async Task<IActionResult> SubmitChangeRole([Bind("Id", "HR", "Admin", "SuperAdmin", "Employee", "Sales")] ChangeRoles changeRoles)
         {
             try
-            {                
+            {
 
                 if (!ModelState.IsValid)
                 {
@@ -446,7 +447,7 @@ namespace coderush.Controllers
                     TempData[StaticString.StatusMessage] = "Error: Register new member not success";
                     return RedirectToAction(nameof(Register));
                 }
-                
+
             }
             catch (Exception ex)
             {
@@ -479,6 +480,47 @@ namespace coderush.Controllers
                 }
             }
             return RedirectToAction("Index", "Membership");
+        }
+        [HttpGet]
+        public JsonResult SalaryEmployee()
+        {
+            List<ApplicationUser> users = new List<ApplicationUser>();
+            users = _security.GetAllMembers();
+
+            return Json(users);
+        }
+
+        [HttpPost]
+        public ActionResult SaveSalary(List<SaveEmployeeHistoryModel> request)
+        {
+            try
+            {
+
+                if (request != null && request.Count > 0)
+                {
+                    List<EmployeeHistory> employeeHistories = new List<EmployeeHistory>();
+
+                    employeeHistories = (from a in request
+                                         select new EmployeeHistory()
+                                         {
+                                             UserId = a.userid,
+                                             Salary = a.salary,
+                                             Date = DateTime.Now
+                                         }).ToList();
+
+                    _context.EmployeeHistory.AddRange(employeeHistories);
+                    _context.SaveChanges();
+                }
+                
+                var result = new { Success = "true", Message = "Data save successfully." };
+               return Json(result);
+            }
+            catch (Exception ex)
+            {
+                var result = new { Success = "False", Message = ex.Message };
+                return Json(result);
+            }
+
         }
     }
 }

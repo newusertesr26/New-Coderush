@@ -188,8 +188,18 @@
                     </a>
                 </li>
             }
+            @if (roles.Contains("SuperAdmin") || roles.Contains("HR") || roles.Contains("Employee"))
+            {
+                <li class="@Html.IsSelected(controller: Pages.Holiday.ControllerName)">
+                    <a href="@Pages.Holiday.UrlDefault">
+                        <i class="fa fa-th"></i> <span>@Pages.Holiday.NavigationName</span>
+                        <span class="pull-right-container">
+                            <small class="label pull-right bg-green">List</small>
+                        </span>
+                    </a>
+                </li>
+            }
 
-           
         </ul>
     </section>
     <!-- /.sidebar -->

@@ -30,6 +30,7 @@
             <div class="box-header with-border">
                 <h3 class="box-title">List of member</h3>
                 <div class="box-tools pull-right">
+                    <button type="button" onclick="Salary()" class="btn btn-primary" id="mybutton">Add Salary</button>
                     <a href="/EmployeeMaster/Register" class="btn btn-primary"><i class="fa fa-plus"></i></a>
 
                 </div>
@@ -95,7 +96,37 @@
     <!-- /.content -->
 </div>
 <!-- /.content-wrapper -->
+<div class="modal fade" id="myModal" role="dialog">
+    <div class="modal-dialog">
 
+        <!-- Modal content-->
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">Salary</h4>
+            </div>
+            <div class="modal-body">
+                <div class="table-responsive">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th width="25%">Members Name</th>
+                                <th width="25%">Amount </th>
+                            </tr>
+                        </thead>
+
+                        <tbody id="notebody">
+                        </tbody>
+                    </table>
+
+                    <button type="button" id='save' class='btn btn-primary pull-right'>  Save </button>
+                </div>
+
+            </div>
+
+        </div>
+    </div>
+</div>
 
 @section Styles{
     <!-- DataTables -->
@@ -125,7 +156,75 @@
 
             });
 
+
+            $("#save").click(function () {
+                 
+                var formData = new FormData();
+
+                $(".salary-txt-emp").each(function (index, telement) {
+                    var eleuser = $(telement).data("userid");
+                    var salary = $(telement).val();
+
+                    formData.append("request[" + index + "].userid", eleuser);
+                    formData.append("request[" + index + "].salary", salary.trim().length > 0 ? parseFloat(salary) : 0);
+
+                });
+
+                $.ajax({
+                    type: "POST",
+                    url: "/EmployeeMaster/SaveSalary",
+                    dataType: 'json',
+                    data: formData,
+                    cache: false,
+                    processData: false,
+                    contentType: false,
+                    success: function (response) {
+                        console.log(response);
+                        if (response.success == "true") {
+                            alert(response.message);
+                        }
+                        $("#myModal").modal("hide");
+                    },
+                    error: function (response) {
+                        alert(response.message);
+                    }
+                });
+
+            });
+
         });
+
+        function Salary() {
+            $("#amount").val("");
+            
+            $.ajax({
+                type: "GET",
+                url: "/EmployeeMaster/SalaryEmployee",
+                data: "Json",
+
+                success: function (response) {
+                    console.log(response);
+
+                    if (response != null) {
+                        var innerHtml = '';
+                        $.each(response, function (i, v) {
+                            var rowdata = response[i]
+                            innerHtml += "<tr>";
+                            innerHtml += "<td id='mail'> " + rowdata.firstName + " " + rowdata.lastName +" </td>";
+                            innerHtml += "<td> <div> <input type='number' data-userid='" + rowdata.id + "' id='amount_" + rowdata.id + "' class='form-control salary-txt-emp'/ > <br/></div>  </td>";
+                            innerHtml += "</tr>";
+
+                        });
+                        $("#notebody").html(innerHtml);
+                        $("#myModal").modal("show");
+                    }
+                }
+
+            });
+
+
+
+        }
 
     </script>
 
