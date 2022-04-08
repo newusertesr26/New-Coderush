@@ -1,0 +1,79 @@
+﻿@model CodesDotHRMS.Models.HolidayListViewModel
+@{ ViewData["Title"] = "Holiday Form"; }
+
+<!-- Content Wrapper. Contains page content -->
+<div class="content-wrapper">
+    <!-- Content Header (Page header) -->
+    <section class="content-header">
+        <h1>
+            @ViewData["Title"]
+        </h1>
+        <p>
+            @await Html.PartialAsync(PartialView.StatusMessage, TempData[StaticString.StatusMessage])
+        </p>
+
+    </section>
+    <!-- Main content -->
+    <section class="content">
+        <!-- Default box -->
+        <form asp-controller="HolidayList" enctype="multipart/form-data" asp-action="SubmitForm" method="post">
+            <div class="box">
+                <div class="box-header with-border">
+                    <h3 class="box-title">Create Holiday List</h3>
+                    <div class="box-tools pull-right">
+                        <button type="button" class="btn btn-box-tool" data-widget="collapse" data-toggle="tooltip"
+                                title="Collapse">
+                            <i class="fa fa-minus"></i>
+                        </button>
+                        <button type="button" class="btn btn-box-tool" data-widget="remove" data-toggle="tooltip" title="Remove">
+                            <i class="fa fa-times"></i>
+                        </button>
+                    </div>
+                </div>
+                <div class="box-body">
+                    <input type="hidden" asp-for="Id" />
+                    <div class=" form-group col-md-6">
+                        <label asp-for="Name"></label>
+                        <input id="" maxlength="100" asp-for="Name" class="form-control" />
+                        <span asp-validation-for="Name" class="text-danger"></span>
+                     
+
+                    </div>
+                    <div class=" form-group col-md-6">
+
+                        <label asp-for="Date"></label>
+                        <input type="date" id="" asp-for="Date" class="form-control" />
+                        <span asp-validation-for="Date" class="text-danger"></span>
+                       
+                    </div>
+                    <div class=" form-group col-md-6">
+                        <label asp-for="Day"></label>
+                        <select id="dropdown" asp-for="Day" class="form-control">
+                            <option value="select"> --Select--</option>
+                            <option value="Monday"> Monday </option>
+                            <option value="Tueday"> Tueday</option>
+                            <option value="Wednesday"> Wednesday</option>
+                            <option value="Thursday"> Thursday</option>
+                            <option value="Friday"> Friday</option>
+                            <option value="Saturday"> Saturday </option>
+                        </select>
+                        <span asp-validation-for="Day" class="text-danger"></span>
+                       
+                    </div>
+
+
+
+                </div>
+                <!-- /.box-body -->
+                <div class="box-footer">
+                    <a href="/Dashboard/DashboardIndex" class="btn btn-default">Back</a>
+                    <button type="submit" class="btn btn-primary" id="btnsave">Save</button>
+                </div>
+                <!-- /.box-footer-->
+            </div>
+        </form>
+
+        <!-- /.box -->
+    </section>
+    <!-- /.content -->
+</div>

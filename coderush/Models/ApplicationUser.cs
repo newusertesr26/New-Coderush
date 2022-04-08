@@ -11,7 +11,7 @@ namespace coderush.Models
     public partial class ApplicationUser : IdentityUser
     {
         //override identity user, add new column
-
+      //  public int Id { get; set; }
         public string FirstName { get; set; }
         public string LastName { get; set; }
         [Display(Name = "JoiningDate:")]

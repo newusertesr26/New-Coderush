@@ -170,7 +170,7 @@ namespace coderush.Controllers
                 }
                 catch (Exception ew)
                 {
-
+                    throw ew;
                 }
             }
             levcunt.List = leavecount;
