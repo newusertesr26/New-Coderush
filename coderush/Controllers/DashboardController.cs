@@ -42,14 +42,12 @@ namespace coderush.Controllers
         {
 
             var TODAYDATE = DateTime.Now;
-            var top15date = _context.HolidayList.OrderByDescending(x => x.Date).Take(15).ToList();
-            var maxdate = top15date.Where(x => x.Date > TODAYDATE).Max(x => x.Date);
-            var mindate = top15date.Where(x => x.Date > TODAYDATE).Min(x => x.Date);
-             
+            var after15day = DateTime.Now.AddDays(+15);
+           
             var data = new List<HolidayListViewModel>();
 
             data = (from h in _context.HolidayList.OrderByDescending(x => x.Id)
-                    where !h.Isdelete && h.Date >= mindate && h.Date <= maxdate
+                    where !h.Isdelete && h.Date <= after15day && h.Date >= TODAYDATE
 
                     select new HolidayListViewModel
                     {
