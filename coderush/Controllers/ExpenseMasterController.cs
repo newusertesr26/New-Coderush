@@ -108,8 +108,8 @@ namespace coderush.Controllers
                     ViewBag.startdate = sdate;
                     ViewBag.enddate = edate;
                     //serchadata = _context.ExpenseMaster.Where(x => !x.Isdelete && x.CreatedDate >= Convert.ToDateTime(sdate) && x.UpdatedDate <= Convert.ToDateTime(edate)).ToList();
-                   // serchadata = _context.ExpenseMaster.Where(x => !x.Isdelete && x.CreatedDate >= Convert.ToDateTime(sdate)).ToList();
-                    return View(serchadata);
+                    // serchadata = _context.ExpenseMaster.Where(x => !x.Isdelete && x.CreatedDate >= Convert.ToDateTime(sdate)).ToList();
+                    //return View(serchadata);
 
                     serchadata.List = serchadata.List.Where(x => x.Isdelete == false
                                          && x.ExpenseDate >= Convert.ToDateTime(sdate) && x.ExpenseDate <= Convert.ToDateTime(edate)).ToList();
