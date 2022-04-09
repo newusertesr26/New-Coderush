@@ -72,16 +72,34 @@ namespace CodesDotHRMS.Controllers
 
                 HolidayList newHoliday = new HolidayList();
 
-                newHoliday.Name = holiday.Name;
-                newHoliday.Day = holiday.Day;
-                newHoliday.Date = holiday.Date;
+                var exitdata = _context.HolidayList.Where(x => x.Name == holiday.Name).FirstOrDefault();
+                if (exitdata == null)
+                {
+                    newHoliday.Name = holiday.Name;
+                    newHoliday.Day = holiday.Day;
+                    newHoliday.Date = holiday.Date;
 
-                _context.HolidayList.Add(newHoliday);
-                _context.SaveChanges();
+                    _context.HolidayList.Add(newHoliday);
+                    _context.SaveChanges();
 
-                TempData[StaticString.StatusMessage] = "Create new HolidayList item successfully.";
-                return RedirectToAction(nameof(Form));
+                    TempData[StaticString.StatusMessage] = "Create new HolidayList item successfully.";
+                    return RedirectToAction(nameof(Form));
+                }
+                else
+                {
+                    if(exitdata.Isdelete == true)
+                    {
+                        exitdata.Isdelete = false;
+                        _context.HolidayList.Update(exitdata);
+                        _context.SaveChanges();
 
+                        TempData[StaticString.StatusMessage] = "Create new HolidayList item successfully.";
+                        return RedirectToAction(nameof(Form));
+
+                    }
+                    TempData[StaticString.StatusMessage] = "Data is already exist";
+                    return RedirectToAction(nameof(Form));
+                }
             }
             catch (Exception ex)
             {
@@ -116,7 +134,7 @@ namespace CodesDotHRMS.Controllers
                 }
 
                 deleteholiday.Isdelete = true;
-            
+
                 _context.HolidayList.Update(deleteholiday);
                 _context.SaveChanges();
 
