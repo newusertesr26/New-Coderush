@@ -199,6 +199,17 @@
                     </a>
                 </li>
             }
+            @if (roles.Contains("SuperAdmin") || roles.Contains("HR"))
+            {
+                <li class="@Html.IsSelected(controller: Pages.Schedule.ControllerName)">
+                    <a href="@Pages.Schedule.UrlDefault">
+                        <i class="fa fa-th"></i> <span>@Pages.Schedule.NavigationName</span>
+                        <span class="pull-right-container">
+                            <small class="label pull-right bg-green">List</small>
+                        </span>
+                    </a>
+                </li>
+            }
 
         </ul>
     </section>
