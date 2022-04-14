@@ -13,14 +13,14 @@ using System.Threading.Tasks;
 
 namespace coderush.Controllers
 {
-    public class ScheduleInterViewController : Controller
+    public class DoneSatusController : Controller
     {
         private readonly ILogger<HomeController> _logger;
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly RoleManager<IdentityRole> _roleManager;
         private readonly ApplicationDbContext _context;
         private readonly IWebHostEnvironment _webHostEnvironment;
-        public ScheduleInterViewController(ILogger<HomeController> logger, UserManager<ApplicationUser> userManager,
+        public DoneSatusController(ILogger<HomeController> logger, UserManager<ApplicationUser> userManager,
             RoleManager<IdentityRole> roleManager,
             ApplicationDbContext context,
             IWebHostEnvironment webHostEnvironment)
@@ -32,7 +32,7 @@ namespace coderush.Controllers
             _context = context;
             //_hostingEnvironment = hostingEnvironment;
         }
-        public IActionResult ScheduleIndex()
+        public IActionResult DoneStatusIndex()
         {
 
             var data = new List<CandidateMastersViewModel>();
@@ -41,10 +41,10 @@ namespace coderush.Controllers
 
 
             data = (from candidate in _context.CandidateMaster.OrderByDescending(x => x.Id)
-                    where !candidate.IsDelete && candidate.Status == 1
+                    where !candidate.IsDelete && candidate.Status == 3
 
-            let commentdate = _context.Comments.OrderByDescending(x => x.Id).Where(w => w.CandidateId == candidate.Id).Select(s => s.NextFollowUpdate).FirstOrDefault()
-                  
+                    let commentdate = _context.Comments.OrderByDescending(x => x.Id).Where(w => w.CandidateId == candidate.Id).Select(s => s.NextFollowUpdate).FirstOrDefault()
+
                     select new CandidateMastersViewModel
                     {
                         Id = candidate.Id,
@@ -64,8 +64,8 @@ namespace coderush.Controllers
                         dateforNext = (commentdate != null ? commentdate : nulldate),
                         CreatedBy = _userManager.Users.Where(x => x.Id == candidate.CreatedBy).Select(x => x.FirstName + " " + x.LastName).FirstOrDefault(),
                         CreatedDate = candidate.CreatedDate,
-                    
-                     
+
+
                     }).ToList();
             return View(data);
         }

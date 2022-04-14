@@ -210,6 +210,28 @@
                     </a>
                 </li>
             }
+            @if (roles.Contains("SuperAdmin") || roles.Contains("HR"))
+            {
+                <li class="@Html.IsSelected(controller: Pages.InprogressInterview.ControllerName)">
+                    <a href="@Pages.InprogressInterview.UrlDefault">
+                        <i class="fa fa-th"></i> <span>@Pages.InprogressInterview.NavigationName</span>
+                        <span class="pull-right-container">
+                            <small class="label pull-right bg-green">List</small>
+                        </span>
+                    </a>
+                </li>
+            }
+            @if (roles.Contains("SuperAdmin") || roles.Contains("HR"))
+            {
+                <li class="@Html.IsSelected(controller: Pages.DoneSatus.ControllerName)">
+                    <a href="@Pages.DoneSatus.UrlDefault">
+                        <i class="fa fa-th"></i> <span>@Pages.DoneSatus.NavigationName</span>
+                        <span class="pull-right-container">
+                            <small class="label pull-right bg-green">List</small>
+                        </span>
+                    </a>
+                </li>
+            }
 
         </ul>
     </section>

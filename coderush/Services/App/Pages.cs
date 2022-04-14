@@ -8,12 +8,26 @@ namespace coderush.Services.App
     //static class for app pages common information
     public static partial class Pages
     {
+        public static class DoneSatus
+        {
+            public const string ControllerName = "DoneSatus";
+            public const string RoleName = "DoneSatus";
+            public const string UrlDefault = "/DoneSatus/DoneStatusIndex";
+            public const string NavigationName = "DoneSatus";
+        }
         public static class Schedule
         {
             public const string ControllerName = "ScheduleInterView";
             public const string RoleName = "Schedule InterView";
             public const string UrlDefault = "/ScheduleInterView/ScheduleIndex";
             public const string NavigationName = "Schedule InterView";
+        }
+        public static class InprogressInterview
+        {
+            public const string ControllerName = "InprogressInterview";
+            public const string RoleName = "InprogressInterview";
+            public const string UrlDefault = "/InprogressInterview/InprogressIndex";
+            public const string NavigationName = "InprogressInterview";
         }
         public static class Holiday
         {
