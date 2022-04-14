@@ -264,11 +264,11 @@ namespace coderush.Controllers
                     return RedirectToAction(nameof(ChangeRole), new { id = changeRoles.Id });
                 }
 
-                if (_identityDefaultOptions.IsDemo && _superAdminDefaultOptions.Email.Equals(member.Email))
-                {
-                    TempData[StaticString.StatusMessage] = "Error: Demo mode can not change super@admin.com data.";
-                    return RedirectToAction(nameof(ChangeRole), new { id = changeRoles.Id });
-                }
+                //if (_identityDefaultOptions.IsDemo && _superAdminDefaultOptions.Email.Equals(member.Email))
+                //{
+                //    TempData[StaticString.StatusMessage] = "Error: Demo mode can not change super@admin.com data.";
+                //    return RedirectToAction(nameof(ChangeRole), new { id = changeRoles.Id });
+                //}
 
                 //todo role
                 //if (changeRoles.IsTodoRegistered)
