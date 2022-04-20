@@ -50,8 +50,6 @@
     });
 
     var Bindtablegrid = function (id, username, userid) {
-        debugger
-
         $.ajax({
             url: "/Leavecount/BindGridData?id=" + id + "&UserName=" + username + "&Userid=" + userid,
             method: 'Get',

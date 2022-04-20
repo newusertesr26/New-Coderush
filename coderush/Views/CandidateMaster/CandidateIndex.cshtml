@@ -326,7 +326,6 @@
                 pageLength: 25,
                 order: [[0, "desc"]],
 
-
             });
             $('#autosrch').on('keyup', function () {
 
@@ -351,7 +350,6 @@
             //});
 
             $("#clear").click(function () {
-                debugger
                 $("#canTO").val("");
                 $("#dropdown").val("");
                 $("#canFromDate").val("");
@@ -376,7 +374,6 @@
                         $("#notes").val("");
                         $("#noteid").val(id);
                         var innerHtml = '';
-                        debugger
                         $.each(response, function (i, v) {
                             var rowdata = response[i]
                             innerHtml += "<tr>";
