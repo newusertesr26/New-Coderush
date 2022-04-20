@@ -50,6 +50,8 @@
     });
 
     var Bindtablegrid = function (id, username, userid) {
+        debugger
+
         $.ajax({
             url: "/Leavecount/BindGridData?id=" + id + "&UserName=" + username + "&Userid=" + userid,
             method: 'Get',
@@ -87,7 +89,13 @@
                         }
                         innerHtml += "<td scope='col' id='Approve Date'>" + moment(rowdata.approveDate).format('LL') + "</td>";
                         //innerHtml += '<td>@Html.ActionLink("Download", "DownloadFile", new { fileName = item.FileUpload })</td>';
-                        innerHtml += "<td><a class='cladownload' data-downloadFile='/document/Leave/" + rowdata.filename + "'><i class='fa fa-download'></i></a></td>";
+                        if (rowdata.filename != null && rowdata.filename != "") {
+                            innerHtml += "<td><a class='cladownload' data-downloadFile='/document/Leave/" + rowdata.filename + "'><i class='fa fa-download'></i></a></td>";
+                        }
+                        else {
+                            innerHtml += "<td></td>"
+
+                        }
                         if (rowdata.adminRole) {
                             innerHtml += "<td><input type='button' value='approve' class='clsAprove' data-aproveid='" + rowdata.id + "' id='btn_" + rowdata.id + "' ></td>";
                         }
@@ -191,7 +199,7 @@
             alert("Please select user");
             return false;
         }
-        
+
 
         var userid = $("#leavedrpdwn").val();
         window.location.href = '/LeaveCount/Form?id=' + 0 + '&userid=' + userid;
@@ -223,7 +231,7 @@
 
     BinddrpdwnData();
 
-    Bindtablegrid("","");
+    Bindtablegrid("", "");
 
     $(document).on("click", ".cladownload", function () {
         var fileName = $(this).attr('data-downloadFile');
