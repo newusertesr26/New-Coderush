@@ -47,7 +47,6 @@ namespace coderush.Controllers
         public IActionResult LeaveIndex(string id)
         {
             List<LeaveCountViewModel> model = new List<LeaveCountViewModel>();
-
             return View(model);
         }
 
@@ -59,13 +58,13 @@ namespace coderush.Controllers
 
             var user = _userManager.GetUserAsync(User).Result;
             var adminrole = await _userManager.IsInRoleAsync(user, "HR");
+            var suadminrole = await _userManager.IsInRoleAsync(user, "SuperAdmin");
 
             LeaveCountViewModel levcunt = new LeaveCountViewModel();
             var leavecount = new List<LeaveCountViewModel>();
             var todayDate = DateTime.Now;
             if (!adminrole)
             {
-                
                 leavecount = _context.LeaveCount
                                     .Where(w => w.Userid == user.Id)
                                    .Select(s => new LeaveCountViewModel()
@@ -108,7 +107,7 @@ namespace coderush.Controllers
                 }
 
             }
-            else if (adminrole)
+            else if (adminrole || suadminrole)
             {
                 try
                 {
@@ -130,13 +129,13 @@ namespace coderush.Controllers
                                           Approveby = s.Approveby,
                                           AdminRole = adminrole,
                                           isedit = (s.Todate <= todayDate) ? true : false,
-                                          colouris= s.Todate > todayDate ? "#ffe0bb" : "",
+                                          colouris = s.Todate > todayDate ? "#ffe0bb" : "",
                                       }).ToList();
                     //leavecount = leavecount.OrderByDescending(x => x.Todate).ToList();
                     //leavecount = leavecount.OrderByDescending(x => x.Todate).Where(x => x.Todate > todayDate).OrderBy(x=>x.Todate).ToList();
-                    var leavecount1 = leavecount.Where(x => x.colouris=="").ToList();
-                    leavecount = leavecount.OrderByDescending(x => x.Todate).Where(x => x.Todate > todayDate).OrderBy(x=>x.Todate).ToList();
-                      foreach (var data in leavecount1)
+                    var leavecount1 = leavecount.Where(x => x.colouris == "").ToList();
+                    leavecount = leavecount.OrderByDescending(x => x.Todate).Where(x => x.Todate > todayDate).OrderBy(x => x.Todate).ToList();
+                    foreach (var data in leavecount1)
                     {
                         LeaveCountViewModel ab = new LeaveCountViewModel();
                         ab.Id = data.Id;
@@ -168,23 +167,14 @@ namespace coderush.Controllers
             //return RedirectToAction(nameof(LeaveIndex), new { id = leaveCounts.Id > 0 ? leaveCounts.Id : 0 });
             return Json(levcunt);
         }
+
         public async Task<IActionResult> BinddrpdwnData()
         {
             var user = _userManager.GetUserAsync(User).Result;
             var adminrole = await _userManager.IsInRoleAsync(user, "HR");
+            var suadminrole = await _userManager.IsInRoleAsync(user, "SuperAdmin");
 
-            if (!adminrole)
-            {
-                var leavecount = _userManager.Users
-                                    .Where(w => w.UserName != null && w.Email == user.ToString())
-                                   .Select(s => new SelectListItem()
-                                   {
-                                       Text = String.Format("{0} {1} {2}", s.UserName, s.FirstName != null ? "|| " + s.FirstName : "", s.LastName != null ? "|| " + s.LastName : "").ToString(),
-                                       Value = s.Id.ToString()
-                                   }).ToList();
-                return Json(leavecount);
-            }
-            else if (adminrole)
+            if (adminrole || suadminrole)
             {
                 var leavecount = _userManager.Users
                                     .Where(w => w.UserName != null)
@@ -193,6 +183,17 @@ namespace coderush.Controllers
                                        Text = String.Format("{0} {1} {2}", s.UserName, s.FirstName != null ? "|| " + s.FirstName : "", s.LastName != null ? "|| " + s.LastName : "").ToString(),
                                        Value = s.Id.ToString()
                                    }).ToList();
+                return Json(leavecount);
+            }
+            else
+            {
+                var leavecount = _userManager.Users
+                                      .Where(w => w.UserName != null && w.Email == user.ToString())
+                                     .Select(s => new SelectListItem()
+                                     {
+                                         Text = String.Format("{0} {1} {2}", s.UserName, s.FirstName != null ? "|| " + s.FirstName : "", s.LastName != null ? "|| " + s.LastName : "").ToString(),
+                                         Value = s.Id.ToString()
+                                     }).ToList();
                 return Json(leavecount);
             }
             return null;
@@ -306,7 +307,7 @@ namespace coderush.Controllers
             LeaveCountViewModel model = new LeaveCountViewModel();
             var userRole = _userManager.GetUserAsync(User).Result;
             var roleHR = await _userManager.IsInRoleAsync(userRole, "HR");
-            var roleSuperAdmin = await _userManager.IsInRoleAsync(userRole, "SUPERADMIN");
+            var roleSuperAdmin = await _userManager.IsInRoleAsync(userRole, " SuperAdmin");
 
             var userDetail = _userManager.GetUserAsync(User).Result;
 
@@ -319,7 +320,7 @@ namespace coderush.Controllers
                 //newleavecount.Userid = udser.UserName;
                 model.UserName = udser.UserName;
                 model.Userid = udser.Id;
-               // model.strUserid = udser.Id;
+                // model.strUserid = udser.Id;
                 return View(model);
             }
             else

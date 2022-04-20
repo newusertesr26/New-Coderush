@@ -65,6 +65,7 @@
                 if (data.list != null && data.list.length > 0) {
                     var innerHtml = '';
                     var arrya = new Array();
+                    var totalLeavesCount = 0;
                     $.each(data.list, function (i, v) {
                         var rowdata = data.list[i]
                         innerHtml += "<tr style='background-color:" + rowdata.colouris + "'>";
@@ -103,9 +104,17 @@
                             innerHtml += "<td><input type='button' value='Approve' class='clsAprove btn btn-info' data-aproveid='" + rowdata.id + "' id='btn_" + rowdata.id + "' ></td>";
                         }
                         innerHtml += "</tr>"
-                    });
-                    $("#levtblbdy").html(innerHtml);
+                        totalLeavesCount += parseInt(rowdata.count);
 
+                    });
+
+                    var totalYearlyLeave = parseInt($("#lblYearlyLeaves").text());
+                    var total = 0;
+
+                    $("#levtblbdy").html(innerHtml);
+                    $("#lblTotalLeavesCount").text(totalLeavesCount);
+                    total = (totalYearlyLeave - totalLeavesCount);
+                    $("#lblRemainingLeaves").text(total);
                     gridSorting();
 
                     $(".editleave").unbind().click(function () {
@@ -259,5 +268,6 @@
         $("#IsApprove").prop("checked", false);
         $("#IsReject").prop("checked", false);
     }
+   // var totalYearsLeaves = 200;
 });
 

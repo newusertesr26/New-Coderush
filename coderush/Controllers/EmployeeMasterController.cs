@@ -28,7 +28,7 @@ namespace coderush.Controllers
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly IWebHostEnvironment _webHostEnvironment;
 
-        //dependency injection through constructor, to directly access services
+        //dependency injection through constructor, to directly access services  // Harshal Working on
         public EmployeeMasterController(
             Services.Security.ICommon security,
             IOptions<IdentityDefaultOptions> identityDefaultOptions,
@@ -49,8 +49,52 @@ namespace coderush.Controllers
         public IActionResult Index()
         {
             List<ApplicationUser> users = new List<ApplicationUser>();
+            List<ApplicationUser> finaluser = new List<ApplicationUser>();
             users = _security.GetAllMembers();
-            return View(users);
+            var lastMonthAsString = System.DateTime.Now.ToString("Y");
+
+            foreach (var ldata in users)
+            {
+                try
+                {
+                    ApplicationUser usersm = new ApplicationUser();
+                    usersm.Id = ldata.Id;
+                    usersm.Email = ldata.Email;
+                    usersm.FirstName = ldata.FirstName;
+                    usersm.LastName = ldata.LastName;
+                    usersm.JoiningDate = ldata.JoiningDate;  //var JoiningDate = users.Select(x => x.JoiningDate == null? System.DateTime.Now : x.JoiningDate).FirstOrDefault();
+                    var month = ldata.JoiningDate.Value.Month;
+                    var finmalmoth = 12 - month;
+                    var totalleves = _context.LeaveCount.Where(x => x.Userid == ldata.Id && x.Fromdate.Value.Month>= ldata.JoiningDate.Value.Month && x.Fromdate.Value.Year==DateTime.Now.Year).ToList();
+                    var pl=0;
+                    var regularlevs=0;
+
+                    foreach(var data1 in totalleves)
+                    {
+                        if(data1.Count=="1")
+                        {
+                            pl++;
+                        }
+                        else if(Convert.ToInt32(data1.Count) >1)
+                        {
+                            pl++;
+                            regularlevs = regularlevs + Convert.ToInt32(data1.Count) - 1;
+                        }
+
+                    }
+                    usersm.Pl = "" + pl + "/" + finmalmoth + "";
+                    usersm.UnpaidLeave = Convert.ToInt32(regularlevs);
+                    usersm.isSuperAdmin = ldata.isSuperAdmin;
+                    usersm.PhoneNumber = ldata.PhoneNumber;
+                    usersm.ProfilePicture = ldata.ProfilePicture;
+                    finaluser.Add(usersm);
+                }
+                catch (Exception ex)
+                {
+                    throw ex;
+                }
+            }
+            return View(finaluser);
         }
 
         //display change profile screen if member founded, otherwise 404
@@ -77,7 +121,7 @@ namespace coderush.Controllers
         //post submited change profile request
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> SubmitChangeProfile([Bind("Id,EmailConfirmed,Email,FirstName,LastName,PhoneNumber,JoiningDate,ProfilePicture")] ApplicationViewModel applicationUser)
+        public async Task<IActionResult> SubmitChangeProfile([Bind("Id,EmailConfirmed,Email,FirstName,LastName,PhoneNumber,ProfilePicture")] ApplicationViewModel applicationUser)
         {
             try
             {
@@ -125,7 +169,7 @@ namespace coderush.Controllers
                 updatedUser.LastName = applicationUser.LastName;
                 updatedUser.PhoneNumber = applicationUser.PhoneNumber;
                 updatedUser.EmailConfirmed = applicationUser.EmailConfirmed;
-                updatedUser.JoiningDate = applicationUser.JoiningDate;
+                //updatedUser.JoiningDate = applicationUser.JoiningDate;
                 updatedUser.ProfilePicture = applicationUser.Id + filetext;
 
 
@@ -264,11 +308,11 @@ namespace coderush.Controllers
                     return RedirectToAction(nameof(ChangeRole), new { id = changeRoles.Id });
                 }
 
-                if (_identityDefaultOptions.IsDemo && _superAdminDefaultOptions.Email.Equals(member.Email))
-                {
-                    TempData[StaticString.StatusMessage] = "Error: Demo mode can not change super@admin.com data.";
-                    return RedirectToAction(nameof(ChangeRole), new { id = changeRoles.Id });
-                }
+                //if (_identityDefaultOptions.IsDemo && _superAdminDefaultOptions.Email.Equals(member.Email))
+                //{
+                //    TempData[StaticString.StatusMessage] = "Error: Demo mode can not change super@admin.com data.";
+                //    return RedirectToAction(nameof(ChangeRole), new { id = changeRoles.Id });
+                //}
 
                 //todo role
                 //if (changeRoles.IsTodoRegistered)
@@ -417,7 +461,7 @@ namespace coderush.Controllers
         //post submitted registration request
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> SubmitRegister([Bind("EmailConfirmed,Email,FirstName,LastName,PhoneNumber,Password,ConfirmPassword")] Register register)
+        public async Task<IActionResult> SubmitRegister([Bind("EmailConfirmed,Email,FirstName,LastName,PhoneNumber,JoiningDate,Password,ConfirmPassword")] Register register)
         {
             try
             {
@@ -430,6 +474,7 @@ namespace coderush.Controllers
                 ApplicationUser newMember = new ApplicationUser();
                 newMember.Email = register.Email;
                 newMember.FirstName = register.FirstName;
+                newMember.JoiningDate = register.JoiningDate;
                 newMember.LastName = register.LastName;
                 newMember.UserName = register.Email;
                 newMember.PhoneNumber = register.PhoneNumber;
@@ -511,9 +556,9 @@ namespace coderush.Controllers
                     _context.EmployeeHistory.AddRange(employeeHistories);
                     _context.SaveChanges();
                 }
-                
+
                 var result = new { Success = "true", Message = "Data save successfully." };
-               return Json(result);
+                return Json(result);
             }
             catch (Exception ex)
             {

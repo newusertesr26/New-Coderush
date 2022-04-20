@@ -413,19 +413,7 @@ namespace coderush.Controllers
                 var result = new { Success = "False", Message = ex.Message };
                 return Json(result);
             }
-      
         }
-
-        //[HttpPost]
-        //public async Task<IActionResult> Delete(int Id)
-        //{
-        //    var data = await _context.Datamaster.FindAsync(Id);
-        //    data.Isdeleted = true;
-        //    _context.Datamaster.Update(data);
-        //    await _context.SaveChangesAsync();
-
-        //    return Json(new { success = true, message = "Data deleted successfully." });
-        //}
     }
 }
 

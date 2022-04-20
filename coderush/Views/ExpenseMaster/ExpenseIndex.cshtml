@@ -69,12 +69,12 @@
                             <a href="/ExpenseMaster/ExpenseIndex?curentmonth=2" style="margin-top: 25px" class="btn btn-primary" id="btnCurrentMonth">Current Month</a>
                             @*<a href="#"><i id="myModal" onclick="Creadit" &nbsp; class="fa fa-comments-o"></i></a>*@
                             @*<br />
-                <br />
-                <a href="/ExpenseMaster/ExpenseIndex" onclick="openNote" class="btn btn-primary" id="myModal">Creadit</a>*@
+                                <br />
+                                <a href="/ExpenseMaster/ExpenseIndex" onclick="openNote" class="btn btn-primary" id="myModal">Creadit</a>*@
                             @*<button type="button" class="btn btn-primary" data-toggle="modal" data-target="#myModal">Credit </button>*@
                         </div>
                     </div>
-                
+
                 </div>
             </div>
 
@@ -119,22 +119,16 @@
                                                 <th width="10%">Amount</th>
                                                 <th width="10%">Manager Name</th>
                                                 <th width="10%">Credit Date</th>
-
                                             </tr>
                                         </thead>
                                         <tbody id="notebody">
                                         </tbody>
                                     </table>
                                 </div>
-
                             </div>
-
-
                         </div>
-
                     </div>
                 </div>
-
             </div>
 
             <!-- Default box -->
@@ -143,36 +137,36 @@
                     <h3 class="box-title">List of Expense item</h3>
                 </div>
 
-                    <div class="col-lg-3">
-                        <label style="margin-top: 10px ;font :bold ;color:red"> Total Credited Amount: </label>
-                        <label style="font :bold ;color:red">  @ViewBag.TotalCredit INR </label>
-                    </div>
-                    <div class="col-lg-3">
-                        <label style="margin-top: 10px; font: bold; color: red ">Total Expense Amount: </label>
-                        <label style="font :bold ;color:red">
-                            @ViewBag.TotalExpense INR
-                        </label>
-
-                    </div>
-
-                    <div class="col-lg-3">
-                        <label style="margin-top: 10px; font: bold; color: red"> Balance: </label>
-                        <label style="font :bold ;color:red">
-                            @{var credit = ViewBag.TotalCredit;
-                                var expense = ViewBag.TotalExpense;
-                                var balance = credit - expense;
-                                ViewBag.Balance = balance;
-                            }
-                            @ViewBag.Balance INR
-                        </label>
-
-                    </div>
-
-                    <div class="box-tools pull-right">
-                        <a href="/ExpenseMaster/Form" class="btn btn-primary"><i class="fa fa-plus"></i></a>
-                        <button type="button"  class="btn btn-primary" id="mybutton">Credit</button> @*data-target="#myModal" data-toggle="modal"*@
-                    </div>
+                <div class="col-lg-3">
+                    <label style="margin-top: 10px ;font :bold ;color:red"> Total Credited Amount: </label>
+                    <label style="font :bold ;color:red">  @ViewBag.TotalCredit INR </label>
                 </div>
+                <div class="col-lg-3">
+                    <label style="margin-top: 10px; font: bold; color: red ">Total Expense Amount: </label>
+                    <label style="font :bold ;color:red">
+                        @ViewBag.TotalExpense INR
+                    </label>
+
+                </div>
+
+                <div class="col-lg-3">
+                    <label style="margin-top: 10px; font: bold; color: red"> Balance: </label>
+                    <label style="font :bold ;color:red">
+                        @{var credit = ViewBag.TotalCredit;
+                            var expense = ViewBag.TotalExpense;
+                            var balance = credit - expense;
+                            ViewBag.Balance = balance;
+                        }
+                        @ViewBag.Balance INR
+                    </label>
+
+                </div>
+
+                <div class="box-tools pull-right">
+                    <a href="/ExpenseMaster/Form" class="btn btn-primary"><i class="fa fa-plus"></i></a>
+                    <button type="button" class="btn btn-primary" id="mybutton">Credit</button> @*data-target="#myModal" data-toggle="modal"*@
+                </div>
+            </div>
             <div class="box-body">
                 <div class="table-responsive">
                     <table id="grid" class="table table-striped" cellspacing="0" width="100%">
@@ -211,7 +205,7 @@
                                     </td>
                                     <td>
                                         @item.Amount
-                                       
+
                                     </td>
                                     <td>
                                         @item.ExpenseDate.Value.ToString("dd MMMM yyyy")
@@ -316,7 +310,6 @@
 
             $("#mybutton").click(function () {
                 // show Modal
-                debugger
                 $('#myModal').modal('show');
                 Notes();
                 $(".dataTables_paginate").css("display", "none");
@@ -339,7 +332,7 @@
                     //data: { "id": id },
                     success: function (response) {
                         console.log(response);
-                   
+
                         if (response != null) {
                             var innerHtml = '';
                             $.each(response, function (i, v) {
@@ -351,7 +344,7 @@
                                 innerHtml += "</tr>"
                             });
                             $("#notebody").html(innerHtml);
-                           
+
                         }
                     },
                     error: function (response) {

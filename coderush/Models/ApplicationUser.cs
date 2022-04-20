@@ -12,6 +12,7 @@ namespace coderush.Models
     {
         //override identity user, add new column
       //  public int Id { get; set; }
+        
         public string FirstName { get; set; }
         public string LastName { get; set; }
         [Display(Name = "JoiningDate:")]
@@ -20,6 +21,12 @@ namespace coderush.Models
         public string ProfilePicture { get; set; }
 
         public bool isSuperAdmin { get; set; } = false;
-            
+
+        public int PaidLeave { get; set; }
+        public int UnpaidLeave { get; set; }
+        public string Pl { get; set; }
+       // public int TotalLeave { get; set; }
+
+
     }
 }

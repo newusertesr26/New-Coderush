@@ -41,10 +41,13 @@
                         <thead>
                             <tr>
                                 <th width="10%"></th>
-                                <th width="25%">Member Email</th>
-                                <th width="25%">FirstName</th>
-                                <th width="25%">LastName</th>
-                                <th width="25%">Phone Number</th>
+                                <th width="20%">Member Email</th>
+                                <th width="10%">FirstName</th>
+                                <th width="10%">LastName</th>
+                                <th width="10%">Paid Leave</th>
+                                <th width="10%">Unpaid Leave</th>
+                                <th width="10%">Joining Date</th>
+                                <th width="10%">Phone Number</th>
                                 <th width="10%">Status</th>
                                 @if (roles.Contains("SuperAdmin"))
                                 {
@@ -73,6 +76,9 @@
                                     <td>@item.Email</td>
                                     <td>@item.FirstName</td>
                                     <td>@item.LastName</td>
+                                    <td><button type="button" id="leavespopup" data-username="@item.Email" data-id="@item.Id">@item.Pl</button></td>
+                                    <td><button type="button" id="unpaidleavespopup" data-username="@item.Email" data-id="@item.Id">@item.UnpaidLeave</button></td>
+                                    <td>@item.JoiningDate</td>
                                     <td>@item.PhoneNumber</td>
                                     <td>
                                         <span class="label label-@(item.EmailConfirmed ? "success" : "danger")">@(item.EmailConfirmed ? "Active" : "Pending")</span>
@@ -128,6 +134,114 @@
     </div>
 </div>
 
+
+
+<div class="container">
+    <!-- Modal -->
+    <div class="modal fade" id="myModalpl" role="dialog">
+        <div class="row">
+            <div class="col-md-8">
+                <section class="content">
+                    @Html.AntiForgeryToken()
+                    <!-- Default box -->
+                    <div class="box">
+                        <div class="box-header with-border">
+                            <button type="button" class="close" data-dismiss="modal">&times;</button>
+                            <h4 class="modal-title">Leaves Details</h4>
+                        </div>
+                        <div><input type="hidden" id=""></div>
+                        <div class="box-body">
+                            @*@if (roles.Contains("SuperAdmin") || roles.Contains("HR"))
+                        {
+                            <div class="form-group">
+                                <select name="Userid" id="leavedrpdwn" class="form-control" asp-items="@ViewBag.UserList"></select>
+                            </div>
+                        }*@
+                            <div class="table-responsive">
+                                <table class="table table-striped grid1" cellspacing="0" width="100%">
+                                    <thead>
+                                        <tr>
+                                            <th width="10%">UserName</th>
+                                            <th width="10%">From Date</th>
+                                            <th width="10%">To Date</th>
+                                            <th width="10%">Count</th>
+                                            <th width="15%">EmployeeDescription</th>
+                                            @if (roles.Contains("SuperAdmin") || roles.Contains("HR"))
+                                            {
+                                                <th width="15%">HrDescription</th>
+                                            }
+                                            <th width="10%">Is Approve</th>
+                                            <th width="10%">Approve Date</th>
+                                            <th width="10%">FileUpload</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="levtblbdy">
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                        <!-- /.box-body -->
+                    </div>
+                    <!-- /.box -->
+                </section>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="container">
+    <!-- Modal -->
+    <div class="modal fade" id="myModalunpaidpl" role="dialog">
+        <div class="row">
+            <div class="col-md-8">
+                <section class="content">
+                    @Html.AntiForgeryToken()
+                    <!-- Default box -->
+                    <div class="box">
+                        <div class="box-header with-border">
+                            <button type="button" class="close" data-dismiss="modal">&times;</button>
+                            <h4 class="modal-title">Leaves Details</h4>
+                        </div>
+                        <div><input type="hidden" id=""></div>
+                        <div class="box-body">
+                            @*@if (roles.Contains("SuperAdmin") || roles.Contains("HR"))
+                                {
+                                    <div class="form-group">
+                                        <select name="Userid" id="leavedrpdwn" class="form-control" asp-items="@ViewBag.UserList"></select>
+                                    </div>
+                                }*@
+                            <div class="table-responsive">
+                                <table class="table table-striped grid1" cellspacing="0" width="100%">
+                                    <thead>
+                                        <tr>
+                                            <th width="15%">UserName</th>
+                                            <th width="10%">From Date</th>
+                                            <th width="10%">To Date</th>
+                                            <th width="10%">Count</th>
+                                            <th width="10%">EmployeeDescription</th>
+                                            @if (roles.Contains("SuperAdmin") || roles.Contains("HR"))
+                                            {
+                                                <th width="15%">HrDescription</th>
+                                            }
+                                            <th width="10%">Is Approve</th>
+                                            <th width="10%">Approve Date</th>
+                                            <th width="10%">FileUpload</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="UNlevtblbdy">
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                        <!-- /.box-body -->
+                    </div>
+                    <!-- /.box -->
+                </section>
+            </div>
+        </div>
+    </div>
+</div>
+
 @section Styles{
     <!-- DataTables -->
     <link rel="stylesheet" href="~/adminlte/components/datatables.net-bs/css/dataTables.bootstrap.min.css">
@@ -138,9 +252,11 @@
 
 
     <!-- DataTables -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js" integrity="sha512-qTXRIMyZIFb8iQcfjXWCO8+M5Tbc38Qi5WzdPOYZHIlZpzBHG3L3by84BBBOiRGiEb7KKtAOAs5qYdUiZiQNNQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
     <script src="~/adminlte/components/datatables.net/js/jquery.dataTables.min.js"></script>
     <script src="~/adminlte/components/datatables.net-bs/js/dataTables.bootstrap.min.js"></script>
-
+    <script src="~/js/Employeeleave.js"></script>
+    <script src="~/js/unpaidEmployee.js"></script>
     <!-- page script -->
     <script type="text/javascript">
 
@@ -156,9 +272,16 @@
 
             });
 
+            $(document).on("click", "#leavespopup", function () {
+                $('#myModalpl').modal('show');
+            })
+
+            $(document).on("click", "#unpaidleavespopup", function () {
+                $('#myModalunpaidpl').modal('show');
+            })
 
             $("#save").click(function () {
-                 
+
                 var formData = new FormData();
 
                 $(".salary-txt-emp").each(function (index, telement) {
@@ -196,7 +319,7 @@
 
         function Salary() {
             $("#amount").val("");
-            
+
             $.ajax({
                 type: "GET",
                 url: "/EmployeeMaster/SalaryEmployee",
@@ -210,7 +333,7 @@
                         $.each(response, function (i, v) {
                             var rowdata = response[i]
                             innerHtml += "<tr>";
-                            innerHtml += "<td id='mail'> " + rowdata.firstName + " " + rowdata.lastName +" </td>";
+                            innerHtml += "<td id='mail'> " + rowdata.firstName + " " + rowdata.lastName + " </td>";
                             innerHtml += "<td> <div> <input type='number' data-userid='" + rowdata.id + "' id='amount_" + rowdata.id + "' class='form-control salary-txt-emp'/ > <br/></div>  </td>";
                             innerHtml += "</tr>";
 

@@ -3,11 +3,12 @@
 
 @model List<LeaveCountViewModel>
 
-@inject UserManager<ApplicationUser> _userManager              
+@inject UserManager<ApplicationUser> _userManager
 @{ ViewData["Title"] = "Leave";
     var user = await _userManager.GetUserAsync(User);
     var roles = await _userManager.GetRolesAsync(user);
 }
+
 
 <!-- Content Wrapper. Contains page content -->
 <div class="content-wrapper">
@@ -65,7 +66,6 @@
                                 }
                             </tr>
                         </thead>
-
                         <tbody id="levtblbdy">
                         </tbody>
                     </table>
@@ -82,11 +82,9 @@
 <!-- /.content-wrapper -->
 
 <div class="container">
-
     <!-- Modal -->
     <div class="modal fade" id="myModal" role="dialog">
         <div class="modal-dialog">
-
             <!-- Modal content-->
             <div class="modal-content">
                 <div class="modal-header">
@@ -128,6 +126,31 @@
         </div>
     </div>
 </div>
+<!-- Default box -->
+@*<div class="box-header with-border">
+    <div class="col-lg-3">
+        <h3 class="box-title">List of Expense item</h3>
+    </div>
+
+    <div class="col-lg-3">
+        <label style="margin-top: 10px ;font :bold ;color:red"> Total Leave: </label>
+        <label style="font :bold ;color:red" id="lblYearlyLeaves">200   </label>
+    </div>
+    <div class="col-lg-3">
+        <label style="margin-top: 10px; font: bold; color: red ">count Leave : </label>
+        <label style="font :bold ;color:red" id="lblTotalLeavesCount">
+
+        </label>
+
+    </div>
+
+    <div class="col-lg-3">
+        <label style="margin-top: 10px; font: bold; color: red"> Remaining Leave : </label>
+        <label style="font :bold ;color:red" id="lblRemainingLeaves">
+
+        </label>
+    </div>
+</div>*@
 
 @section Styles{
     <!-- DataTables -->
@@ -164,3 +187,5 @@
     </script>
 
 }
+
+
