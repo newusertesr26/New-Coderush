@@ -212,16 +212,28 @@ namespace coderush.Controllers
                 }
                 var user = _userManager.GetUserAsync(User).Result;
 
-                string wwwPath = this._webHostEnvironment.WebRootPath;
-                string contentPath = this._webHostEnvironment.ContentRootPath;
-                var filename = leaveCounts.FileUpload.FileName;
-                string path = Path.Combine(this._webHostEnvironment.WebRootPath, "document/Leave");
-                List<string> uploadedFiles = new List<string>();
-                string fileName = Path.GetFileName(leaveCounts.FileUpload.FileName);
-                using (FileStream stream = new FileStream(Path.Combine(path, fileName), FileMode.Create))
+                if (leaveCounts.FileUpload != null)
                 {
-                    leaveCounts.FileUpload.CopyTo(stream);
-                    uploadedFiles.Add(fileName);
+
+
+
+                    string wwwPath = this._webHostEnvironment.WebRootPath;
+                    string contentPath = this._webHostEnvironment.ContentRootPath;
+                    var filename = leaveCounts.FileUpload.FileName;
+                    string path = Path.Combine(this._webHostEnvironment.WebRootPath, "document/Leave");
+                    //if (!Directory.Exists(path))
+                    //{
+                    //    Directory.CreateDirectory(path);
+                    //}
+
+                    List<string> uploadedFiles = new List<string>();
+
+                    string fileName = Path.GetFileName(leaveCounts.FileUpload.FileName);
+                    using (FileStream stream = new FileStream(Path.Combine(path, fileName), FileMode.Create))
+                    {
+                        leaveCounts.FileUpload.CopyTo(stream);
+                        uploadedFiles.Add(fileName);
+                    }
                 }
 
                 //create new
@@ -235,7 +247,14 @@ namespace coderush.Controllers
                     newleaveCount.Count = leaveCounts.Count;
                     newleaveCount.EmployeeDescription = leaveCounts.EmployeeDescription;
                     newleaveCount.HrDescription = leaveCounts.HrDescription;
-                    newleaveCount.FileUpload = leaveCounts.FileUpload.FileName.ToString(); ;
+                    if (leaveCounts.FileUpload != null)
+                    {
+                        newleaveCount.FileUpload = leaveCounts.FileUpload.FileName.ToString();
+                    }
+                    else
+                    {
+                        newleaveCount.FileUpload = string.Empty;
+                    }
                     newleaveCount.ApproveDate = DateTime.Now;
                     newleaveCount.Isapprove = leaveCounts.Isapprove;
                     newleaveCount.CreatedBy = user.Id;
@@ -246,7 +265,14 @@ namespace coderush.Controllers
                     leaveHistory.Count = leaveCounts.Count;
                     leaveHistory.EmployeeDescription = leaveCounts.EmployeeDescription;
                     leaveHistory.HRDescription = leaveCounts.HrDescription;
-                    leaveHistory.FileUpload = leaveCounts.FileUpload.FileName.ToString();
+                    if (leaveCounts.FileUpload != null)
+                    {
+                        leaveHistory.FileUpload = leaveCounts.FileUpload.FileName.ToString();
+                    }
+                    else
+                    {
+                        leaveHistory.FileUpload = string.Empty;
+                    }
                     leaveHistory.ApproveDate = DateTime.Now;
                     leaveHistory.Isapprove = leaveCounts.Isapprove;
                     leaveHistory.CreatedBy = userid;
@@ -269,7 +295,10 @@ namespace coderush.Controllers
                 editLeavecount.Count = leaveCounts.Count;
                 editLeavecount.EmployeeDescription = leaveCounts.EmployeeDescription;
                 editLeavecount.HrDescription = leaveCounts.HrDescription;
-                editLeavecount.FileUpload = leaveCounts.FileUpload.FileName.ToString();
+                if (editLeavecount.FileUpload != null)
+                {
+                    editLeavecount.FileUpload = editLeavecount.FileUpload.ToString();
+                }
                 editLeavecount.UpdatedBy = user.Id;
                 editLeavecount.Isapprove = true;
                 editLeavecount.Approveby = user.Id;
@@ -280,7 +309,10 @@ namespace coderush.Controllers
                 addleaveHistory.Count = leaveCounts.Count;
                 addleaveHistory.EmployeeDescription = leaveCounts.EmployeeDescription;
                 addleaveHistory.HRDescription = leaveCounts.HrDescription;
-                addleaveHistory.FileUpload = leaveCounts.FileUpload.FileName.ToString();
+                if (addleaveHistory.FileUpload != null)
+                {
+                    addleaveHistory.FileUpload = editLeavecount.FileUpload.ToString();
+                }
                 addleaveHistory.UpdatedBy = user.Id;
                 addleaveHistory.Isapprove = true;
                 addleaveHistory.Approveby = user.Id;

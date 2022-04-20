@@ -270,7 +270,7 @@ namespace coderush.Controllers
         [HttpGet]
         public IActionResult Form(int id)
         {
-            var typelist1 = _context.Datamaster.Where(x => x.Type == DataSelection.Expenses).ToList();
+            var typelist1 = _context.Datamaster.Where(x => x.Type == DataSelection.Expenses && x.Isactive==true).ToList();
 
             ViewBag.Expensetypelist = typelist1.Select(v => new SelectListItem
             {

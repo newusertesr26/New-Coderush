@@ -81,17 +81,21 @@
                             <button id="clear" style="margin-top: 25px" class="btn btn-primary">Clear</button>
                         </div>
 
+                        <div class="col-lg-2">
+                            <input id="autosrch" type="text" placeholder="Name & Email" class="form-control" />
+                        </div>
+                      
                     </div>
-                    <br />
-                    <br />
+                    
                     @*<div class="col-md-4">
                             <select name="type" class="form-control" style="" id="btnddl" asp-items="@ViewBag.CandidatetechnologiesList">
                                 <option value="">-- ALL --</option>
                             </select>
                         </div>*@
-                    <div class="box-tools pull-right">
-                        <a href="/CandidateMaster/Form" class="btn btn-primary"><i class="fa fa-plus"></i></a>
-                    </div>
+                    @*<h3 class="box-title">List of Candidate item</h3>
+                        <div class="box-tools pull-right">
+                            <a href="/CandidateMaster/Form" class="btn btn-primary"><i class="fa fa-plus"></i></a>
+                        </div>*@
                 </div>
                 <div class="box-body">
                     <div class="table-responsive">
@@ -112,7 +116,6 @@
                                     <th width="10%">Status</th>
                                     <th id="cmtopenbtn">Comment</th>
                                     <th>Action</th>
-                                    <th></th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -301,7 +304,6 @@
 
 @section Scripts{
 
-
     <!-- DataTables -->
     <script src="~/adminlte/components/datatables.net/js/jquery.dataTables.min.js"></script>
     <script src="~/adminlte/components/datatables.net-bs/js/dataTables.bootstrap.min.js"></script>
@@ -319,7 +321,15 @@
                 dom: 'lrtip',
                 scrollX: false,
                 pageLength: 25,
-                order: [[0, "desc"]]
+                order: [[0, "desc"]],
+
+            });
+            $('#autosrch').on('keyup', function () {
+
+                $('#grid')
+                    .DataTable()
+                    .search($('#autosrch').val(), false, true)
+                    .draw();
             });
 
             $(".tooltips").tooltip();
@@ -329,11 +339,17 @@
 
             });
 
+            //$("#srchname").on('change', function () {
+
+
+            //});
+
             $("#clear").click(function () {
                 $("#canTO").val("");
                 $("#dropdown").val("");
                 $("#canFromDate").val("");
                 $("#btnddl").val("");
+                $("#srchname").val("");
             });
 
 
@@ -372,6 +388,7 @@
             });
         }
 
+
         $("#saveNote").click(function () {
             var notes = $("#notes").val();
             var id = $("#noteid").val();
@@ -399,6 +416,7 @@
                 "NextFollowUpdate": nextfollowupdate,
                 "Status": ddlStatusc,
             }
+            debugger
             $.ajax({
                 type: "POST",
                 url: "/CandidateMaster/SaveNotes",
@@ -415,6 +433,7 @@
                     alert(response.message);
                 }
             });
+
         });
     </script>
 

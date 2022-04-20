@@ -49,6 +49,7 @@
         var userid = $("#leavedrpdwn").val();
         if (userid == null || userid == "" || userid == undefined) {
             /* alert("Please select drowpdown menu first !!");*/
+            alert("Please select user");
             return false;
         }
         $(".text-danger").hide();
@@ -99,7 +100,13 @@
                         }
                         innerHtml += "<td scope='col' id='Approve Date'>" + moment(rowdata.approveDate).format('LL') + "</td>";
                         //innerHtml += '<td>@Html.ActionLink("Download", "DownloadFile", new { fileName = item.FileUpload })</td>';
-                        innerHtml += "<td><a class='cladownload' data-downloadFile='/document/Leave/" + rowdata.filename + "'><i class='fa fa-download'></i></a></td>";
+                        if (rowdata.filename != null && rowdata.filename != "") {
+                            innerHtml += "<td><a class='cladownload' data-downloadFile='/document/Leave/" + rowdata.filename + "'><i class='fa fa-download'></i></a></td>";
+                        }
+                        else {
+                            innerHtml += "<td></td>"
+
+                        }
                         if (rowdata.adminRole) {
                             innerHtml += "<td><input type='button' value='Approve' class='clsAprove btn btn-info' data-aproveid='" + rowdata.id + "' id='btn_" + rowdata.id + "' ></td>";
                         }
@@ -223,6 +230,15 @@
         $("#grid").show();
     });
     $("#btninsert").unbind().click(function () {
+        var userid = $("#leavedrpdwn").val();
+        if (userid == null || userid == "" || userid == undefined) {
+
+            var username = $("#leavedrpdwn option:selected").text();
+            alert("Please select user");
+            return false;
+        }
+
+
         var userid = $("#leavedrpdwn").val();
         window.location.href = '/LeaveCount/Form?id=' + 0 + '&userid=' + userid;
     });
