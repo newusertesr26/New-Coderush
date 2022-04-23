@@ -12,7 +12,7 @@
 
 
 <div class="content-wrapper">
-    
+
     <section class="content-header">
         <h1>
             @ViewData["Title"]
@@ -34,7 +34,7 @@
                     </div>
                     <div class="box-body">
                         <div class="table-responsive">
-                            <table  class="table table-striped grid" cellspacing="0" width="100%">
+                            <table class="table table-striped grid" cellspacing="0" width="100%">
                                 <thead>
                                     <tr>
                                         <th width="15%">Date</th>
@@ -76,27 +76,33 @@
                     </div>
                     <div><input type="hidden" id=""></div>
                     <div class="box-body">
-                        @if (roles.Contains("SuperAdmin") || roles.Contains("HR"))
-                        {
-                            <div class="form-group">
-                                <select name="Userid" id="leavedrpdwn" class="form-control" asp-items="@ViewBag.UserList"></select>
-                            </div>
-                        }
+                        @*@if (roles.Contains("SuperAdmin") || roles.Contains("HR"))
+                            {
+                                <div class="form-group">
+                                    <select name="Userid" id="leavedrpdwn" class="form-control" asp-items="@ViewBag.UserList"></select>
+                                </div>
+                            }*@
                         <div class="table-responsive">
-                            <table  class="table table-striped grid1" cellspacing="0" width="100%">
+                            <table id="grid" class="table table-striped grid1" cellspacing="0" width="100%">
                                 <thead>
                                     <tr>
-                                        <th width="10%">UserName</th>  
-                                        <th width="5%">From Date</th>
-                                        <th width="5%">To Date</th>
+                                        <th width="19%">UserName</th>
+                                        <th width="8%">From Date</th>
+                                        <th width="8%">To Date</th>
                                         <th width="5%">Count</th>
-                                        <th width="10%">EmployeeDescription</th>
+                                        <th width="14%">EmployeeDescription</th>
                                         @if (roles.Contains("SuperAdmin") || roles.Contains("HR"))
                                         {
                                             <th width="13%">HrDescription</th>
                                         }
-                                        <th width="3%">Is Approve</th>
-                                        <th width="4%">Approve Date</th>
+                                        <th width="8%">Is Approve</th>
+                                        <th width="10%">Approve Date</th>
+
+                                        @*<th width="5%">FileUpload</th>*@
+                                        @*@if (roles.Contains("SuperAdmin") || roles.Contains("HR"))
+                                        {
+                                            <th width="6%">Approve</th>
+                                        }*@
                                     </tr>
                                 </thead>
                                 <tbody id="levtblbdy">
@@ -121,9 +127,28 @@
 }
 @section Scripts{
     <!-- DataTables -->
+    @*<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js" integrity="sha512-qTXRIMyZIFb8iQcfjXWCO8+M5Tbc38Qi5WzdPOYZHIlZpzBHG3L3by84BBBOiRGiEb7KKtAOAs5qYdUiZiQNNQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+        <script src="~/adminlte/components/datatables.net/js/jquery.dataTables.min.js"></script>
+        <script src="~/adminlte/components/datatables.net-bs/js/dataTables.bootstrap.min.js"></script>*@
+
     <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js" integrity="sha512-qTXRIMyZIFb8iQcfjXWCO8+M5Tbc38Qi5WzdPOYZHIlZpzBHG3L3by84BBBOiRGiEb7KKtAOAs5qYdUiZiQNNQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    @*<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>*@
     <script src="~/adminlte/components/datatables.net/js/jquery.dataTables.min.js"></script>
     <script src="~/adminlte/components/datatables.net-bs/js/dataTables.bootstrap.min.js"></script>
     <script src="~/js/Dashboard.js"></script>
-}
 
+    <script type="text/javascript">
+
+        $(document).ready(function () {
+            $('#grid').DataTable({
+                lengthChange: false,
+                info: false,
+                searching: true,
+                dom: 'lrtip',
+                scrollX: false,
+                pageLength: 25,
+            });
+
+
+    </script>
+}

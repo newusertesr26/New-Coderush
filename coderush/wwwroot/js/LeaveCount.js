@@ -49,7 +49,7 @@
         var userid = $("#leavedrpdwn").val();
         if (userid == null || userid == "" || userid == undefined) {
             /* alert("Please select drowpdown menu first !!");*/
-            alert("Please select user");
+
             return false;
         }
         $(".text-danger").hide();

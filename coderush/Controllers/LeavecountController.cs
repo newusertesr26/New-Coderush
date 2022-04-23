@@ -215,8 +215,6 @@ namespace coderush.Controllers
                 if (leaveCounts.FileUpload != null)
                 {
 
-
-
                     string wwwPath = this._webHostEnvironment.WebRootPath;
                     string contentPath = this._webHostEnvironment.ContentRootPath;
                     var filename = leaveCounts.FileUpload.FileName;
@@ -313,7 +311,7 @@ namespace coderush.Controllers
                 {
                     addleaveHistory.FileUpload = editLeavecount.FileUpload.ToString();
                 }
-                addleaveHistory.UpdatedBy = user.Id;
+                addleaveHistory.UpdatedBy = user.Id; 
                 addleaveHistory.Isapprove = true;
                 addleaveHistory.Approveby = user.Id;
                 addleaveHistory.ApproveDate = DateTime.Now;
