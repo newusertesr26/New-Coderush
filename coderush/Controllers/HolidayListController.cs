@@ -36,7 +36,7 @@ namespace CodesDotHRMS.Controllers
         public IActionResult HolidayIndex()
         {
             var data = new List<HolidayListViewModel>();
-            data = (from h in _context.HolidayList.OrderByDescending(x => x.Id)
+            data = (from h in _context.HolidayList.OrderBy(x => x.Date.Value.Month)
                     where !h.Isdelete
                     select new HolidayListViewModel
                     {
@@ -45,8 +45,9 @@ namespace CodesDotHRMS.Controllers
                         Day = h.Day,
                         Date = h.Date,
 
-
                     }).ToList();
+
+
 
             return View(data);
         }

@@ -18,13 +18,25 @@
             @ViewData["Title"]
         </h1>
 
+        <style type="text/css" media="screen">
+
+            table {
+                border-collapse: collapse;
+                border: 1px solid #FF0000;
+            }
+
+                table td {
+                    border: 1px solid #FF0000;
+                }
+        </style>
+
     </section>
     <!-- Main content -->
     <section class="content">
         <!-- Default box -->
         <div class="box">
             <div class="box-header with-border">
-                <h3 class="box-title">Holiday List</h3>
+                <h1 class="text-center">CODESDOT HOLIDAY LIST @DateTime.Now.Year</h1>
                 <div class="box-tools pull-right">
                     @if (roles.Contains("SuperAdmin") || roles.Contains("HR"))
                     {
@@ -101,6 +113,7 @@
     <!-- DataTables -->
     <script src="~/adminlte/components/datatables.net/js/jquery.dataTables.min.js"></script>
     <script src="~/adminlte/components/datatables.net-bs/js/dataTables.bootstrap.min.js"></script>
+    <script src="https://cdn.datatables.net/plug-ins/1.11.5/sorting/date-dd-MMM-yyyy.js"></script>
 
     <!-- page script -->
     <script type="text/javascript">
@@ -113,11 +126,17 @@
                 dom: 'lrtip',
                 scrollX: false,
                 pageLength: 25,
-
+                columnDefs: [
+                    { type: 'date-dd-mmm-yyyy', targets: 0 }
+                ]
             });
 
         });
     </script>
 
 }
+
+
+
+
 

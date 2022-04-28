@@ -16,17 +16,19 @@ namespace coderush.ViewModels
         public List<LeaveCountViewModel> List { get; set; }
         public int Id { get; set; }
         public string Userid { get; set; }
-
+        [Required(ErrorMessage ="From date is required")]
         public DateTime? Fromdate { get; set; }
         public string FromdateView { get; set; }
+        [Required(ErrorMessage = "To date is required")]
         public DateTime? Todate { get; set; }
         public string TodateView { get; set; }
         public IFormFile FileUpload { get; set; }
         public string Filename { get; set; }
+        [Required(ErrorMessage = "Count is required")]
         public string Count { get; set; }
+        [Required(ErrorMessage = "Employee Description is required")]
         public string EmployeeDescription { get; set; }
         public string HrDescription { get; set; }
-        
         public bool Isapprove { get; set; }
         public DateTime? ApproveDate { get; set; }
         public string Approveby { get; set; }

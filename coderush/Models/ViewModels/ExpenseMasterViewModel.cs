@@ -12,7 +12,7 @@ namespace coderush.Models.ViewModels
     {
         [Key]
         public int Id { get; set; }
-        [Required]
+        [Required (ErrorMessage ="Name is Required")]
         [StringLength(50, MinimumLength = 2, ErrorMessage = "* A valid Name is required.")]
         [Display(Name = "Name")]
         public string ExpName { get; set; }
@@ -21,16 +21,16 @@ namespace coderush.Models.ViewModels
         public int Exptype { get; set; }
         public string exptype { get; set; }
         [Display(Name = "Amount:")]
-        [Required]
+        [Required(ErrorMessage ="Amount is Required")]
         [RegularExpression("^[0-9]*$", ErrorMessage = "Amount must be numeric")]
         public long? Amount { get; set; }
 
-        [Required]
+        [Required (ErrorMessage ="Expense date is required")]
         [Display(Name = "Expense Date:")]
         public DateTime? ExpenseDate { get; set; }
 
         [Display(Name = "Description:")]
-        [Required]
+        [Required(ErrorMessage ="Description is required")]
         public string Description { get; set; }
         [Display(Name = "CVUpload:")]
         public IFormFile FileUpload { get; set; }
