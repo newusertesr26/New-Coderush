@@ -12,14 +12,15 @@ namespace coderush.Models
     {
         public int Id { get; set; }
         [Display(Name = "Type:")]
-        [Required]
+        [Required(ErrorMessage = " Type is Required ")]
         public DataSelection Type { get; set; }
         [Display(Name = "Text:")]
         [Required]
+        [StringLength(60, MinimumLength = 3)]
         public string Text { get; set; }
         [Display(Name = "Description:")]
         [Required]
-        [StringLength(60, MinimumLength = 3)]
+        [StringLength(120, MinimumLength = 3)]
         public string Description { get; set; }
         [Display(Name = "Isactive:")]
         public bool Isactive { get; set; }

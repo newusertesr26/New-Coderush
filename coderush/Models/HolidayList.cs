@@ -14,7 +14,5 @@ namespace CodesDotHRMS.Models
         [DataType(DataType.Date)]
         public DateTime? Date { get; set; }
         public bool Isdelete { get; set; }
-
-
     }
 }

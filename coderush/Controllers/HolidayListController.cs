@@ -36,7 +36,7 @@ namespace CodesDotHRMS.Controllers
         public IActionResult HolidayIndex()
         {
             var data = new List<HolidayListViewModel>();
-            data = (from h in _context.HolidayList.OrderByDescending(x => x.Id)
+            data = (from h in _context.HolidayList
                     where !h.Isdelete
                     select new HolidayListViewModel
                     {
@@ -44,12 +44,40 @@ namespace CodesDotHRMS.Controllers
                         Name = h.Name,
                         Day = h.Day,
                         Date = h.Date,
-
-
-                    }).ToList();
+                    }).OrderBy(x => x.Date).ToList();
 
             return View(data);
         }
+
+
+        // var trendData =
+        //     (from d in ExpenseItemsViewableDirect
+        //      group d by new
+        //      {
+        //          Year = d.Er_Approved_Date.Year,
+        //          Month = d.Er_Approved_Date.Month
+        //      } into g
+        //      select new
+        //      {
+        //          Year = g.Key.Year,
+        //          Month = g.Key.Month,
+        //          Total = g.Sum(x => x.Item_Amount),
+        //          AveragePerTrans = Math.Round(g.Average(x => x.Item_Amount), 2)
+        //      }
+        //).AsEnumerable()
+        // .Select(g => new {
+        //     Period = g.Year + "-" + g.Month,
+        //     Total = g.Total,
+        //     AveragePerTrans = g.AveragePerTrans
+        // });
+
+        // OrderBy(x => CultureInfo.Date.DateTimeFormat.GetMonthName(x.Month))
+        //OrderBy(x=> CultureInfo.CurrentCulture.DateTimeFormat.GetMonthName(x.Month))
+        // var data = from h in _context
+        //.select new HolidayListViewModel(x => new { Name = x, Sort = DateTime.ParseExact(x, "MMMM", CultureInfo.InvariantCulture) })
+        //.OrderBy(x => x.Sort.Month)
+        //.Select(x => x.Name)
+        //.ToArray();
 
         [HttpGet]
         public IActionResult Form()

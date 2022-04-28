@@ -58,6 +58,13 @@ namespace coderush.Services.App
             public const string UrlDefault = "/DataMaster/Index";
             public const string NavigationName = "Data";
         }
+        public static class Dashboard
+        {
+            public const string ControllerName = "Dashboard";
+            public const string RoleName = "Dashboard";
+            public const string UrlDefault = "/Dashboard/DashboardIndex";
+            public const string NavigationName = "Dashboard";
+        }
         //public static class LeadMaster
         //{
         //    public const string ControllerName = "LeadMaster";
